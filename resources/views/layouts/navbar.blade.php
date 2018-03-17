@@ -41,8 +41,7 @@
             font-weight: 500;
             letter-spacing: 0.5px;
         }
-
-
+        
     </style>
     <div class="nav-container">
         <div class="bar bar--sm visible-xs bar--mobile-sticky box-shadow" data-scroll-class="59px:pos-fixed" style="background: #03A9F4;">
