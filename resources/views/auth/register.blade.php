@@ -47,32 +47,12 @@
                                     @endif
                                 </div>
 
-                                <div class="col-md-6">
-                                    <div class="input-select">
-                                        <select id="city_id" name="city_id" required>
-                                            <option value="" disabled selected>City</option>
-                                            @foreach( $cities as $city )
-                                                <option value="{{ $city->id }}" {{ old('city_id') == $city->id ? "selected" : "" }}>{{ ucwords($city->name) }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @if ($errors->has('city_id'))
-                                        <span class="color--error">
-                                        <strong>{{ $errors->first('city_id') }}</strong>
-                                    </span>
-                                    @endif
+                                <div class="col-md-12">
+                                    <input id="pin_code" type="text" placeholder="Pin-code" name="pin_code" value="{{ old('pin_code') }}">
                                 </div>
 
-                                <div class="col-md-6">
-                                    <div class="input-select">
-                                        <select id="pin_code_id"  name="pin_code_id" required>
-                                        </select>
-                                    </div>
-                                    @if ($errors->has('pin_code_id'))
-                                        <span class="color--error">
-                                        <strong>{{ $errors->first('pin_code_id') }}</strong>
-                                    </span>
-                                    @endif
+                                <div class="col-md-12">
+                                    <input id="full_address" type="text" placeholder="Full Address" name="pin_code" value="{{ old('full_address') }}" disabled>
                                 </div>
 
                                 <div class="col-md-12">
@@ -119,49 +99,49 @@
 <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
 {{----}}
+
 <script>
 
     $(document).ready(function () {
 
-        $('#pin_code_id').append('<option value="" disabled selected>Pin Code</option>');
+        $('#pin_code').on('change', function () {
+            var full_address = '';
+            var address = $(this).val();
+            var i, j;
+            if(parseInt(address.length) === 6) {
+                $.ajax({
 
-        function changePinCodes(val = 0) {
-
-            var pin_code_selector = $('#pin_code_id');
-            pin_code_selector.empty();
-            var city_id = $('#city_id').val();
-            var csrf_token = '{{ csrf_token() }}';
-            $.ajax(
-                {
-                    type: 'POST',
-                    url: '{{ route('get_pin_codes') }}',
-                    data: { _token: csrf_token, city_id: city_id },
+                    url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyDtfAuKKrycjdbscKGGfbCg0R5udw3N73g',
+                    type: 'GET',
                     dataType: 'JSON',
-                    success: function(returned_data){
+                    success: function (response) {
 
-                        pin_code_selector.append('<option value="" disabled selected>Pin Code</option>');
+                        if (response.status == 'OK') {
 
-                        $.each(returned_data, function(i, d) {
-
-                            if (val == d.id) {
-                                pin_code_selector.append('<option value="' + d.id + '" selected>' + d.pin_code + '</option>');
+                            for (i = 0; i < response.results[0].address_components.length; i++) {
+                                for (j = 0; j < response.results[0].address_components[i].types.length; j++) {
+                                    if (response.results[0].address_components[i].types[j] == 'locality') {
+                                        full_address += response.results[0].address_components[i].long_name + ', ';
+                                        break;
+                                    }
+                                    else if (response.results[0].address_components[i].types[j] == 'administrative_area_level_2') {
+                                        full_address += response.results[0].address_components[i].long_name + ', ';
+                                        break;
+                                    }
+                                    else if (response.results[0].address_components[i].types[j] == 'administrative_area_level_1') {
+                                        full_address += response.results[0].address_components[i].long_name + '';
+                                        break;
+                                    }
+                                }
                             }
-                            else {
-                                pin_code_selector.append('<option value="' + d.id + '">' + d.pin_code + '</option>');
-                            }
+                            $('#full_address').val(full_address);
 
-                        });
+                        }
 
                     }
-                }
-            )
-        }
-
-        changePinCodes({{ old('pin_code_id') }});
-
-        $('#city_id').on('change', function () {
-            changePinCodes(0);
-        });
+                });
+            }
+        })
 
     })
 </script>
