@@ -39,15 +39,17 @@ class UpdateProfileController extends Controller
 
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
-                'city_id' => 'required|integer',
-                'pin_code_id' => 'required|integer',
+                'address' => 'required|string',
+                'lat' => 'required|float',
+                'lng' => 'required|float',
 
             ]);
             $request->session()->remove('failure');
             $user->first_name = $request->input('first_name');
             $user->last_name = $request->input('last_name');
-            $user->city_id = $request->input('city_id');
-            $user->pin_code_id = $request->input('pin_code_id');
+            $user->address = $request->input('address');
+            $user->lat = $request->input('lat');
+            $user->lng = $request->input('lng');
             if ($result = $user->save())
                 $request->session()->flash('success', 'Your profile was successfully updated.');
             else

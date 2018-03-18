@@ -63,8 +63,6 @@ class RentController extends Controller
             abort('404');
         $subcategory = DB::table('subcategories')->where('id', $product->subcategory_id)->first();
         $category = DB::table('categories')->where('id', $subcategory->category_id)->first();
-        if(!\Auth::user())
-            $data['cities'] = DB::table('cities')->get();
         $product->subcategory = $subcategory;
         $product->category = $category;
         $product_pictures = DB::table('product_pictures')->where('product_id', $id)->get();

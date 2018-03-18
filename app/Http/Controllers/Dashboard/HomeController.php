@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
-use App\Cities;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +17,6 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('mobile_auth');
-        $this->cities = Cities::all();
     }
 
     /**
@@ -41,7 +39,6 @@ class HomeController extends Controller
             $data['tab'] = $tab;
         }
         $data['categories'] = DB::table('categories')->get();
-        $data['cities'] = $this->cities;
 
         return view('dashboard.account', $data);
 

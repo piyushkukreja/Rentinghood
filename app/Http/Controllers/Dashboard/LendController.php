@@ -20,7 +20,6 @@ class LendController extends Controller
     public function showLendForm($category_id)
     {
         $data = [];
-        $data['cities'] = DB::table('cities')->get();
         $data['categories'] = DB::table('categories')->get();
         $data['category_id'] = $category_id;
         $data['fixhome'] = false;
@@ -37,6 +36,9 @@ class LendController extends Controller
             'subcategory_id' => 'required|integer',
             'name' => 'required',
             'duration' => 'required',
+            'address' => 'required|string',
+            'lat' => 'required|float',
+            'lng' => 'required|float',
             'file.0' => 'image|max:2000|required'
 
         ];
@@ -60,8 +62,9 @@ class LendController extends Controller
             'availability'=> 1,
             'description' => $request->input('description'),
             'duration' => $request->input('duration'),
-            'city_id' => $request->input('city_id'),
-            'pin_code_id' => $request->input('pin_code_id'),
+            'address' => $request->input('address'),
+            'lat' => $request->input('lat'),
+            'lng' => $request->input('lng'),
             'rate_1' => $request->input('rate1'),
             'rate_2' => $rate2,
             'rate_3' => $rate3,

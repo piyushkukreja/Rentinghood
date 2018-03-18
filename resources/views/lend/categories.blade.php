@@ -5,6 +5,13 @@
         .category_image {
             padding : 1em;
         }
+        .category {
+            transition: transform 0.3s ease-out;
+        }
+
+        .category:hover {
+            transform: translate(0,-5px);
+        }
     </style>
     <div class="main-container">
         <section class="text-center bg--secondary" style="padding-bottom: 3em; padding-top: 3em;">

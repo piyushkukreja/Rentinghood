@@ -270,22 +270,14 @@
                                                         <input id="email2" type="email" placeholder="Email" name="email" value="" required>
                                                     </div>
 
-                                                    <div class="col-md-6">
-                                                        <div class="input-select">
-                                                            <select id="city_id" name="city_id" required>
-                                                                <option value="" disabled selected>City</option>
-                                                                @foreach( $cities as $city )
-                                                                    <option value="{{ $city->id }}">{{ ucwords($city->name) }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
+                                                    <div class="col-md-12">
+                                                        <input id="address" type="text" placeholder="Address" name="address"
+                                                               value="{{ old('address') }}" required>
                                                     </div>
 
-                                                    <div class="col-md-6">
-                                                        <div class="input-select">
-                                                            <select id="pin_code_id" name="pin_code_id" required>
-                                                            </select>
-                                                        </div>
+                                                    <div id="latlng" class="hidden">
+                                                        <input id="lat" type="hidden" name="lat" value="">
+                                                        <input id="lng" type="hidden" name="lng" value="">
                                                     </div>
 
                                                     <div class="col-md-12">
@@ -538,45 +530,19 @@
             });
 
             //js for Pin Codes
-            $('#pin_code_id').append('<option value="" disabled selected>Pin Code</option>');
-
-            function changePinCodes(val = 0) {
-
-                var pin_code_selector = $('#pin_code_id');
-                pin_code_selector.empty();
-                var city_id = $('#city_id').val();
-                var csrf_token = '{{ csrf_token() }}';
-                $.ajax(
-                    {
-                        type: 'POST',
-                        url: '{{ route('get_pin_codes') }}',
-                        data: { _token: csrf_token, city_id: city_id },
-                        dataType: 'JSON',
-                        success: function(returned_data){
-
-                            pin_code_selector.append('<option value="" disabled selected>Pin Code</option>');
-
-                            $.each(returned_data, function(i, d) {
-
-                                if (val == d.id) {
-                                    pin_code_selector.append('<option value="' + d.id + '" selected>' + d.pin_code + '</option>');
-                                }
-                                else {
-                                    pin_code_selector.append('<option value="' + d.id + '">' + d.pin_code + '</option>');
-                                }
-
-                            });
-
-                        }
-                    }
-                )
-            }
-
-            changePinCodes(0);
-
-            $('#city_id').on('change', function () {
-                changePinCodes(0);
+            var defaultBounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(19.296441, 72.9864994),
+                new google.maps.LatLng(18.8465126, 72.9042434)
+            );
+            $("#address").geocomplete({
+                location: 'Mumbai',
+                details: "#latlng",
+                bounds: defaultBounds
+            }).bind("geocode:result", function (event, result) {
+                console.log(result);
             });
+
+
             @else
             var logged_in = true;
             @endguest

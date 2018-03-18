@@ -10,6 +10,54 @@
         .bar-2 .menu-horizontal > li > a {
             letter-spacing: 0.5px;
         }
+
+        .menu-horizontal li:hover {
+            transform: translate(0, -5px);
+        }
+
+        .menu-horizontal li {
+            transition: transform .3s ease-out;
+        }
+
+        #scroll_to_content {
+            position: absolute;
+            width: 3.71428571em;
+            height: 3.71428571em;
+            background: #fff;
+            left: 50%;
+            margin-left: -1.85em;
+            border-radius: 50%;
+            text-align: center;
+            bottom: 2.71428571em;
+            padding-top: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.04);
+            z-index: 98;
+            border: 1px solid #ececec;
+            transition: 0.2s ease-out;
+            -webkit-transition: 0.2s ease-out;
+            -moz-transition: 0.2s ease-out;
+            display: none;
+        }
+        #scroll_to_content i {
+            color: #252525;
+        }
+        #scroll_to_content:hover {
+            transform: translate3d(0, -5px, 0);
+            -webkit-transform: translate3d(0, -5px, 0);
+        }
+
+        @media (min-width: 767px) {
+
+            #home {
+                min-height: 100vh;
+            }
+
+            #scroll_to_content {
+                display: block;
+            }
+
+        }
     </style>
     <div class="nav-container">
         <div class="bar bar--sm visible-xs">
@@ -122,7 +170,7 @@
         </div>
     @endauth
     <div class="main-container">
-    <section class="cover height-90 imagebg text-center" data-overlay="6" id="home">
+    <section class="cover height-90 imagebg text-center" data-overlay="5" id="home">
         <div class="background-image-holder">
             <img alt="background" src="{{ asset('img/home/home5.jpg') }}" />
         </div>
@@ -130,7 +178,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <img alt="Image" class="unmarg--bottom" src="{{ asset('img/home/logo-heading.png') }}" />
-                    <h3>
+                    <h3 style="font-weight: 600;">
                         Rent anything, right from your neighbourhood
                     </h3>
                     <a class="btn btn--primary type--uppercase btn--lg" href="{{ route('rent_categories') }}">
@@ -147,8 +195,14 @@
             </div>
             <!--end of row-->
         </div>
+        <div class="text-center">
+            <a id="scroll_to_content" href="#content">
+                <i class="stack-interface stack-down-open-big"></i>
+            </a>
+        </div>
         <!--end of container-->
     </section>
+        <a id="content"></a>
     <section class="text-center" id="about">
         <div class="container">
             <div class="row">
@@ -163,7 +217,7 @@
         </div>
         <!--end of container-->
     </section>
-    <section class="text-center bg--secondary">
+    {{--<section class="text-center bg--secondary">
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-lg-6">
@@ -181,7 +235,7 @@
             <!--end of row-->
         </div>
         <!--end of container-->
-    </section>
+    </section>--}}
         @guest
     <section class="bg--primary unpad cta cta-2" id="video">
         <a href="{{ route('register') }}">
@@ -199,7 +253,9 @@
         @endguest
 </div>
     <script>
-        @auth
+        $(document).ready(function () {
+
+            @auth
             function getMessageCount() {
 
                 $.ajax({
@@ -219,7 +275,24 @@
             }
 
             getMessageCount();
+            @endauth
 
-        @endauth
+            $('#scroll_to_content').click(function (e) {
+
+                e.preventDefault();
+                scrollToItem($($(this).attr('href')));
+
+            });
+
+            function scrollToItem(item) {
+
+                $('html, body').animate({
+                    scrollTop: item.offset().top
+                }, 1000);
+
+            }
+
+        });
+
     </script>
 @endsection

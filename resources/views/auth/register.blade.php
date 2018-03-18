@@ -2,23 +2,25 @@
 @extends('layouts.navbar')
 @section('content')
     <div class="main-container">
-        <section class="imageblock switchable feature-large height-100 bg--light">
-            <div class="imageblock__content col-lg-6 col-md-4 pos-right">
-                <div class="background-image-holder">
-                    <img alt="image" src="{{ asset('img/inner-7.jpg') }}" />
-                </div>
+        <section class="feature-large height-100 image--light imagebg">
+            <div class="background-image-holder">
+                <img alt="background" src="{{ asset('img/agency-1.jpg') }}">
             </div>
             <div class="container pos-vertical-center">
                 <div class="row">
-                    <div class="col-lg-5 col-md-7">
-                        <h2>Become a Rentinghood neighbour</h2>
+                    <div class="col-md-6 col-12">
+                        <div class="map_canvas h-100"></div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <h2 style="font-weight: 500;">Become a Rentinghood neighbour</h2>
 
                         <form method="POST" action="{{ route('register') }}">
                             {{ csrf_field() }}
                             <div class="row">
 
                                 <div class="col-md-6">
-                                    <input id="first_name" type="text"  name="first_name" placeholder="First Name" value="{{ old('first_name') }}" required autofocus>
+                                    <input id="first_name" type="text" name="first_name" placeholder="First Name"
+                                           value="{{ old('first_name') }}" required autofocus>
 
                                     @if ($errors->has('first_name'))
                                         <span class="color--error">
@@ -28,7 +30,8 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <input id="last_name" type="text" placeholder="Last Name" name="last_name" value="{{ old('last_name') }}" required>
+                                    <input id="last_name" type="text" placeholder="Last Name" name="last_name"
+                                           value="{{ old('last_name') }}" required>
 
                                     @if ($errors->has('last_name'))
                                         <span class="color--error">
@@ -38,7 +41,8 @@
                                 </div>
 
                                 <div class="col-md-12">
-                                    <input id="email" type="email" placeholder="Email" name="email" value="{{ old('email') }}" required>
+                                    <input id="email" type="email" placeholder="Email" name="email"
+                                           value="{{ old('email') }}" required>
 
                                     @if ($errors->has('email'))
                                         <span class="color--error">
@@ -48,15 +52,18 @@
                                 </div>
 
                                 <div class="col-md-12">
-                                    <input id="pin_code" type="text" placeholder="Pin-code" name="pin_code" value="{{ old('pin_code') }}">
+                                    <input id="address" type="text" placeholder="Address" name="address"
+                                           value="{{ old('address') }}" required>
+                                </div>
+
+                                <div id="latlng" class="hidden">
+                                    <input id="lat" type="hidden" name="lat" value="">
+                                    <input id="lng" type="hidden" name="lng" value="">
                                 </div>
 
                                 <div class="col-md-12">
-                                    <input id="full_address" type="text" placeholder="Full Address" name="pin_code" value="{{ old('full_address') }}" disabled>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <input id="contact" placeholder="Contact" type="number" name="contact" value="{{ old('contact') }}" required>
+                                    <input id="contact" placeholder="Contact" type="number" name="contact"
+                                           value="{{ old('contact') }}" required>
 
                                     @if ($errors->has('contact'))
                                         <span class="color--error">
@@ -66,7 +73,8 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <input id="password" placeholder="Password" type="password"  name="password" required>
+                                    <input id="password" placeholder="Password" type="password" name="password"
+                                           required>
 
                                     @if ($errors->has('password'))
                                         <span class="color--error">
@@ -76,9 +84,10 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <input id="password-confirm" placeholder="Confirm Password" type="password"  name="password_confirmation" required>
+                                    <input id="password-confirm" placeholder="Confirm Password" type="password"
+                                           name="password_confirmation" required>
                                 </div>
-                            
+
                                 <div class="col-md-12">
                                     <button type="submit" class="btn btn--primary type--uppercase">
                                         Register
@@ -93,57 +102,27 @@
             <!--end of container-->
         </section>
     </div>
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDtfAuKKrycjdbscKGGfbCg0R5udw3N73g&amp;libraries=places"></script>
+    <script src="{{ asset('js/jquery.geocomplete.min.js') }}"></script>
 
+    <script>
 
-{{--jquey--}}
-<script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        $(document).ready(function () {
 
-{{----}}
+            var defaultBounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(19.296441, 72.9864994),
+                new google.maps.LatLng(18.8465126, 72.9042434)
+            );
+            $("#address").geocomplete({
+                location: 'Mumbai',
+                map: ".map_canvas",
+                details: "#latlng",
+                bounds: defaultBounds
+            }).bind("geocode:result", function (event, result) {
+                console.log(result);
+            });
 
-<script>
-
-    $(document).ready(function () {
-
-        $('#pin_code').on('change', function () {
-            var full_address = '';
-            var address = $(this).val();
-            var i, j;
-            if(parseInt(address.length) === 6) {
-                $.ajax({
-
-                    url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyDtfAuKKrycjdbscKGGfbCg0R5udw3N73g',
-                    type: 'GET',
-                    dataType: 'JSON',
-                    success: function (response) {
-
-                        if (response.status == 'OK') {
-
-                            for (i = 0; i < response.results[0].address_components.length; i++) {
-                                for (j = 0; j < response.results[0].address_components[i].types.length; j++) {
-                                    if (response.results[0].address_components[i].types[j] == 'locality') {
-                                        full_address += response.results[0].address_components[i].long_name + ', ';
-                                        break;
-                                    }
-                                    else if (response.results[0].address_components[i].types[j] == 'administrative_area_level_2') {
-                                        full_address += response.results[0].address_components[i].long_name + ', ';
-                                        break;
-                                    }
-                                    else if (response.results[0].address_components[i].types[j] == 'administrative_area_level_1') {
-                                        full_address += response.results[0].address_components[i].long_name + '';
-                                        break;
-                                    }
-                                }
-                            }
-                            $('#full_address').val(full_address);
-
-                        }
-
-                    }
-                });
-            }
         })
-
-    })
-</script>
+    </script>
 
 @endsection

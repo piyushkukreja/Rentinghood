@@ -47,6 +47,10 @@
     .menu-horizontal > li:not(:hover) > a {
         opacity: 0.8;
     }
+
+    .nav-container {
+        font-size: 1.15em  ;
+    }
 </style>
 <a id="start"></a>
 
@@ -77,22 +81,17 @@
             <div class="col-md-6 text-right text-center-xs">
                 <ul class="social-list list-inline list--hover">
                     <li class="list-inline-item">
-                        <a href="#">
-                            <i class="socicon socicon-google icon icon--xs"></i>
+                        <a href="https://www.linkedin.com/company/rentinghood">
+                            <i class="socicon socicon-linkedin icon icon--xs"></i>
                         </a>
                     </li>
                     <li class="list-inline-item">
-                        <a href="#">
-                            <i class="socicon socicon-twitter icon icon--xs"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a href="#">
+                        <a href="https://www.facebook.com/rentinghood">
                             <i class="socicon socicon-facebook icon icon--xs"></i>
                         </a>
                     </li>
                     <li class="list-inline-item">
-                        <a href="#">
+                        <a href="https://www.linkedin.com/company/rentinghood">
                             <i class="socicon socicon-instagram icon icon--xs"></i>
                         </a>
                     </li>

@@ -23,10 +23,9 @@ class CreateUsersTable extends Migration
             $table->string('aadhaar_id')->default('0');
             $table->integer('reviews')->default(0);
             $table->integer('total_rating')->default(0);
-            $table->integer('city_id')->unsigned();
-            $table->foreign('city_id')->references('id')->on('cities');
-            $table->integer('pin_code_id')->unsigned();
-            $table->foreign('pin_code_id')->references('id')->on('pin_codes');
+            $table->string('address');
+            $table->float('lat');
+            $table->float('lng');
             $table->tinyInteger('verified')->unsigned();
             $table->string('profile_picture')->default('avatar.png');
             $table->rememberToken();

@@ -14,6 +14,14 @@
             font-weight: 600;
         }
 
+        .menu-horizontal li:hover {
+            transform: translate(0, -5px);
+        }
+
+        .menu-horizontal li {
+            transition: transform .3s ease-out;
+        }
+
         .logo-dark, .logo-light {
             font-weight: 900; margin-bottom: 0;
         }
@@ -182,8 +190,8 @@
         <section class="switchable feature-large" style="padding-top: 5em;">
             <div class="container">
                 <div class="row justify-content-around">
-                    <div class="col-md-6">
-                        <img alt="Image" class="border--round" src="{{ asset('img/aboutus/avatar-wide-3.jpg') }}" />
+                    <div class="col-md-5">
+                        <img alt="Image" class="rounded-circle" src="{{ asset('img/aboutus/avatar-1.JPG') }}" />
                     </div>
                     <div class="col-md-6 col-lg-5">
                         <div class="switchable__text">
@@ -221,8 +229,8 @@
         <section class="switchable switchable--switch feature-large">
             <div class="container">
                 <div class="row justify-content-around">
-                    <div class="col-md-6">
-                        <img alt="Image" class="border--round" src="{{ asset('img/aboutus/avatar-wide-4.jpg') }}" />
+                    <div class="col-md-5">
+                        <img alt="Image" class="rounded-circle" src="{{ asset('img/aboutus/avatar-2.jpg') }}" />
                     </div>
                     <div class="col-md-6 col-lg-5">
                         <div class="switchable__text">
@@ -260,37 +268,22 @@
         <section class="switchable feature-large">
             <div class="container">
                 <div class="row justify-content-around">
-                    <div class="col-md-6">
-                        <img alt="Image" class="border--round" src="{{ asset('img/aboutus/avatar-wide-1.jpg') }}" />
+                    <div class="col-md-5">
+                        <img alt="Image" class="rounded-circle" src="{{ asset('img/aboutus/avatar-3.jpeg') }}" />
                     </div>
-                    <div class="col-md-6 col-lg-5">
+                    <div class="col-md-8 col-lg-5">
                         <div class="switchable__text">
                             <div class="text-block">
                                 <h2>Pankaj Ajwani</h2>
-                                <span>Front-End Developer</span>
+                                <span>Full Stack Web-developer</span>
                             </div>
                             <p class="lead">
-                                Launching an attractive and scalable website quickly and affordably is important for modern startups &mdash; Stack offers massive value without looking 'bargain-bin'.
+                                Being an undergrad hasn't stopped Pankaj from taking on multidisciplinary projects, which showcase his exemplary work. Having skills which span through the dimensions of website and application development, he is self-disciplined in multiple programming languages.
                             </p>
                             <ul class="social-list list-inline list--hover">
                                 <li>
-                                    <a href="#">
+                                    <a href="mailto:pankaj.ajwani0409@gmail.com">
                                         <i class="socicon socicon-mail icon icon--xs"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="socicon socicon-google icon icon--xs"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="socicon socicon-twitter icon icon--xs"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="socicon socicon-instagram icon icon--xs"></i>
                                     </a>
                                 </li>
                             </ul>

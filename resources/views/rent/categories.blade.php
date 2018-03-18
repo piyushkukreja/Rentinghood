@@ -6,6 +6,15 @@
             padding-right: 1em;
             padding-left: 1em;
         }
+
+        .category {
+            transition: transform 0.3s ease-out;
+        }
+
+        .category:hover {
+            transform: translate(0,-5px);
+        }
+
         @media (max-width: 577px) {
             h4 {
                 margin-bottom: 0;

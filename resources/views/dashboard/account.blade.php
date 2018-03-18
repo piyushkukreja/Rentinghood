@@ -30,6 +30,11 @@
 
         .loading {
             background: url({{ asset('img/loading.gif') }}) center no-repeat;
+            color: transparent;
+        }
+
+        .loading * {
+            color: transparent;
         }
 
         .account-tab {
@@ -131,7 +136,7 @@
                 </a>
                 <a class="btn btn--primary show_contact" href="#">
                     <span class="btn__text">
-                        Get ontact
+                        Get contact
                     </span>
                 </a>
             </div>
@@ -268,24 +273,12 @@
                                                    value="{{ Auth::user()->email }}" required disabled>
                                         </div>
 
-                                        <div id="user_location" class="col-md-12">
-                                            <label>Location:</label>
-                                            <div class="input-select">
-                                                <select class="city" name="city_id" required>
-                                                    @foreach( $cities as $city )
-                                                        <option value="{{ $city->id }}"{{ Auth::user()->city_id == $city->id ? " selected" : "" }}>{{ ucwords($city->name) }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @if ($errors->has('city_id'))
-                                                    <span class="color--error"><strong>{{ $errors->first('city_id') }}</strong></span>
-                                                @endif
-                                            </div>
-                                            <div class="input-select">
-                                                <select class="pin_code" name="pin_code_id" required>
-                                                </select>
-                                                @if ($errors->has('pin_code_id'))
-                                                    <span class="color--error"><strong>{{ $errors->first('pin_code_id') }}</strong></span>
-                                                @endif
+                                        <div class="col-md-12">
+                                            <label>Address:</label>
+                                            <input id="user_address" name="address" type="text" value="">
+                                            <div id="user_latlng" class="hidden">
+                                                <input name="lat" type="hidden" value="">
+                                                <input name="lng" type="hidden" value="">
                                             </div>
                                         </div>
 
@@ -437,24 +430,12 @@
                                             @endif
                                         </div>
 
-                                        <div id="product_location" class="col-md-12">
-                                            <label>Location:</label>
-                                            <div class="input-select">
-                                                <select class="city" name="city_id" required>
-                                                    @foreach( $cities as $city )
-                                                        <option value="{{ $city->id }}"{{ Auth::user()->city_id == $city->id ? " selected" : "" }}>{{ ucwords($city->name) }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @if ($errors->has('city_id'))
-                                                    <span class="color--error"><strong>{{ $errors->first('city_id') }}</strong></span>
-                                                @endif
-                                            </div>
-                                            <div class="input-select">
-                                                <select class="pin_code" name="pin_code_id" required>
-                                                </select>
-                                                @if ($errors->has('pin_code_id'))
-                                                    <span class="color--error"><strong>{{ $errors->first('pin_code_id') }}</strong></span>
-                                                @endif
+                                        <div class="col-md-12">
+                                            <label>Address:</label>
+                                            <input id="product_address" name="address" type="text" value="">
+                                            <div id="product_latlng" class="hidden">
+                                                <input name="lat" type="hidden" value="">
+                                                <input name="lng" type="hidden" value="">
                                             </div>
                                         </div>
 
@@ -502,8 +483,12 @@
         </section>
     </div>
 
-    {{--dropzone.js--}}
+    {{--Dropzone Plugin--}}
     <script src="{{ asset('js/dropzone.js') }}"></script>
+
+    {{--Places API and Geocomplete plugin --}}
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDtfAuKKrycjdbscKGGfbCg0R5udw3N73g&amp;libraries=places"></script>
+    <script src="{{ asset('js/jquery.geocomplete.min.js') }}"></script>
 
     <script type="text/javascript">
 
@@ -1119,51 +1104,26 @@
                 changeRequiredStates();
             });
 
+            //js for Address
+            var defaultBounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(19.296441, 72.9864994),
+                new google.maps.LatLng(18.8465126, 72.9042434)
+            );
 
-            //js for pin_codes
-            function changePinCodes(location, val) {
-
-                var pin_code_selector = location.find($('.pin_code'));
-                pin_code_selector.empty();
-                var city_id = location.find($('.city')).val();
-                var csrf_token = '{{ csrf_token() }}';
-
-                $.ajax(
-                    {
-                        type: 'POST',
-                        url: '{{ route('get_pin_codes') }}',
-                        data: {_token: csrf_token, city_id: city_id},
-                        dataType: 'JSON',
-                        success: function (returned_data) {
-
-                            $.each(returned_data, function (i, d) {
-
-                                if (val == d.id) {
-                                    pin_code_selector.append('<option value="' + d.id + '" selected>' + d.pin_code + '</option>');
-                                }
-                                else {
-                                    pin_code_selector.append('<option value="' + d.id + '">' + d.pin_code + '</option>');
-                                }
-
-                            });
-
-                        }
-                    }
-                );
-            }
-
-            var product_location = $('#product_location');
-            var user_location = $('#user_location');
-
-            changePinCodes(product_location, '{{ Auth::user()->pin_code_id }}');
-            changePinCodes(user_location, '{{ Auth::user()->pin_code_id }}');
-
-            product_location.find('.city').on('change', function () {
-                changePinCodes(product_location, 0);
+            $("#user_address").geocomplete({
+                location: '{{ Auth::user()->address }}',
+                details: "#user_latlng",
+                bounds: defaultBounds
+            }).bind("geocode:result", function (event, result) {
+                console.log(result);
             });
 
-            user_location.find('.city').on('change', function () {
-                changePinCodes(user_location, 0);
+            $("#product_address").geocomplete({
+                location: '{{ Auth::user()->address }}',
+                details: "#product_latlng",
+                bounds: defaultBounds
+            }).bind("geocode:result", function (event, result) {
+                console.log('Product :' + result);
             });
 
             //js for alerts

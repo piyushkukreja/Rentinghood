@@ -26,10 +26,9 @@ class CreateProductsTable extends Migration
             $table->integer('rate_1')->unsigned();
             $table->integer('rate_2')->unsigned();
             $table->integer('rate_3')->unsigned();
-            $table->integer('city_id')->unsigned();
-            $table->foreign('city_id')->references('id')->on('cities');
-            $table->integer('pin_code_id')->unsigned();
-            $table->foreign('pin_code_id')->references('id')->on('pin_codes');
+            $table->string('address');
+            $table->float('lat');
+            $table->float('lng');
             $table->string('image');
 
             $table->timestamps();
