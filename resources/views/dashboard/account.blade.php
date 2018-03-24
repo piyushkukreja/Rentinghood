@@ -1,8 +1,6 @@
 @extends('layouts.app')
 @extends('layouts.navbar')
 @section('content')
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
-          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <style>
         #alert .fa-close {
             position: absolute;
@@ -11,54 +9,50 @@
             margin-right: 15px;
             cursor: pointer;
         }
-
         .menu-vertical li:not(:hover):not(.dropdown--active) {
             opacity: 1;
         }
-
         .message i.fa-check-circle, .message i.fa-times-circle {
             font-size: 2em;
             float: right;
         }
-
         .message .fa-check-circle {
             color: #4ebf56;
         }
         .message .fa-times-circle {
             color: #e23636;
         }
-
         .loading {
             background: url({{ asset('img/loading.gif') }}) center no-repeat;
             color: transparent;
         }
-
         .loading * {
             color: transparent;
         }
-
         .account-tab {
             min-height: 500px;
         }
-
         @media (max-width: 767px) {
             .boxed div[class*='col-']:not(.boxed) {
                 padding-left: 15px;
                 padding-right: 15px;
             }
-
+            .tabs li:not(:last-child) {
+                border-bottom: 1px solid #ECECEC;
+                border-right: 1px solid #ECECEC;
+            }
+            .tabs li {
+                display: inline-block;
+            }
         }
-
         #account-messages h4, #account-messages p {
             margin-bottom: 0.5em;
         }
-
         #account-messages .boxed {
             padding: 1.2em;
             margin-bottom: 0.7em;
             border-width: 1.5px;
         }
-
         .badge-count {
             line-height: 1.5;
             display: inline-block;
@@ -70,11 +64,9 @@
             border-radius: 50%;
             margin: auto;
         }
-
         .account-tab {
             min-height: 100vh;
         }
-
     </style>
 
     <div id="request_message_template" style="display: none;">
@@ -145,7 +137,7 @@
     </div>
     <div id="messages_modal_template" class="hidden">
         <div class="modal-instance">
-            <div class="modal-container">
+            <div id="new_message_modal" class="modal-container">
                 <div class="modal-content">
                     <div class="boxed boxed--lg">
                         <h2>You have new messages</h2>
@@ -162,7 +154,7 @@
                     <div class="modal-close modal-close-cross"></div>
                 </div>
             </div>
-            <a href="#" class="modal-trigger hidden"></a>
+            <a id="new_message_modal_trigger" href="#" class="modal-trigger hidden"></a>
         </div>
     </div>
     <div id="notifications_template" style="display: none;">
@@ -485,10 +477,6 @@
 
     {{--Dropzone Plugin--}}
     <script src="{{ asset('js/dropzone.js') }}"></script>
-
-    {{--Places API and Geocomplete plugin --}}
-    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDtfAuKKrycjdbscKGGfbCg0R5udw3N73g&amp;libraries=places"></script>
-    <script src="{{ asset('js/jquery.geocomplete.min.js') }}"></script>
 
     <script type="text/javascript">
 

@@ -2,19 +2,66 @@
 @extends('layouts.navbar')
 @section('content')
     <style>
+        #scroll_to_content {
+            position: absolute;
+            width: 3em;
+            height: 3em;
+            background: #fff;
+            right: 1em;
+            margin-left: -1.85em;
+            border-radius: 50%;
+            text-align: center;
+            top: 1em;
+            padding-top: 8px;
+            box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.04);
+            z-index: 98;
+            border: 1px solid #ececec;
+            transition: 0.2s ease-out;
+            -webkit-transition: 0.2s ease-out;
+            -moz-transition: 0.2s ease-out;
+        }
+        #scroll_to_content i {
+            color: #03A9F4;
+        }
+        #scroll_to_content:hover {
+            transform: translate3d(0, -5px, 0);
+            -webkit-transform: translate3d(0, -5px, 0);
+        }
         .category_image {
-            padding : 1em;
+            padding-right: 1em;
+            padding-left: 1em;
         }
         .category {
             transition: transform 0.3s ease-out;
         }
-
         .category:hover {
             transform: translate(0,-5px);
         }
+        section.how_to_section {
+            padding-top: 3em;
+            padding-bottom: 3em;
+        }
+        @media (max-width: 577px) {
+            .feature i + h4 {
+                margin-top: 0;
+            }
+            .feature i {
+                margin-bottom: 0;
+            }
+            h4 {
+                margin-bottom: 0;
+            }
+            .masonry__item {
+                margin-bottom: 0.3em;
+            }
+            section.how_to_section {
+                padding-top: 1em;
+                padding-bottom: 1em;
+            }
+        }
     </style>
     <div class="main-container">
-        <section class="text-center bg--secondary" style="padding-bottom: 3em; padding-top: 3em;">
+        <section class="title_section text-center bg--secondary">
             <div class="container">
                 <div class="row">
                     <div class="col-md-10 col-lg-8">
@@ -28,12 +75,15 @@
             </div>
             <!--end of container-->
         </section>
-        <section class="text-center" style="padding-bottom: 3em; padding-top: 3em;">
+        <section class="text-center how_to_section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="feature feature-3 boxed boxed--lg boxed--border">
-                            <i class="icon icon--lg icon-Mail-3"></i>
+                        <div class="feature feature-3 boxed boxed--sm boxed--border">
+                            <a id="scroll_to_content" href="#content">
+                                <i class="stack-interface stack-down-open-big"></i>
+                            </a>
+                            <i class="fa fa-sitemap fa-5x"></i>
                             <h4>Select a category</h4>
                             <p>
                                 Choose a category to which your product belongs to.
@@ -42,8 +92,8 @@
                         <!--end feature-->
                     </div>
                     <div class="col-md-4">
-                        <div class="feature feature-3 boxed boxed--lg boxed--border">
-                            <i class="icon icon--lg icon-Code-Window"></i>
+                        <div class="feature feature-3 boxed boxed--sm boxed--border">
+                            <i class="fa fa-list-alt fa-5x"></i>
                             <h4>Fill out a form</h4>
                             <p>
                                 Provide a few pictures,
@@ -55,9 +105,10 @@
                         <!--end feature-->
                     </div>
                     <div class="col-md-4">
-                        <div class="feature feature-3 boxed boxed--lg boxed--border">
-                            <i class="icon icon--lg icon-Mail-3"></i>
+                        <div class="feature feature-3 boxed boxed--sm boxed--border">
+                            <i class="fa fa-bell fa-5x"></i>
                             <h4>Get notified</h4>
+                            <a id="content"></a>
                             <p>
                                 You’ll get a notification on your mobile number if any neighbour is interested in your product.
                             </p>
@@ -69,7 +120,7 @@
             </div>
             <!--end of container-->
         </section>
-        <section class="space--sm">
+        <section class="space--sm categories_section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -108,10 +159,19 @@
         $(document).ready(function () {
 
             $('.category').find('img').each( function(){
-
                 $( this ).attr( 'src', $( this ).attr( 'data-src' ) );
-
             });
+
+            $('#scroll_to_content').click(function (e) {
+                e.preventDefault();
+                scrollToItem($($(this).attr('href')));
+            });
+
+            function scrollToItem(item) {
+                $('html, body').animate({
+                    scrollTop: item.offset().top
+                }, 1000);
+            }
 
         });
     </script>

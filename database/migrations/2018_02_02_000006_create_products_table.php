@@ -27,8 +27,8 @@ class CreateProductsTable extends Migration
             $table->integer('rate_2')->unsigned();
             $table->integer('rate_3')->unsigned();
             $table->string('address');
-            $table->float('lat');
-            $table->float('lng');
+            $table->decimal('lat', 9, 6);
+            $table->decimal('lng', 9, 6);
             $table->string('image');
 
             $table->timestamps();

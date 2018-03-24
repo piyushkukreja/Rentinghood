@@ -324,7 +324,7 @@ body {
 }
 @media all and (max-width: 767px) {
   .text-center-xs {
-    text-align: center;
+    text-align: center!important;
   }
   .text-left-xs {
     text-align: left;

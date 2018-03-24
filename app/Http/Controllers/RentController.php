@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Categories;
+use Illuminate\Support\Facades\Session;
 
 class RentController extends Controller
 {
@@ -31,11 +32,21 @@ class RentController extends Controller
         return view('rent.categories', $data);
     }
 
+    public function checkSessionHasLocation()
+    {
+        $response = [];
+        if(Session::has('location') && Session::has('lat') && Session::has('lng'))
+            $response['message'] = 'success';
+        else
+            $response['message'] = 'failed';
+        return $response;
+    }
+
     public function subcategories($category_name)
     {
         $category = DB::table('categories')->where('name', $category_name)->first();
         if(!$category)
-            return '';
+            return abort('404');
         $data['subcategories'] = DB::table('subcategories')->where('category_id', $category->id)->orderBy('name')->get();
         $data['categories'] = DB::table('categories')->get();
         $data['category'] = $category;
@@ -44,14 +55,31 @@ class RentController extends Controller
     }
     public function subcategory_products(Request $request)
     {
+        if(!(Session::has('location') && Session::has('lat') && Session::has('lng')))
+            return redirect(route('rent_categories'));
+        else {
+            $lng = Session::get('lng');
+            $lat = Session::get('lat');
+        }
         $subcategory_id = $request->input('subcategory_id');
         if($subcategory_id != 0)
-            return DB::table('products')->where('subcategory_id', $request->input('subcategory_id'))->where('availability', 1)->get();
+            return DB::table('products')
+                ->where('subcategory_id', $request->input('subcategory_id'))
+                ->where('availability', 1)
+                ->whereRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng) < 20')
+                ->orderByRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng)')
+                ->get();
         else {
             $category_id = $request->input('category_id');
-            return DB::table('products')->whereIn('subcategory_id', function ($query) use ($category_id) {
-                $query->select('id')->from(with(new Subcategories)->getTable())->where('category_id', $category_id);
-            })->where('availability', 1)->get();
+            return DB::table('products')
+                ->whereIn('subcategory_id', function ($query) use ($category_id) {
+                    $query->select('id')
+                        ->from(with(new Subcategories)->getTable())
+                        ->where('category_id', $category_id);
+            })->where('availability', 1)
+                ->whereRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng) < 10')
+                ->orderByRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng)')
+                ->get();
         }
     }
 

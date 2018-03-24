@@ -1,7 +1,12 @@
 @extends('layouts.app')
 @extends('layouts.navbar')
 @section('content')
-    <div class="main-container bg--secondary" style="min-height: 100vh;">
+    <style>
+        .main-container {
+            min-height: 100vh;
+        }
+    </style>
+    <div class="main-container bg--secondary">
         <section class="text-center bg--secondary" style="padding-top: 10em;">
             <div class="container">
                 <div class="row" id="send_otp_div">

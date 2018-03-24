@@ -153,29 +153,6 @@
             </div>
             <!--end of container-->
         </section>
-        {{--<section class="text-center">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-11">
-                        <div class="slider border--round" data-arrows="true" data-paging="true">
-                            <ul class="slides">
-                                <li>
-                                    <img alt="Image" src="img/gallery-1.jpg" />
-                                </li>
-                                <li>
-                                    <img alt="Image" src="img/cowork-1.jpg" />
-                                </li>
-                                <li>
-                                    <img alt="Image" src="img/cowork-5.jpg" />
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!--end of row-->
-            </div>
-            <!--end of container-->
-        </section>--}}
         <section class="text-center bg--primary" style="padding-bottom: 1em; padding-top: 2em; box-shadow: 0 23px 40px 0 rgba(0, 0, 0, 0.2);">
             <div class="container">
                 <div class="row">
@@ -197,7 +174,7 @@
                         <div class="switchable__text">
                             <div class="text-block">
                                 <h2>Bhushan Punjabi</h2>
-                                <span>Co-Founder &amp; Designer</span>
+                                <span>Founder &amp; CEO</span>
                             </div>
                             <p class="lead">
                                 Launching an attractive and scalable website quickly and affordably is important for modern startups &mdash; Stack offers massive value without looking 'bargain-bin'.
@@ -236,7 +213,7 @@
                         <div class="switchable__text">
                             <div class="text-block">
                                 <h2>Bharti Udasi</h2>
-                                <span>Co-Founder &amp; Developer</span>
+                                <span>Chief Creative Officer</span>
                             </div>
                             <p class="lead">
                                 Launching an attractive and scalable website quickly and affordably is important for modern startups &mdash; Stack offers massive value without looking 'bargain-bin'.
@@ -275,7 +252,7 @@
                         <div class="switchable__text">
                             <div class="text-block">
                                 <h2>Pankaj Ajwani</h2>
-                                <span>Full Stack Web-developer</span>
+                                <span>Chief Technical Officer</span>
                             </div>
                             <p class="lead">
                                 Being an undergrad hasn't stopped Pankaj from taking on multidisciplinary projects, which showcase his exemplary work. Having skills which span through the dimensions of website and application development, he is self-disciplined in multiple programming languages.

@@ -1,20 +1,18 @@
 @extends('layouts.app')
 @extends('layouts.navbar')
+@extends('layouts.location_field')
 @section('content')
     <style>
         .category_image {
             padding-right: 1em;
             padding-left: 1em;
         }
-
         .category {
             transition: transform 0.3s ease-out;
         }
-
         .category:hover {
             transform: translate(0,-5px);
         }
-
         @media (max-width: 577px) {
             h4 {
                 margin-bottom: 0;
@@ -24,8 +22,33 @@
             }
         }
     </style>
+
+    <!-- LOCATION MODAL -->
+    <div id="location_modal_template" class="hidden">
+        <div class="modal-instance">
+            <div id="location_modal" class="modal-container">
+                <div class="modal-content">
+                    <div class="boxed boxed--lg">
+                        <h2>Tell us your location</h2>
+                        <hr class="short">
+                        <p class="lead">
+                            Your location will help us show products which are near you.
+                        </p>
+                        <div class="text-center">
+                            <a class="btn btn--lg btn--primary type--uppercase" href="#">
+                                <span class="btn__text">Update</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="modal-close modal-close-cross"></div>
+                </div>
+            </div>
+            <a href="#" id="location_modal_trigger" class="modal-trigger"></a>
+        </div>
+    </div>
+
     <div class="main-container">
-        <section class="text-center bg--secondary" style="padding-bottom: 3em; padding-top: 3em;">
+        <section class="title_section text-center bg--secondary">
             <div class="container">
                 <div class="row">
                     <div class="col-md-10 col-lg-8">
@@ -39,7 +62,7 @@
             </div>
             <!--end of container-->
         </section>
-        <section class="space--sm">
+        <section class="space--sm categories_section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -80,15 +103,67 @@
     <script>
         $(document).ready(function () {
 
+            //js for LOCATION FIELD
+            function saveLocation() {
+                var csrf_token = '{{ csrf_token() }}';
+                var location = $('#location_field').val();
+                var lat = $('#lat_field').val();
+                var lng = $('#lng_field').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('save_location') }}',
+                    data: { _token: csrf_token, location: location, lat: lat, lng: lng}
+                });
+            }
+
+                    @if(Session::has('location'))
+
+            var location_field = '{{ Session::get('location') }}';
+
+            $('#location_field').geocomplete({
+                location: location_field,
+                details: "#location_form",
+            }).bind("geocode:result", function (event, result) {
+                saveLocation();
+            });
+
+            @else
+
+            $('#location_field').geocomplete({ details: "#location_form" }).bind("geocode:result", function (event, result) {
+                saveLocation();
+            });
+
+            @endif
+
+            $('.modal-content').find('a').on('click', function (e) {
+                e.preventDefault();
+                $('.modal-container').removeClass('modal-active');
+                $('#location_field').focus();
+            });
+
+            //js for CATEGORY CLICK
             $('.category_link').on('click', function (e) {
 
+                var clicked_category = $(this);
                 e.preventDefault();
-                var name =  $(this).siblings('.category_name_info').html();
-                var url = '{{ \Illuminate\Support\Facades\URL::to('/rent/category') }}/' + name;
-                $(location).attr('href', url);
+                $.ajax({
+                    url: '{{ route('check_location') }}',
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (response) {
+                        if(response.message == 'success') {
+                            var name =  clicked_category.siblings('.category_name_info').html();
+                            var url = '{{ \Illuminate\Support\Facades\URL::to('/rent/category') }}/' + name;
+                            $(location).attr('href', url);
+                        } else {
+                            $('.modal-trigger').trigger('click');
+                        }
+                    }
+                });
 
             });
 
+            //js for ASYNC IMAGE LOAD
             $('.category').find('img').each( function(){
 
                 $( this ).attr( 'src', $( this ).attr( 'data-src' ) );

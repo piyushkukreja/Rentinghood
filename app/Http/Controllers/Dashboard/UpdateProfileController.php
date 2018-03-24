@@ -40,8 +40,8 @@ class UpdateProfileController extends Controller
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
                 'address' => 'required|string',
-                'lat' => 'required|float',
-                'lng' => 'required|float',
+                'lat' => 'required|numeric',
+                'lng' => 'required|numeric',
 
             ]);
             $request->session()->remove('failure');

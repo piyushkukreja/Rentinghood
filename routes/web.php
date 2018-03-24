@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 //Landing Page
@@ -27,6 +27,15 @@ Route::get('/clear-cache', function() {
     $exitCode = Artisan::call('cache:clear');
     return 'done';
 });
+
+Route::post('/save-location', function (Request $request) {
+
+    Session::put('location', $request->input('location'));
+    Session::put('lat', $request->input('lat'));
+    Session::put('lng', $request->input('lng'));
+
+
+})->name('save_location');
 
 //Auth Routes
 
@@ -82,6 +91,7 @@ Route::post('/rent/contact_owner', 'ProductsController@contactOwner')->name('con
 Route::post('/rent/get_unavailable_dates', 'RentController@getUnavailableDates')->name('get_unavailable_dates');
 Route::post('/rent/check_availability', 'RentController@checkAvailability')->name('check_availability');
 Route::post('/rent/check_request_placed', 'ProductsController@checkForPlacedRequest')->name('check_request_placed');
+Route::get('/rent/check_location', 'RentController@checkSessionHasLocation')->name('check_location');
 
 //Lend Routes
 Route::post('/subcategories','RentController@sendSubcategories')->name('get_subcategories');

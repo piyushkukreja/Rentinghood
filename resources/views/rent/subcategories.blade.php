@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @extends('layouts.navbar')
+@extends('layouts.location_field')
 @section('content')
     <style>
         .loading {

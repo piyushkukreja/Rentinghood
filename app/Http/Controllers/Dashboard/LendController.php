@@ -37,8 +37,8 @@ class LendController extends Controller
             'name' => 'required',
             'duration' => 'required',
             'address' => 'required|string',
-            'lat' => 'required|float',
-            'lng' => 'required|float',
+            'lat' => 'required|numeric',
+            'lng' => 'required|numeric',
             'file.0' => 'image|max:2000|required'
 
         ];

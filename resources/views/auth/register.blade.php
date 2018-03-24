@@ -1,6 +1,22 @@
 @extends('layouts.app')
 @extends('layouts.navbar')
 @section('content')
+    <style>
+        @media (max-width: 767px) {
+
+            .map_canvas {
+                min-height: 50vh;
+            }
+            .main-container > section h2 {
+                margin-top: 1em;
+                color: #fff;
+            }
+
+        }
+        .main-container > section {
+            font-size: 1.05em;
+        }
+    </style>
     <div class="main-container">
         <section class="feature-large height-100 image--light imagebg">
             <div class="background-image-holder">
@@ -102,8 +118,6 @@
             <!--end of container-->
         </section>
     </div>
-    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDtfAuKKrycjdbscKGGfbCg0R5udw3N73g&amp;libraries=places"></script>
-    <script src="{{ asset('js/jquery.geocomplete.min.js') }}"></script>
 
     <script>
 

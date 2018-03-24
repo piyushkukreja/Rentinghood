@@ -6,73 +6,37 @@
         ol.breadcrumbs, ol.breadcrumbs > li {
             margin-bottom: 0;
         }
-
         label {
             font-size: 1em;
         }
-
         #from, #to {
             cursor: pointer;
         }
-
         .pricing__head.boxed {
             padding: 1em;
         }
-
         #verify_otp {
             margin-top: 1em;
         }
-
-        .modal-container .modal-content .container {
-            max-width: 100%;
-        }
-
-        .modal-container .modal-content {
-            width: auto; !important;
-            padding: 0;
-            max-width: 90vw;
-        }
-
         #otp_modal .boxed {
             margin-bottom: 0;
         }
-
         @media (min-width: 576px)  {
-            .modal-container .modal-content {
-                width: auto; !important;
-                max-width: 90vw;
-            }
-
-            #login_modal .modal-content, #otp_modal .modal-content { max-width: 500px; }
-
-
         }
-
         @media (min-width: 768px) {
-
-            .modal-container .modal-content { max-width: 70vw; }
-
             .picker__weekday { padding: 0.6em; }
-
-            #login_modal .modal-content, #otp_modal .modal-content { max-width: 500px; }
-
         }
-
         @media (min-width: 992px) {  .picker__weekday { padding: 0.9em; } }
-
         @media (max-width: 990px) {
             #product_hr {
                 margin-top: 0;
                 margin-bottom: 0.5em;
             }
         }
-
         #contact_owner {
-
             font-size: 1em;
             margin-top: 0.5em;
             margin-bottom: 5em;
-
         }
     </style>
     <div class="main-container">
@@ -352,8 +316,6 @@
         </div>
     </div>
 
-
-
     <!-- CONTACT OWNER MODAL -->
     <div class="modal-instance">
         <a id="contact_modal_trigger" class="btn modal-trigger hidden" href="#"></a>
@@ -484,7 +446,6 @@
 
             });
 
-
             //js for Register Modal
             var register_form = $('#register_form');
             register_form.submit(function (e) {
@@ -550,7 +511,6 @@
             //js for Placing a request
             var placed = false;
             $('#contact_owner_form').submit(function (e) {
-
                 e.preventDefault();
                 e.stopPropagation();
                 if (!placed) {

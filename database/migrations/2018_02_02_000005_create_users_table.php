@@ -24,8 +24,8 @@ class CreateUsersTable extends Migration
             $table->integer('reviews')->default(0);
             $table->integer('total_rating')->default(0);
             $table->string('address');
-            $table->float('lat');
-            $table->float('lng');
+            $table->decimal('lat', 9, 6);
+            $table->decimal('lng', 9, 6);
             $table->tinyInteger('verified')->unsigned();
             $table->string('profile_picture')->default('avatar.png');
             $table->rememberToken();
