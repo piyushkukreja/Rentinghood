@@ -68,7 +68,8 @@ Route::get('/account/{tab?}', 'Dashboard\HomeController@index')->name('account')
 //Inventory Routes
 Route::get('/account/inventory/products', 'Dashboard\HomeController@getInventory')->name('get_inventory');
 Route::post('/account/inventory/update_availability', 'Dashboard\HomeController@updateAvailability')->name('update_availability');
-Route::get('/account/inventory/{id}', 'Dashboard\LendController@editPost')->name('edit_product');
+Route::get('/account/inventory/{id}', 'Dashboard\LendController@getProductDetails')->name('inventory_product_details');
+Route::post('/account/inventory/edit_product', 'Dashboard\LendController@editPost')->name('edit_product');
 
 //Messages Routes
 Route::get('/account/messages/get_messages', 'Dashboard\HomeController@getMessages')->name('get_messages');

@@ -259,7 +259,7 @@
                             </p>
                             <ul class="social-list list-inline list--hover">
                                 <li>
-                                    <a href="mailto:pankaj.ajwani0409@gmail.com">
+                                    <a target="_blank" href="mailto:pankaj.ajwani0409@gmail.com">
                                         <i class="socicon socicon-mail icon icon--xs"></i>
                                     </a>
                                 </li>

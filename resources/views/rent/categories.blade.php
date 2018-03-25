@@ -116,22 +116,22 @@
                 });
             }
 
-                    @if(Session::has('location'))
+            @if(Session::has('location'))
 
-            var location_field = '{{ Session::get('location') }}';
+                var location_field = '{{ Session::get('location') }}';
 
-            $('#location_field').geocomplete({
-                location: location_field,
-                details: "#location_form",
-            }).bind("geocode:result", function (event, result) {
-                saveLocation();
-            });
+                $('#location_field').geocomplete({
+                    location: location_field,
+                    details: "#location_form"
+                }).bind("geocode:result", function (event, result) {
+                    saveLocation();
+                });
 
             @else
 
-            $('#location_field').geocomplete({ details: "#location_form" }).bind("geocode:result", function (event, result) {
-                saveLocation();
-            });
+                $('#location_field').geocomplete({ details: "#location_form" }).bind("geocode:result", function (event, result) {
+                    saveLocation();
+                });
 
             @endif
 

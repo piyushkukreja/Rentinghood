@@ -101,19 +101,72 @@ class LendController extends Controller
 
     }
 
-    public function editPost($id)
+    public function getProductDetails($id)
     {
         $product = DB::table('products')->where('id', $id)->first();
         if($product && ($product->lender_id == Auth::user()->id))
+        {
+            $subcategory = DB::table('subcategories')->where('id', $product->subcategory_id)->first();
+            $product->subcategory_name = $subcategory->name;
+            $product->category_name = DB::table('categories')->where('id', $subcategory->category_id)->first()->name;
+            $product->message = 'success';
             return json_encode($product);
+        }
         else {
 
             $product = new \stdClass();
             $product->id = 0;
+            $product->message = 'failed';
             return json_encode($product);
 
         }
     }
 
+    public function editPost(Request $request)
+    {
+        $product = DB::table('products')->where('id', $request->input('id'))->first();
+        if((!$product) || (!($product->lender_id == Auth::user()->id)))
+        {
+            $request->session()->flash('failure', 'You are not authorized to edit this product.');
+            return redirect()->route('account', 'inventory');
+        }
+        $rules = [
+            'duration' => 'required',
+            'address' => 'required|string',
+            'lat' => 'required|numeric',
+            'lng' => 'required|numeric',
+        ];
 
+        if($request->has('duration'))
+        {
+            if($request->has('duration') > 0)
+                $rules['rate1'] = 'required|integer';
+            if($request->has('duration') > 1)
+                $rules['rate2'] = 'required|integer';
+        }
+
+        $request->validate($rules);
+        $rate2 = $request->input('rate2') ? $request->input('rate2') : 0;
+        $rate3 = $request->input('rate3') ? $request->input('rate3') : 0;
+
+        $values = [
+            'description' => $request->input('description'),
+            'duration' => $request->input('duration'),
+            'address' => $request->input('address'),
+            'lat' => $request->input('lat'),
+            'lng' => $request->input('lng'),
+            'rate_1' => $request->input('rate1'),
+            'rate_2' => $rate2,
+            'rate_3' => $rate3,
+        ];
+
+        $result = DB::table('products')->where('id', $request->input('id'))->update($values);
+
+        if($result)
+            $request->session()->flash('success', 'Your inventory was successfully updated.');
+        else
+            $request->session()->flash('failure', 'Update was unsuccessful');
+
+        return redirect()->route('account', 'inventory');
+    }
 }

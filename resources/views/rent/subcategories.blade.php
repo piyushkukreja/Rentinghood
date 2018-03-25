@@ -173,8 +173,34 @@
 
             });
 
-            $('#all_link').trigger('click');
+        });
 
+        //js for LOCATION FIELD
+        function saveLocation() {
+            var csrf_token = '{{ csrf_token() }}';
+            var location = $('#location_field').val();
+            var lat = $('#lat_field').val();
+            var lng = $('#lng_field').val();
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('save_location') }}',
+                data: { _token: csrf_token, location: location, lat: lat, lng: lng},
+                success: function () {
+                    if($('.subcategories_list').find('li.active').find('a') == 0)
+                        $('.subcategories_list').find('li.active').find('a').trigger('click');
+                    else
+                        $('#all_link').trigger('click');
+                }
+            });
+        }
+
+        var location_field = '{{ Session::get('location') }}';
+
+        $('#location_field').geocomplete({
+            location: location_field,
+            details: "#location_form"
+        }).bind("geocode:result", function (event, result) {
+            saveLocation();
         });
 
     </script>

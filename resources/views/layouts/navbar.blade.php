@@ -7,6 +7,7 @@
 
         .menu-horizontal > li:hover > a {
             opacity: 1;
+            color: white;
         }
 
         .menu-horizontal li:hover {

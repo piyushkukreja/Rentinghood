@@ -9,6 +9,9 @@
             margin-right: 15px;
             cursor: pointer;
         }
+        #alert {
+            font-size: 1.2em;
+        }
         .menu-vertical li:not(:hover):not(.dropdown--active) {
             opacity: 1;
         }
@@ -346,7 +349,7 @@
                                         <div class="col-md-12">
                                             <label>Sub-Category:</label>
                                             <div class="input-select">
-                                                <select name="subcategory_id" id="subcategory_id"></select>
+                                                <select name="subcategory_id" id="subcategory_id" required></select>
                                             </div>
                                         </div>
 
@@ -464,14 +467,86 @@
 
                                 </form>
                             </div>
-                            <div id="account-inventory" style="@if($tab != 'inventory')display: none;@endif" class="account-tab"></div>
+                            <div id="account-inventory" style="@if($tab != 'inventory')display: none;@endif" class="account-tab">
+                                <div id="inventory_form" style="display: none;">
+                                    <h4>Update your inventory</h4>
+                                    <form id="update-form" method="POST" action="{{ route('edit_product') }}">
+                                        {{ csrf_field() }}
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Category</label>
+                                                <input type="text" name="category_id" disabled>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <label>Sub-Category:</label>
+                                                <input type="text" name="subcategory_id" disabled>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <label>Product Name</label>
+                                                <input type="text" name="name" required disabled>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <label>Description</label>
+                                                <textarea name="description" required></textarea>
+
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <label>Duration</label>
+                                                <div class="input-select">
+                                                    <select class="input-select" name="duration" required>
+                                                        <option value="0">Short Term</option>
+                                                        <option value="1">Weekly</option>
+                                                        <option value="2">Long Term</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12" style="margin-bottom: 0;">
+                                                <label>Rates (in &#8377;)</label>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <input placeholder="Short Term" type="number" name="rate1">
+                                            </div>
+
+                                            <div class="col-md-4" style="display: none;">
+                                                <input placeholder="Weekly" type="number" name="rate2">
+                                            </div>
+
+                                            <div class="col-md-4" style="display: none;">
+                                                <input placeholder="Long Term" type="number" name="rate3">
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <label>Address:</label>
+                                                <input name="address" type="text" value="">
+                                                <div id="inventory_product_latlng" class="hidden">
+                                                    <input name="lat" type="hidden" value="">
+                                                    <input name="lng" type="hidden" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-4">
+                                                <input type="submit" id="update_post"
+                                                       class="btn btn--primary type--uppercase" name="submit_post"
+                                                       value="Post">
+                                            </div>
+
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
                             <div id="account-messages" style="@if($tab != 'messages')display: none;@endif" class="account-tab"></div>
                         </div>
                     </div>
                 </div>
-                <!--end of row-->
             </div>
-            <!--end of container-->
         </section>
     </div>
 
@@ -500,7 +575,7 @@
                     })
             }
 
-            //js for URLs and tab change
+            //js for URLS and TAB TRANSITION
             function changeTab(tab) {
 
                 $('.account-tab').not('[style="display: none;"]').fadeOut( function () {
@@ -531,18 +606,18 @@
                 history.replaceState({ tab: 'profile'}, 'test', '{{ URL::to('account') }}/profile');
             @endif
 
-            //js for Message Count
+            //js for MESSAGE COUNT
             function updateCount(count) {
 
                 $('#message_count').html(count);
-                if(count == 0)
+                if(parseInt(count) == 0)
                     $('#message_count').hide();
                 else
                     $('#message_count').show();
 
             }
 
-            //js for Messages
+            //js for MESSAGES
             var requestMessageTemplate = $('#request_message_template');
             requestMessageTemplate.remove();
             requestMessageTemplate = requestMessageTemplate.html();
@@ -603,9 +678,7 @@
 
                             }
                         }
-
                     }
-
                 });
 
             }
@@ -887,7 +960,7 @@
 
             getMessages(true);
 
-            //js for Notifciations
+            //js for  NOTIFICATIONS
             var notificationTemplate = $('#notifications_template');
             notificationTemplate.remove();
             notificationTemplate = notificationTemplate.html();
@@ -911,7 +984,7 @@
 
                     type: 'POST',
                     url: '{{ route('reply_notification') }}',
-                    data: {_token: csrf_token, id: id, reply: reply},
+                    data: {_token: csrf_token, id: id, reply: reply}
 
                 });
 
@@ -956,7 +1029,7 @@
 
             getNotifications();
 
-            //js for loading inventory
+            //js for INVENTORY
             function updateAvailability(id, availability) {
 
                 var csrf = '{{ csrf_token() }}';
@@ -967,9 +1040,7 @@
                     dataType: 'JSON',
                     data: {_token: csrf, product_id: id, availability: availability},
                     success: function () {
-
                         console.log('success');
-
                     }
                 });
 
@@ -978,7 +1049,9 @@
             function loadInventory() {
 
                 var inventory_div = $('#account-inventory');
+                var inventory_form = inventory_div.find('#inventory_form').html();
                 inventory_div.html('');
+                inventory_div.append('<div id="inventory_form" style="display: none;">' + inventory_form + '</div>');
                 inventory_div.addClass('loading');
                 $.ajax({
 
@@ -995,7 +1068,7 @@
                                 '</div>');
                         }
                         else {
-                            inventory_div.html('<div class="row">' +
+                            inventory_div.append('<div id="inventory_row" class="row">' +
                                 '<div class="col-md-12">' +
                                 '<div class="masonry">' +
                                 '<div class="masonry__container masonry--active row"></div>' +
@@ -1011,10 +1084,10 @@
                                 var product = $('<div class="masonry__item col-6 col-lg-4">' +
                                     '   <div class="product">' +
                                     '       <span class="product_id_info hidden">' + d.name + '</span>' +
-                                    '       <a class="product_link" href="' + product_link + '">' +
+                                    '       <a class="inventory_product_link" href="' + product_link + '">' +
                                     '           <img class="img-fluid" style="border-radius: 5px;" alt="Image" id="" data-src="' + image + '" src="' + loading_url + '"/>' +
                                     '       </a>' +
-                                    '       <a class="block product_link" href="' + product_link + '">' +
+                                    '       <a class="block inventory_product_link" href="' + product_link + '">' +
                                     '           <div class="text-center"><h5>' + d.name + '</h5></div>' +
                                     '       </a>' +
                                     '       <form>' +
@@ -1036,37 +1109,64 @@
                                     else
                                         updateAvailability(d.id, 0);
 
-                                })
+                                });
+                                product.find('a.inventory_product_link').on('click', function (e) {
 
+                                    var inventory_form = $('#inventory_form');
+                                    e.preventDefault();
+                                    $.ajax({
+                                        url: $(this).attr('href'),
+                                        type: 'GET',
+                                        dataType: 'JSON',
+                                        success: function (response) {
+                                            if(response.message == 'success') {
+                                                inventory_form.find('input[name="category_id"]').val(ucwords(response.category_name));
+                                                inventory_form.find('input[name="subcategory_id"]').val(ucwords(response.subcategory_name));
+                                                inventory_form.find('input[name="name"]').val(response.name);
+                                                inventory_form.find('textarea[name="description"]').html(response.description);
+                                                inventory_form.find('select[name="duration"]').find('option[value="' + response.duration + '"]').attr('selected', true);
+                                                inventory_form.find('input[name="rate1"]').val(response.rate_1);
+                                                inventory_form.find('input[name="rate2"]').val(response.rate_2);
+                                                inventory_form.find('input[name="rate3"]').val(response.rate_3);
+                                                inventory_form.find('form').append('<input type="hidden" name="id" value="' + response.id + '">');
+                                                changeRequiredStates(inventory_form);
+                                                $('#inventory_row').slideUp(function () {
+                                                    inventory_form.slideDown();
+                                                });
+                                                inventory_form.find('input[name="address"]').geocomplete({
+                                                    location: response.address,
+                                                    details: $('#inventory_product_latlng'),
+                                                    bounds: defaultBounds
+                                                });
+                                            }
+                                        }
+                                    });
+                                });
                             });
                         }
                         $('.product').find('img').each(function () {
                             $(this).attr('src', $(this).attr('data-src'));
                         });
-
                     }
-
                 });
-
             }
 
             $('#inventory_link').on('click', function () {
-
                 loadInventory();
-
             });
 
             @if( $tab == 'inventory' )
                 loadInventory();
             @endif
 
-            //js for duration and rates
-            function changeRequiredStates() {
+            //js for DURATION AND RATES
+            function changeRequiredStates(form_container) {
 
-                var rate1 = $('#rate1');
-                var rate2 = $('#rate2');
-                var rate3 = $('#rate3');
-                switch ($('#duration').val()) {
+
+                var rate1 = form_container.find('input[name="rate1"]');
+                var rate2 = form_container.find('input[name="rate2"]');
+                var rate3 = form_container.find('input[name="rate3"]');
+                switch (form_container.find('select[name="duration"]').val()) {
                     case '0' :
                         rate1.prop('required', true).parent().slideDown();
                         rate2.prop('required', false).parent().slideUp();
@@ -1087,12 +1187,15 @@
 
             }
 
-            changeRequiredStates();
-            $('#duration').on('change', function () {
-                changeRequiredStates();
+            changeRequiredStates($('#lend-form'));
+            $('#lend-form').find('select[name="duration"]').on('change', function () {
+                changeRequiredStates($('#lend-form'));
+            });
+            $('#update-form').find('select[name="duration"]').on('change', function () {
+                changeRequiredStates($('#update-form'));
             });
 
-            //js for Address
+            //js for ADDRESS/LOCATION
             var defaultBounds = new google.maps.LatLngBounds(
                 new google.maps.LatLng(19.296441, 72.9864994),
                 new google.maps.LatLng(18.8465126, 72.9042434)
@@ -1114,13 +1217,13 @@
                 console.log('Product :' + result);
             });
 
-            //js for alerts
+            //js for ALERTS
             $('#alert').parent().slideDown();
             $('.fa-close').on('click', function (e) {
                 $(this).parent().parent().slideUp();
             });
 
-            //js for subcategories
+            //js for SUBCATEGORIES
             var category_selector = $('#lend-form').find($('#category_id'));
 
             function changeSubcategories() {
@@ -1143,9 +1246,7 @@
                             success: function (returned_data) {
 
                                 $.each(returned_data, function (i, d) {
-
                                     subcategory_selector.append('<option value="' + d.id + '">' + ucwords(d.name) + '</option>');
-
                                 });
 
                             }
@@ -1161,7 +1262,7 @@
 
         });
 
-        //js for Dropzone
+        //js for DROPZONE
         var previewNode = document.querySelector("#dropzone_template");
         previewNode.id = "";
         var previewTemplate = previewNode.parentNode.innerHTML;
@@ -1191,16 +1292,13 @@
                         $('#pictures_div').append('<span id="pictures_error" style="display: none;" class="color--error"><strong>Upload atleast one picture.</strong></span>');
                         $('#pictures_error').fadeIn();
                     }
-
                 });
-
                 this.on("addedfile", function (file) {
                     files++;
                 });
                 this.on("removedfile", function (file) {
                     files--;
                 });
-
                 this.on("successmultiple", function (files, response) {
                     window.location = '{{ route('account', ['inventory']) }}';
                 });
@@ -1208,7 +1306,6 @@
                     location.reload();
                 });
             }
-
         };
 
 

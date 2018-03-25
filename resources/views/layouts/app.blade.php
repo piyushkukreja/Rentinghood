@@ -159,17 +159,17 @@
                 <div class="text-right text-center-xs">
                     <ul class="social-list list-inline list--hover">
                         <li class="list-inline-item">
-                            <a href="https://www.linkedin.com/company/rentinghood">
+                            <a target="_blank" href="https://www.linkedin.com/company/rentinghood">
                                 <i class="socicon socicon-linkedin icon icon--xs"></i>
                             </a>
                         </li>
                         <li class="list-inline-item">
-                            <a href="https://www.facebook.com/rentinghood">
+                            <a target="_blank" href="https://www.facebook.com/rentinghood">
                                 <i class="socicon socicon-facebook icon icon--xs"></i>
                             </a>
                         </li>
                         <li class="list-inline-item">
-                            <a href="https://www.linkedin.com/company/rentinghood">
+                            <a target="_blank" href="https://www.linkedin.com/company/rentinghood">
                                 <i class="socicon socicon-instagram icon icon--xs"></i>
                             </a>
                         </li>
