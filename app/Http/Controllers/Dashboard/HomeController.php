@@ -83,11 +83,12 @@ class HomeController extends Controller
             ->join('transactions', 'products.id', '=', 'product_id')
             ->join('users', 'users.id', '=', 'lender_id')
             ->select('transactions.id as tid', 'from_date', 'to_date', 'users.id as uid', 'name', 'products.id as pid', 'status')
-            ->where(function ($query) {
-                $query->where('status', 3)
-                    ->where('seen', true);
+            ->where(function($query) {
+              $query->where(function ($query) {
+                  $query->where('status', 3)
+                      ->where('seen', true);
+              })->orWhereIn('status', [1, 4, 5]);
             })
-            ->orWhereIn('status', [1, 4, 5])
             ->where('renter_id', Auth::user()->id)
             ->get();
 
@@ -120,7 +121,7 @@ class HomeController extends Controller
             ->join('users', 'users.id', '=', 'lender_id')
             ->select('transactions.id as tid', 'from_date', 'to_date', 'users.id as uid', 'name', 'products.id as pid', 'status')
             ->where('renter_id', Auth::user()->id)
-            ->whereIn('status', [2, 3, 4, 5])
+            ->whereIn('status', [2, 3])
             ->where('seen', false)
             ->count();
 
@@ -140,12 +141,37 @@ class HomeController extends Controller
         if($product->lender_id == Auth::user()->id)
         {
             DB::table('transactions')->where('id', $request->input('tid'))->update(['status' => $status] );
+            $renter = DB::table('users')->where('id', $transaction->renter_id)->first();
             if($status == 3)
             {
-                $user = DB::table('users')->where('id', $transaction->renter_id)->first();
-                $response['contact'] = $user->contact;
+                $response['contact'] = $renter->contact;
+                $message = 'Hey Neighbour, your request for ' . $product->name . ' is approved. Please visit your dashboard to get contact details of owner';
+            }
+            else
+            {
+                $message = 'Hey Neighbour, the owner couldn\'t fulfill your request for ' . $product->name . '. We apologize for the same.';
             }
             $response['message'] = 'success';
+
+            $mobile = $renter->contact;
+            $curl = curl_init();
+            $authkey = '196622AOmNFnJN5a774bc9';
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "http://api.msg91.com/api/sendhttp.php?sender=RENTHD&route=4&mobiles=" . $mobile . "&authkey=" . $authkey . "&country=91&message=" . urlencode($message),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_SSL_VERIFYHOST => 0,
+                CURLOPT_SSL_VERIFYPEER => 0,
+            ));
+
+            $result = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
         }
         else
             $response['message'] = 'failed';

@@ -33,7 +33,7 @@ Route::post('/save-location', function (Request $request) {
     Session::put('location', $request->input('location'));
     Session::put('lat', $request->input('lat'));
     Session::put('lng', $request->input('lng'));
-
+    return ['message' => 'success'];
 
 })->name('save_location');
 

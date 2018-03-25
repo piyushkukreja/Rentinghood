@@ -89,7 +89,7 @@
                     </div>
                     <div class="col-lg-8">
                         <div class="boxed boxed--lg boxed--border">
-                            <div id="subcategory-all" class="account-tab loading"></div>
+                            <div id="subcategory-all" class="account-tab"></div>
                             @foreach( $subcategories as $subcategory )
                                 <div id="subcategory-{{ $subcategory->name }}" class="hidden account-tab"></div>
                             @endforeach
@@ -101,6 +101,9 @@
             <!--end of container-->
         </section>
     </div>
+
+    {{-- Sweet Alert 2 Plugin--}}
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
 
     <script>
 
@@ -114,8 +117,9 @@
                 var subcategory_id = $(this).siblings('.subcategory_id_info').html();
                 var subcategory_name = $(this).siblings('.subcategory_name_info').html();
                 var subcategory_div = $('#subcategory-' + subcategory_name);
+                swal({ title: 'Getting products near you..'});
+                swal.showLoading();
                 subcategory_div.html('');
-                subcategory_div.addClass('loading');
                 var category_id = {{ $category->id }};
                 $.ajax({
 
@@ -125,11 +129,11 @@
                     dataType: 'JSON',
                     success: function (returned_data) {
 
-                        subcategory_div.removeClass('loading');
                         if(returned_data.length == 0) {
-                            subcategory_div.html('<div class="row align-items-center" style="height: 400px;">' +
-                                '<div class="col-12 text-center h5">There are no products in this segment :(</div>' +
-                                '</div>' +
+                            subcategory_div.html('<div class="row">' +
+                                '<div style="margin-top: 5em;" class="col-12 text-center h4">Uh-Oh! seems like other Neighbours near you haven\'t added products in this category yet :(</div>' +
+                                '<div style="margin-top: 2em; margin-bottom: 0" class="col-12 text-center h4">Would you like to add something ?</div>' +
+                                '<div class="col-12 text-center h2"><a href="{{ route('lend_categories') }}"><i class="fa fa-plus-circle"></i></a></div>' +
                                 '</div>');
                         }
                         else {
@@ -162,11 +166,9 @@
                             });
                         }
                         $('.product').find('img').each( function(){
-
                             $( this ).attr( 'src', $( this ).attr( 'data-src' ) );
-
-                        } );
-
+                        });
+                        swal.close();
                     }
 
                 });
@@ -185,8 +187,8 @@
                 type: 'POST',
                 url: '{{ route('save_location') }}',
                 data: { _token: csrf_token, location: location, lat: lat, lng: lng},
-                success: function () {
-                    if($('.subcategories_list').find('li.active').find('a') == 0)
+                success: function (response) {
+                    if(parseInt($('.subcategories_list').find('li.active').find('a').length) != 0)
                         $('.subcategories_list').find('li.active').find('a').trigger('click');
                     else
                         $('#all_link').trigger('click');

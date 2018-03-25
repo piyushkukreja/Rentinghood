@@ -188,7 +188,7 @@
 
                                             </form>
                                             <span class="type--fine-print block">
-                                                Dont have an account yet? <a id="register_link" href="#">Create account</a>
+                                                Don't have an account yet? <a id="register_link" href="#">Create account</a>
                                             </span>
                                         </div>
                                     </div>
@@ -317,41 +317,14 @@
     </div>
 
     <!-- CONTACT OWNER MODAL -->
-    <div class="modal-instance">
-        <a id="contact_modal_trigger" class="btn modal-trigger hidden" href="#"></a>
-        <div class="modal-container">
-            <div class="modal-content">
-                <section class="imageblock feature-large bg--white border--round ">
-                    <div class="imageblock__content col-lg-5 col-md-3 pos-left">
-                        <div class="background-image-holder">
-                            <img alt="image" src="{{ asset('img/checkmark.gif') }}">
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row justify-content-end">
-                            <div class="col-md-9 col-lg-7">
-                                <div class="row justify-content-center">
-                                    <div class="col-md-11 col-lg-9">
-                                        <h2>Your request has been placed.</h2>
-                                        <p class="lead"><span id="lender_name"></span>, has received your request. If he
-                                            approves the request he will get back to you shortly.</p>
-                                    </div>
-                                    <!--end of col-->
-                                </div>
-                                <!--end of row-->
-                            </div>
-                        </div>
-                        <!--end of row-->
-                    </div>
-                    <!--end of container-->
-                </section>
-                <div class="modal-close modal-close-cross"></div>
-            </div>
-        </div>
-    </div>
     <a id="scroll_to_end" href="#end" class="hidden"></a>
 
+    {{-- DATEPICKER --}}
     <script src="{{ asset('js/datepicker.js') }}"></script>
+
+    {{-- SWEETALERT2 --}}
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
+
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -433,7 +406,9 @@
                         $('#menu1').find('#register_nav_button').remove();
                         logged_in = true;
                         $('.otp_contact').html(returned_data.contact.substr(6));
-                        $('#contact_owner').trigger('click');
+                        setTimeout(function () {
+                            $('#contact_owner').trigger('click');
+                        }, 1000);
                     },
                     error: function (xhr, status, error) {
 
@@ -560,8 +535,14 @@
                                 if(returned_data.verified) {
 
                                     contact_button.html('Request placed');
-                                    $('#lender_name').html(returned_data.name);
-                                    $('#contact_modal_trigger').trigger('click');
+                                    /*$('#lender_name').html(returned_data.name);
+                                    $('#contact_modal_trigger').trigger('click');*/
+                                    swal({
+                                        title: 'Your request has been placed!',
+                                        text: returned_data.name + ', has received your request. If he approves the request he will get back to you shortly.',
+                                        type: 'success'
+                                    });
+
                                     placed = true;
 
                                 } else {

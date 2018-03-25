@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('navbar')
+    <div id="pre-loader">
+        <img src="{{ asset('img/loading-16.gif') }}" alt="">
+    </div>
     <style>
         @media (min-width: 1024px) {
             .bar-2 .bar__module + .bar__module {
@@ -63,14 +66,14 @@
         <div class="bar bar--sm visible-xs">
             <div class="container">
                 <div class="row">
-                    <div class="col-3 col-md-2">
+                    <div class="col-8 col-md-2">
                         <a href="{{ route('home') }}">
-                            <h2 style="font-weight: 900; margin-bottom: 0; color: #333333;">
+                            <h2 style="font-weight: 900; margin-bottom: 0; color: #333333; display: inline-block;">
                                 rentinghood
                             </h2>
                         </a>
                     </div>
-                    <div class="col-9 col-md-10 text-right">
+                    <div class="col-4 col-md-10 text-right">
                         <a href="#" class="hamburger-toggle" data-toggle-class="#menu2;hidden-xs">
                             <i class="icon icon--sm stack-interface stack-menu"></i>
                         </a>
@@ -183,14 +186,14 @@
                         <h3 style="font-weight: 600;">
                             Rent anything, right from your neighbourhood
                         </h3>
-                        <a class="btn btn--primary type--uppercase btn--lg" href="{{ route('rent_categories') }}">
+                        <a class="btn btn--primary btn--lg" href="{{ route('rent_categories') }}" data-tooltip="Let's save some money.">
                                 <span class="btn__text">
-                                    Rent
+                                    RENT
                                 </span>
                         </a>
-                        <a class="btn btn--primary type--uppercase btn--lg" href="{{ route('lend_categories') }}">
+                        <a class="btn btn--primary btn--lg" href="{{ route('lend_categories') }}" data-tooltip="Let's make some money.">
                                 <span class="btn__text">
-                                    Lend
+                                    LEND
                                 </span>
                         </a>
                     </div>
@@ -257,6 +260,12 @@
     </div>
     <script>
         $(document).ready(function () {
+
+            setTimeout(function () {
+                $('#pre-loader').fadeOut('slow', function () {
+                    $(this).remove();
+                });
+            }, 1500);
 
             @auth
             function getMessageCount() {

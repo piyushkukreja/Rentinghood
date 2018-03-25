@@ -57,6 +57,27 @@ class MobileVerificationController extends Controller
             $user = Auth::user();
             $user->verified = 1;
             $user->save();
+            $message = 'Welcome to rentinghood. We look forward to helping you rent/lend anything right from your neighbourhood.';
+            $mobile = $user->contact;
+            $curl = curl_init();
+
+            $authkey = '196622AOmNFnJN5a774bc9';
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "http://api.msg91.com/api/sendhttp.php?sender=RENTHD&route=4&mobiles=" . $mobile . "&authkey=" . $authkey . "&country=91&message=" . urlencode($message),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_SSL_VERIFYHOST => 0,
+                CURLOPT_SSL_VERIFYPEER => 0,
+            ));
+
+            $result = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
         }
         else
         {

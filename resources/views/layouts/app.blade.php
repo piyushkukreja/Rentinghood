@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Rent anything, right from your neighbourhood">
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+    <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}"/>
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" media="all"/>
     <link href="{{ asset('css/stack-interface.css') }}" rel="stylesheet" type="text/css" media="all"/>
     <link href="{{ asset('css/socicon.css') }}" rel="stylesheet" type="text/css" media="all"/>
@@ -26,38 +27,32 @@
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDtfAuKKrycjdbscKGGfbCg0R5udw3N73g&amp;libraries=places"></script>
     <script src="{{ asset('js/jquery.geocomplete.min.js') }}"></script>
     <style>
+        body::-webkit-scrollbar {display:none;}
         .menu-horizontal > li:not(:hover) > a {
             opacity: 0.8;
         }
-
         .nav-container {
             font-size: 1.15em;
         }
-
         .title_section {
             padding-top: 1.5em;
             padding-bottom: 1.5em;
         }
-
         .title_section h1 {
             margin-bottom: 0.1em;
         }
-
         section.categories_section.space--sm {
             padding-top: 2em;
         }
-
         .modal-container .modal-content {
             max-width: 90vw;
             border-radius: 12px;
         }
-
         .modal-container .modal-content .container {
             max-width: 100%;
         }
-
         #pre-loader {
-            background-color: #ffffff;
+            background-color: #34A9DE;
             height: 100%;
             width: 100%;
             position: fixed;
@@ -69,7 +64,6 @@
             right: 0;
             z-index: 100;
         }
-
         #pre-loader img {
             text-align: center;
             left: 0;
@@ -84,10 +78,8 @@
             z-index: 99;
             margin: 0 auto;
         }
-
         @media (min-width: 576px) {
         }
-
         @media (min-width: 768px) {
             footer.footer-3 .row:last-child {
                 margin-top: 0.5em;
@@ -105,16 +97,13 @@
                 max-width: 80vw;
             }
         }
-
         @media (min-width: 992px) {
             .modal-container .modal-content {
                 max-width: 70vw;
             }
         }
-
         @media (min-width: 1200px) {
         }
-
         @media (max-width: 575px) {
             #new_message_modal .modal-content, #location_modal .modal-content {
                 width: 90vw;
@@ -126,7 +115,6 @@
                 top: 2em;
             }
         }
-
         @media (max-width: 767px) {
             .btn:not(:last-child) {
                 margin-bottom: 0;
@@ -135,9 +123,6 @@
     </style>
 </head>
 <body class="" data-smooth-scroll-offset="64">
-<div id="pre-loader">
-    <img src="{{ asset('img/loader-16.gif') }}" alt="">
-</div>
 <a id="start"></a>
 
 @yield('navbar')
@@ -169,7 +154,7 @@
                             </a>
                         </li>
                         <li class="list-inline-item">
-                            <a target="_blank" href="https://www.linkedin.com/company/rentinghood">
+                            <a target="_blank" href="https://www.instagram.com/rentinghood">
                                 <i class="socicon socicon-instagram icon icon--xs"></i>
                             </a>
                         </li>
@@ -186,14 +171,6 @@
 <a class="back-to-top inner-link" href="#start" data-scroll-class="100vh:active">
     <i class="stack-interface stack-up-open-big"></i>
 </a>
-
-<script>
-    $(document).ready(function () {
-        $('#pre-loader').fadeOut('slow', function () {
-            $(this).remove();
-        });
-    })
-</script>
 
 <script src="{{ asset('js/typed.min.js') }}"></script>
 <script src="{{ asset('js/isotope.min.js') }}"></script>

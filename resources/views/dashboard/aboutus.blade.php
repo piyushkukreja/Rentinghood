@@ -6,7 +6,6 @@
                 margin-left: 1.85714286em;
             }
         }
-
         .bar-2 .menu-horizontal > li > a {
             letter-spacing: 0.5px;
         }
@@ -30,14 +29,14 @@
         <div class="bar bar--sm visible-xs">
             <div class="container">
                 <div class="row">
-                    <div class="col-3 col-md-2">
+                    <div class="col-8 col-md-2">
                         <a href="{{ route('home') }}">
-                            <h2 style="font-weight: 900; margin-bottom: 0; color: #333333;">
+                            <h2 style="font-weight: 900; margin-bottom: 0; color: #333333; display: inline-block;">
                                 rentinghood
                             </h2>
                         </a>
                     </div>
-                    <div class="col-9 col-md-10 text-right">
+                    <div class="col-4 col-md-10 text-right">
                         <a href="#" class="hamburger-toggle" data-toggle-class="#menu2;hidden-xs">
                             <i class="icon icon--sm stack-interface stack-menu"></i>
                         </a>
@@ -177,22 +176,17 @@
                                 <span>Founder &amp; CEO</span>
                             </div>
                             <p class="lead">
-                                Launching an attractive and scalable website quickly and affordably is important for modern startups &mdash; Stack offers massive value without looking 'bargain-bin'.
+                                Prior to Rentinghood, founder Bhushan Punjabi spent his days working as a distribution partner for a multinational company ‘XS’ and built a team of over 50 individuals and successfully launched the XS energy drink in the ever flourishing Indian Market. He had also been a part of Uber. But even when his days were busy, his ideas and cups of coffee kept him awake at night. And in this journey of being a nocturnal, Rentinghood took its foundation.
                             </p>
                             <ul class="social-list list-inline list--hover">
                                 <li>
-                                    <a href="#">
+                                    <a href="mailto:punjabibhushan@gmail.com">
                                         <i class="socicon socicon-mail icon icon--xs"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
-                                        <i class="socicon socicon-twitter icon icon--xs"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="socicon socicon-instagram icon icon--xs"></i>
+                                    <a target="_blank" href="https://www.linkedin.com/in/punjabibhushan/">
+                                        <i class="socicon socicon-linkedin icon icon--xs"></i>
                                     </a>
                                 </li>
                             </ul>
@@ -216,22 +210,17 @@
                                 <span>Chief Creative Officer</span>
                             </div>
                             <p class="lead">
-                                Launching an attractive and scalable website quickly and affordably is important for modern startups &mdash; Stack offers massive value without looking 'bargain-bin'.
+                                A graduate in Mass Media, Bharti is a very versatile person. When she isn’t working, she is usually found writing poems and performing them in poetry slams across Mumbai. She also does Graphology and is a part time Makeup Artist. With her varied interests, this feminist lady defines 'travelling' in books she reads, people she comes across and in her own journey of her life.
                             </p>
                             <ul class="social-list list-inline list--hover">
                                 <li>
-                                    <a href="#">
+                                    <a href="mailto:bhartiudasi06@gmail.com">
                                         <i class="socicon socicon-mail icon icon--xs"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
-                                        <i class="socicon socicon-twitter icon icon--xs"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="socicon socicon-instagram icon icon--xs"></i>
+                                    <a target="_blank" href="https://www.linkedin.com/in/bharti-udasi-45a199148/">
+                                        <i class="socicon socicon-linkedin icon icon--xs"></i>
                                     </a>
                                 </li>
                             </ul>

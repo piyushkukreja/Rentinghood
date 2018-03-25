@@ -2,7 +2,7 @@
     <div class="col-12">
         <div class="container">
             <div class="row">
-                <div class="col-12 col-md-6" style="padding-top: 1em; padding-bottom: 1em;">
+                <div class="col-12 offset-md-3 col-md-6" style="padding-top: 1em; padding-bottom: 1em;">
                     <input placeholder="&#xF041; &nbsp; Location" id="location_field" type="text" value="">
                 </div>
                 <form id="location_form" class="hidden">

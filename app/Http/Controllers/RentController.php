@@ -66,7 +66,7 @@ class RentController extends Controller
             return DB::table('products')
                 ->where('subcategory_id', $request->input('subcategory_id'))
                 ->where('availability', 1)
-                ->whereRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng) < 20')
+                ->whereRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng) < 10')
                 ->orderByRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng)')
                 ->get();
         else {

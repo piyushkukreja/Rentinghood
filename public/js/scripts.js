@@ -1084,4 +1084,4 @@ window.mr = window.mr || {}, mr = function (a, b, c, d) {
         a.GoogleAnalyticsObject = e, a[e] = a[e] || function () {
             (a[e].q = a[e].q || []).push(arguments)
         }, a[e].l = 1 * new Date, f = b.createElement(c), g = b.getElementsByTagName(c)[0], f.async = 1, f.src = d, g.parentNode.insertBefore(f, g)
-    }(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga"), ga("create", "UA-52115242-5", "auto"), ga("send", "pageview");
+    }(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga"), ga("create", "UA-115861990-1", "auto"), ga("send", "pageview");

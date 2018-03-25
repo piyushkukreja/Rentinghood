@@ -36,5 +36,13 @@ class LoginController extends Controller
         \Session::put('location', $user->address);
         \Session::put('lat', $user->lat);
         \Session::put('lng', $user->lng);
+        if ($request->ajax()) {
+            return response()->json([
+                'message' => 'success',
+                'contact' => \Auth::user()->contact,
+            ]);
+        } else {
+            return redirect()->intended(route('home'));
+        }
     }
 }

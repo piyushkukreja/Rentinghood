@@ -5854,7 +5854,7 @@ p .material-icons:first-child {
   border: 1px solid #ececec;
   padding: 0.61904762em;
   left: 1.48571429em;
-  top: -0.92857143em;
+  bottom: -0.92857143em;
   opacity: 0;
   pointer-events: none;
   cursor: default;
@@ -5876,7 +5876,7 @@ p .material-icons:first-child {
   transition: all .2s ease;
   content: attr(data-tooltip);
   position: absolute;
-  top: -24px;
+  bottom: -24px;
   left: 50%;
   transform: translateX(-50%);
   background: #252525;

@@ -36,7 +36,7 @@
             min-height: 500px;
         }
         @media (max-width: 767px) {
-            .boxed div[class*='col-']:not(.boxed) {
+            .boxed div[class*='col-']:not(.boxed).tab-container {
                 padding-left: 15px;
                 padding-right: 15px;
             }
@@ -57,15 +57,14 @@
             border-width: 1.5px;
         }
         .badge-count {
-            line-height: 1.5;
+            line-height: 22px;
             display: inline-block;
             text-align: center;
             background-color: #3b5998;
             width: 1.8em;
-            height: 1.5em;
+            height: 22px;
             color: white;
             border-radius: 50%;
-            margin: auto;
         }
         .account-tab {
             min-height: 100vh;
@@ -553,6 +552,9 @@
     {{--Dropzone Plugin--}}
     <script src="{{ asset('js/dropzone.js') }}"></script>
 
+    {{-- Sweet Alert 2 Plugin--}}
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
+
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -618,6 +620,10 @@
             }
 
             //js for MESSAGES
+            @if( $tab == 'messages' )
+                getMessages(false);
+            @endif
+
             var requestMessageTemplate = $('#request_message_template');
             requestMessageTemplate.remove();
             requestMessageTemplate = requestMessageTemplate.html();
@@ -631,7 +637,6 @@
             };
 
             $('#messages_modal_template').find('#view_messages').on('click', function (e) {
-
                 e.preventDefault();
                 $('.all-page-modals').find('.modal-container').fadeOut(200, 'swing', function () {
 
@@ -639,15 +644,15 @@
                     $('#messages_link').trigger('click');
 
                 });
-
-
-
             });
 
             function replySeen(tid) {
 
                 var message_count = $('#message_count').html();
                 updateCount(message_count - 1);
+                new_reply_count --;
+                if(new_reply_count == 0)
+                    $('#reply_dot').hide();
                 $.ajax({
 
                     url: '{{ route('seen_message') }}',
@@ -683,12 +688,14 @@
 
             }
 
-            function getMessages(first_run)
-            {
+            var new_reply_count = 0;
+            var new_request_count = 0;
+            function getMessages() {
 
                 var messages_div = $('#account-messages');
                 messages_div.html('');
-                messages_div.addClass('loading');
+                swal({ title: 'Getting your messages..'});
+                swal.showLoading();
 
                 $.ajax({
 
@@ -699,6 +706,8 @@
 
                         var new_message_count = response.new_requests.length + response.new_replies.length;
                         var total_count = response.old_requests.length + response.new_requests.length + response.old_replies.length + response.new_replies.length;
+                        new_request_count = response.new_requests.length;
+                        new_reply_count = response.new_replies.length;
                         if (total_count === 0) {
                             messages_div.html('<div class="row align-items-center" style="height: 400px;">' +
                                 '<div class="col-12 text-center h5">You don\'t have any messages :(</div>' +
@@ -711,13 +720,13 @@
                                 '<ul class="tabs-content"></ul>' +
                                 '</div></div>');
                             messages_div.find('ul.tabs').append('<li id="requests_title" class="active">' +
-                                '<div class="tab__title"><span class="h5">Requests</span></div>' +
+                                '<div class="tab__title"><span class="h5">Requests <i id="request_dot" style="color: #03A9F4;" class="fa fa-circle"></i></span></div>' +
                                 '</li>');
                             messages_div.find('ul.tabs-content').append('<li id="requests_content" class="active">' +
                                 '<div class="tab__content"></div>' +
                                 '</li>');
                             messages_div.find('ul.tabs').append('<li id="replies_title">' +
-                                '<div class="tab__title"><span class="h5">Replies</span></div>' +
+                                '<div class="tab__title"><span class="h5">Replies <i id="reply_dot" style="color: #03A9F4;" class="fa fa-circle"></i></span></div>' +
                                 '</li>');
                             messages_div.find('ul.tabs-content').append('<li id="replies_content">' +
                                 '<div class="tab__content"></div>' +
@@ -749,6 +758,10 @@
                                     '</div>');
 
                             }
+                            if(response.new_replies.length == 0)
+                                $('#reply_dot').hide();
+                            if(response.new_requests.length == 0)
+                                $('#request_dot').hide();
                             $.each(response.new_requests, function (i, d) {
 
                                 var message = $(requestMessageTemplate);
@@ -887,23 +900,33 @@
                         }
 
                         updateCount(new_message_count);
-                        if(first_run) {
-                            if(new_message_count !== 0) {
-                                @if( $tab != 'messages')
-                                $('#messages_modal_template').find('.modal-trigger').trigger('click');
-                                @endif
-                            }
-                        }
-                        messages_div.removeClass('loading');
+                        swal.close();
                     }
                 });
             }
 
             $('#messages_link').on('click', function () {
-
-                getMessages(false);
-
+                getMessages();
             });
+
+            function getMessageCount() {
+                $.ajax({
+                    url: '{{ route('get_message_count') }}',
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (response) {
+                        var count = parseInt(response.requests_count) + parseInt(response.replies_count);
+                        if (count != 0) {
+                            $('#messages_modal_template').find('.modal-trigger').trigger('click');
+                            updateCount(count);
+                        }
+                    }
+                });
+            }
+
+            @if($tab != 'messages')
+                getMessageCount();
+            @endif
 
             function answerRequest(tid, reply, message) {
 
@@ -951,14 +974,16 @@
                             });
 
                         }
-                        updateCount(message_count - 1);
+                        var message_count = $('#message_count').html();
+                        updateCount(parseInt(message_count) - 1);
+                        new_request_count --;
+                        if(new_request_count == 0)
+                            $('#request_dot').hide();
                     }
 
                 });
 
             }
-
-            getMessages(true);
 
             //js for  NOTIFICATIONS
             var notificationTemplate = $('#notifications_template');
@@ -1052,7 +1077,8 @@
                 var inventory_form = inventory_div.find('#inventory_form').html();
                 inventory_div.html('');
                 inventory_div.append('<div id="inventory_form" style="display: none;">' + inventory_form + '</div>');
-                inventory_div.addClass('loading');
+                swal({title: 'Preparing your inventory..'});
+                swal.showLoading();
                 $.ajax({
 
                     type: 'GET',
@@ -1060,7 +1086,6 @@
                     dataType: 'JSON',
                     success: function (returned_data) {
 
-                        inventory_div.removeClass('loading');
                         if (returned_data.length == 0) {
                             inventory_div.html('<div class="row align-items-center" style="height: 400px;">' +
                                 '<div class="col-12 text-center h5">You havent uploaded any products :(</div>' +
@@ -1112,6 +1137,8 @@
                                 });
                                 product.find('a.inventory_product_link').on('click', function (e) {
 
+                                    swal({title: 'Getting post details'});
+                                    swal.showLoading();
                                     var inventory_form = $('#inventory_form');
                                     e.preventDefault();
                                     $.ajax({
@@ -1119,6 +1146,7 @@
                                         type: 'GET',
                                         dataType: 'JSON',
                                         success: function (response) {
+                                            swal.close();
                                             if(response.message == 'success') {
                                                 inventory_form.find('input[name="category_id"]').val(ucwords(response.category_name));
                                                 inventory_form.find('input[name="subcategory_id"]').val(ucwords(response.subcategory_name));
@@ -1147,6 +1175,7 @@
                         $('.product').find('img').each(function () {
                             $(this).attr('src', $(this).attr('data-src'));
                         });
+                        swal.close();
                     }
                 });
             }
