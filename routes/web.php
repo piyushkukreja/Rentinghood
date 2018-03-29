@@ -93,6 +93,8 @@ Route::post('/rent/get_unavailable_dates', 'RentController@getUnavailableDates')
 Route::post('/rent/check_availability', 'RentController@checkAvailability')->name('check_availability');
 Route::post('/rent/check_request_placed', 'ProductsController@checkForPlacedRequest')->name('check_request_placed');
 Route::get('/rent/check_location', 'RentController@checkSessionHasLocation')->name('check_location');
+Route::get('/rent/get_location', 'RentController@getLocation')->name('get_location');
+Route::get('/rent/category/{category_name}/get_count', 'RentController@getCountAndLocation')->name('get_location_and_count');
 
 //Lend Routes
 Route::post('/subcategories','RentController@sendSubcategories')->name('get_subcategories');

@@ -4,17 +4,13 @@
 @section('content')
     <style>
         .loading {
-
-            background: url({{ asset('img/loading.gif') }}) center no-repeat;
-
+            background: url({{ asset('img/loading.svg') }}) center no-repeat;
         }
         ol.breadcrumbs, ol.breadcrumbs > li {
             margin-bottom: 0;
         }
         .account-tab {
-
             min-height: 400px;
-
         }
         @media (max-width: 767px) {
             .boxed div[class*='col-']:not(.boxed) {
@@ -22,7 +18,6 @@
                 padding-right: 15px;
             }
         }
-
         .subcategories_list li.active a {
             color: #0D47A1;
             opacity: 1;
@@ -30,12 +25,11 @@
         .menu-vertical li:not(:hover):not(.dropdown--active) {
             opacity: 1;
         }
-
         .menu-vertical li:hover:not(.dropdown--active) {
             transform: translate(5px, 0);
         }
-
-
+        .badge-count {
+        }
     </style>
     <div class="main-container">
         <section class="" style="padding-bottom: 2em; padding-top: 3em;">
@@ -69,18 +63,18 @@
                             <hr>
                             <div class="text-block">
                                 <ul class="menu-vertical subcategories_list">
-                                    <li class="active">
+                                    <li class="active" id="subcategory0">
                                         <span class="subcategory_id_info hidden">0</span>
                                         <span class="subcategory_name_info hidden">all</span>
                                         <a href="#" id="all_link" class="subcategory_link"
-                                           data-toggle-class=".account-tab:not(.hidden);hidden|#subcategory-all;hidden">All</a>
+                                           data-toggle-class=".account-tab:not(.hidden);hidden|#subcategory-all;hidden">All (<span class="badge-count">0</span>)</a>
                                     </li>
                                     @foreach( $subcategories as $subcategory )
-                                        <li>
+                                        <li id="subcategory{{ $subcategory->id }}">
                                             <span class="subcategory_id_info hidden">{{ $subcategory->id }}</span>
                                             <span class="subcategory_name_info hidden">{{ $subcategory->name }}</span>
                                             <a href="#" class="subcategory_link"
-                                               data-toggle-class=".account-tab:not(.hidden);hidden|#subcategory-{{ $subcategory->name }};hidden">{{ ucwords(str_replace('_', ' ', $subcategory->name)) }}</a>
+                                               data-toggle-class=".account-tab:not(.hidden);hidden|#subcategory-{{ $subcategory->name }};hidden">{{ ucwords(str_replace('_', ' ', $subcategory->name)) }} (<span class="badge-count">0</span>)</a>
                                         </li>
                                     @endforeach
                                 </ul>
@@ -106,8 +100,62 @@
     <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
 
     <script>
-
         $(document).ready(function () {
+
+            //js for LOCATION FIELD
+            function saveLocation() {
+                var csrf_token = '{{ csrf_token() }}';
+                var location = $('#location_field').val();
+                var lat = $('#lat_field').val();
+                var lng = $('#lng_field').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('save_location') }}',
+                    data: {_token: csrf_token, location: location, lat: lat, lng: lng},
+                    success: function (response) {
+                        if(parseInt($('.subcategories_list').find('li.active').find('a').length) != 0)
+                            $('.subcategories_list').find('li.active').find('a').trigger('click');
+                        else
+                            $('#all_link').trigger('click');
+                    }
+                });
+                $.ajax({
+                    url: '{{ route('get_location') }}',
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (response) {
+                        console.log(response.message);
+                    }
+                });
+            }
+
+            $.ajax({
+                url: '{{ route('get_location_and_count', $category->id) }}',
+                type: 'GET',
+                dataType: 'JSON',
+                success: function (response) {
+                    if(response.message == 'success') {
+                        $('#location_field').geocomplete({
+                            location: response.location,
+                            details: "#location_form"
+                        }).bind("geocode:result", function (event, result) {
+                            saveLocation();
+                        });
+
+                        var sum = 0;
+                        $.each(response.count, function (i, d) {
+                            $('#subcategory' + d.subcategory_id).find('.badge-count').html(d.total);
+                            sum += d.total;
+                        });
+                        $('#subcategory0').find('.badge-count').html(sum);
+
+                    } else {
+                        $('#location_field').geocomplete({ details: "#location_form" }).bind("geocode:result", function (event, result) {
+                            saveLocation();
+                        });
+                    }
+                }
+            });
 
             $('.subcategory_link').on('click', function () {
 
@@ -145,7 +193,7 @@
                                 '</div>' +
                                 '</div>');
                             var masonry_container = subcategory_div.find('.masonry__container');
-                            var loading_url = '{{ asset('img/loading.gif') }}';
+                            var loading_url = '{{ asset('img/loading.svg') }}';
                             $.each(returned_data, function (i, d) {
 
                                 var image = '{{ asset('img/uploads/products/small') }}/' + d.image;
@@ -176,35 +224,6 @@
             });
 
         });
-
-        //js for LOCATION FIELD
-        function saveLocation() {
-            var csrf_token = '{{ csrf_token() }}';
-            var location = $('#location_field').val();
-            var lat = $('#lat_field').val();
-            var lng = $('#lng_field').val();
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('save_location') }}',
-                data: { _token: csrf_token, location: location, lat: lat, lng: lng},
-                success: function (response) {
-                    if(parseInt($('.subcategories_list').find('li.active').find('a').length) != 0)
-                        $('.subcategories_list').find('li.active').find('a').trigger('click');
-                    else
-                        $('#all_link').trigger('click');
-                }
-            });
-        }
-
-        var location_field = '{{ Session::get('location') }}';
-
-        $('#location_field').geocomplete({
-            location: location_field,
-            details: "#location_form"
-        }).bind("geocode:result", function (event, result) {
-            saveLocation();
-        });
-
     </script>
 
 @endsection

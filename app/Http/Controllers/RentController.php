@@ -42,6 +42,48 @@ class RentController extends Controller
         return $response;
     }
 
+    public function getCountAndLocation($category_id)
+    {
+        $response = [];
+        if(Session::has('location') && Session::has('lat') && Session::has('lng'))
+        {
+            $response['message'] = 'success';
+            $lng = Session::get('lng');
+            $lat = Session::get('lat');
+            $response['location'] = Session::get('location');
+            $response['lat'] = $lng;
+            $response['lng'] = $lat;
+            $response['count'] = DB::table('products')
+                ->whereIn('subcategory_id', function ($query) use ($category_id) {
+                    $query->select('id')
+                        ->from(with(new Subcategories)->getTable())
+                        ->where('category_id', $category_id);
+                })->where('availability', 1)
+                ->whereRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng) < 10')
+                ->groupBy('subcategory_id')
+                ->select('subcategory_id', DB::raw('count(*) as total'))
+                ->get();
+            return $response;
+        }
+        else
+            $response['message'] = 'failed';
+        return $response;
+    }
+
+    public function getLocation()
+    {
+        $response = [];
+        if(Session::has('location') && Session::has('lat') && Session::has('lng')) {
+            $response['message'] = 'success';
+            $response['lng'] = Session::get('lng');
+            $response['lat'] = Session::get('lat');
+            $response['location'] = Session::get('location');
+        } else
+            $response['message'] = 'failed';
+        return $response;
+
+        }
+
     public function subcategories($category_name)
     {
         $category = DB::table('categories')->where('name', $category_name)->first();

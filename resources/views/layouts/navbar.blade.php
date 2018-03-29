@@ -34,7 +34,7 @@
             font-weight: 500;
             letter-spacing: 0.5px;
         }
-        #location_field {
+        #location_field, #swal_location_field {
             font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
             font-style: normal;
             font-weight: normal;

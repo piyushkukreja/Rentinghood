@@ -26,7 +26,7 @@
             color: #e23636;
         }
         .loading {
-            background: url({{ asset('img/loading.gif') }}) center no-repeat;
+            background: url({{ asset('img/loading.svg') }}) center no-repeat;
             color: transparent;
         }
         .loading * {
@@ -135,28 +135,6 @@
                 </a>
             </div>
             <div class="contact_div card text-center" style="display: none;">Contact : <span class="h4" style="margin-bottom: 0.5em"><span class="first_name"></span> <span class="last_name"></span>, <span class="contact"></span></span></div>
-        </div>
-    </div>
-    <div id="messages_modal_template" class="hidden">
-        <div class="modal-instance">
-            <div id="new_message_modal" class="modal-container">
-                <div class="modal-content">
-                    <div class="boxed boxed--lg">
-                        <h2>You have new messages</h2>
-                        <hr class="short">
-                        <p class="lead">
-                            Visit the messages tabs to view requests for your products and to answer them.
-                        </p>
-                        <div class="text-center">
-                            <a id="view_messages" class="btn btn--lg btn--primary type--uppercase" href="#">
-                                <span class="btn__text">View messages</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="modal-close modal-close-cross"></div>
-                </div>
-            </div>
-            <a id="new_message_modal_trigger" href="#" class="modal-trigger hidden"></a>
         </div>
     </div>
     <div id="notifications_template" style="display: none;">
@@ -636,16 +614,6 @@
                 day: "numeric"
             };
 
-            $('#messages_modal_template').find('#view_messages').on('click', function (e) {
-                e.preventDefault();
-                $('.all-page-modals').find('.modal-container').fadeOut(200, 'swing', function () {
-
-                    $('.all-page-modals').find('.modal-container').removeClass('modal-active').show();
-                    $('#messages_link').trigger('click');
-
-                });
-            });
-
             function replySeen(tid) {
 
                 var message_count = $('#message_count').html();
@@ -917,7 +885,23 @@
                     success: function (response) {
                         var count = parseInt(response.requests_count) + parseInt(response.replies_count);
                         if (count != 0) {
-                            $('#messages_modal_template').find('.modal-trigger').trigger('click');
+                            swal({
+                                title: 'You have new messages',
+                                imageUrl: '{{ asset('img/message.gif') }}',
+                                imageWidth: 300,
+                                imageHeight: 225,
+                                text: 'Visit the messages tab to view requests for your products and to answer them',
+                                confirmButtonText: 'View Messages'
+                            }).then((result) => {
+                                if(result.value) {
+                                $('.all-page-modals').find('.modal-container').fadeOut(200, 'swing', function () {
+
+                                    $('.all-page-modals').find('.modal-container').removeClass('modal-active').show();
+                                    $('#messages_link').trigger('click');
+
+                                });
+                                }
+                            });
                             updateCount(count);
                         }
                     }
@@ -1101,7 +1085,7 @@
                                 '</div>' +
                                 '</div>');
                             var masonry_container = inventory_div.find('.masonry__container');
-                            var loading_url = '{{ asset('img/loading.gif') }}';
+                            var loading_url = '{{ asset('img/loading.svg') }}';
                             $.each(returned_data, function (i, d) {
 
                                 var image = '{{ asset('img/uploads/products/small') }}/' + d.image;

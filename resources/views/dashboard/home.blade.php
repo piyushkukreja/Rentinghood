@@ -149,31 +149,6 @@
     </div>
 @endsection
 @section('content')
-    @auth
-        <div id="messages_modal_template" class="hidden">
-            <div class="modal-instance">
-                <div id="new_message_modal" class="modal-container">
-                    <div class="modal-content">
-                        <div class="boxed boxed--lg">
-                            <h2>You have new messages</h2>
-                            <hr class="short">
-                            <p class="lead">
-                                Visit the messages tabs to view requests for your products and to answer them.
-                            </p>
-                            <div class="text-center">
-                                <a class="btn btn--lg btn--primary type--uppercase"
-                                   href="{{ route('account', ['messages']) }}">
-                                    <span class="btn__text">View messages</span>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="modal-close modal-close-cross"></div>
-                    </div>
-                </div>
-                <a href="#" class="modal-trigger hidden"></a>
-            </div>
-        </div>
-    @endauth
     <div class="main-container">
         <section class="cover height-90 imagebg text-center" data-overlay="5" id="home">
             <div class="background-image-holder">
@@ -258,6 +233,10 @@
             </section>
         @endguest
     </div>
+
+    {{-- Sweet Alert 2 Plugin--}}
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
+
     <script>
         $(document).ready(function () {
 
@@ -279,7 +258,18 @@
 
                         if (parseInt(response.requests_count) + parseInt(response.replies_count) != 0) {
 
-                            $('#messages_modal_template').find('.modal-trigger').trigger('click');
+                            swal({
+                                title: 'You have new messages',
+                                imageUrl: '{{ asset('img/message.gif') }}',
+                                imageWidth: 300,
+                                imageHeight: 225,
+                                text: 'Visit the messages tab to view requests for your products and to answer them',
+                                confirmButtonText: 'View Messages'
+                            }).then((result) => {
+                                if(result.value) {
+                                window.location.href = "{{ route('account', ['messages']) }}"
+                                }
+                            });
 
                         }
                     }

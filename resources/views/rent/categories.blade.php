@@ -7,6 +7,9 @@
             padding-right: 1em;
             padding-left: 1em;
         }
+        .swal2-container {
+            z-index: 999;
+        }
         .category {
             transition: transform 0.3s ease-out;
         }
@@ -22,30 +25,6 @@
             }
         }
     </style>
-
-    <!-- LOCATION MODAL -->
-    <div id="location_modal_template" class="hidden">
-        <div class="modal-instance">
-            <div id="location_modal" class="modal-container">
-                <div class="modal-content">
-                    <div class="boxed boxed--lg">
-                        <h2>Tell us your location</h2>
-                        <hr class="short">
-                        <p class="lead">
-                            Your location will help us show products which are near you.
-                        </p>
-                        <div class="text-center">
-                            <a class="btn btn--lg btn--primary type--uppercase" href="#">
-                                <span class="btn__text">Update</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="modal-close modal-close-cross"></div>
-                </div>
-            </div>
-            <a href="#" id="location_modal_trigger" class="modal-trigger"></a>
-        </div>
-    </div>
 
     <div class="main-container">
         <section class="title_section text-center bg--secondary">
@@ -76,7 +55,7 @@
                                             <span class="category_id_info hidden">{{ $category->id }}</span>
                                             <span class="category_name_info hidden">{{ $category->name }}</span>
                                             <a class="category_link" href="#">
-                                                <img alt="{{ $category->name }}" class="img-fluid category_image" data-src="{{ asset('img/categories') }}/{{ $category->name }}.png" src="{{ asset('img/loading.gif') }}"/>
+                                                <img alt="{{ $category->name }}" class="img-fluid category_image" data-src="{{ asset('img/categories') }}/{{ $category->name }}.png" src="{{ asset('img/loading.svg') }}"/>
                                             </a>
                                             <a class="block category_link" href="#">
                                                 <div class="text-center" style="margin-top: 1em;">
@@ -100,6 +79,9 @@
         </section>
     </div>
 
+    {{-- Sweet Alert 2 Plugin--}}
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
+
     <script>
         $(document).ready(function () {
 
@@ -112,28 +94,40 @@
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('save_location') }}',
-                    data: { _token: csrf_token, location: location, lat: lat, lng: lng}
+                    data: {_token: csrf_token, location: location, lat: lat, lng: lng},
+                    success: function (response) {
+                        console.log(response.message);
+                    }
+                });
+                $.ajax({
+                    url: '{{ route('get_location') }}',
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (response) {
+                        console.log(response.message);
+                    }
                 });
             }
 
-            @if(Session::has('location'))
-
-                var location_field = '{{ Session::get('location') }}';
-
-                $('#location_field').geocomplete({
-                    location: location_field,
-                    details: "#location_form"
-                }).bind("geocode:result", function (event, result) {
-                    saveLocation();
-                });
-
-            @else
-
-                $('#location_field').geocomplete({ details: "#location_form" }).bind("geocode:result", function (event, result) {
-                    saveLocation();
-                });
-
-            @endif
+            $.ajax({
+                url: '{{ route('get_location') }}',
+                type: 'GET',
+                dataType: 'JSON',
+                success: function (response) {
+                    if(response.message == 'success') {
+                        $('#location_field').geocomplete({
+                            location: response.location,
+                            details: "#location_form"
+                        }).bind("geocode:result", function (event, result) {
+                            saveLocation();
+                        });
+                    } else {
+                        $('#location_field').geocomplete({ details: "#location_form" }).bind("geocode:result", function (event, result) {
+                            saveLocation();
+                        });
+                    }
+                }
+            });
 
             $('.modal-content').find('a').on('click', function (e) {
                 e.preventDefault();
@@ -156,7 +150,27 @@
                             var url = '{{ \Illuminate\Support\Facades\URL::to('/rent/category') }}/' + name;
                             $(location).attr('href', url);
                         } else {
-                            $('.modal-trigger').trigger('click');
+                            swal({
+                                title: 'Which neighbourhood are you looking for?',
+                                showConfirmButton: false,
+                                imageUrl: '{{ asset('img/question.gif') }}',
+                                imageWidth: 200,
+                                imageHeight: 150,
+                                html: '<div style="margin-bottom: 1em;">We don\'t want to show you results from Mars! :D</div>' +
+                                '<div style="padding-top: 1em; padding-bottom: 3em;">' +
+                                '<input placeholder="&#xF041; &nbsp; Area or Locality" id="swal_location_field" type="text" value="">' +
+                                '</div>',
+                                onBeforeOpen : function () {
+                                    $('#swal_location_field').geocomplete({
+                                        details: '#location_form'
+                                    }).bind("geocode:result", function (event, result) {
+                                        $('#location_field').val($('#swal_location_field').val());
+                                        saveLocation();
+                                        swal.close();
+                                    });
+                                    $('#swal_location_field').focus();
+                                }
+                            });
                         }
                     }
                 });

@@ -132,7 +132,7 @@
                                     <div class="masonry__item col-6 col-lg-3">
                                         <div class="category">
                                             <a class="category_link" href="{{ URL::to('account/lend') }}/{{ $category->id }}">
-                                                <img alt="{{ $category->name }}" class="img-fluid category_image" data-src="{{ asset('img/categories') }}/{{ $category->name }}.png" src="{{ asset('img/loading.gif') }}"/>
+                                                <img alt="{{ $category->name }}" class="img-fluid category_image" data-src="{{ asset('img/categories') }}/{{ $category->name }}.png" src="{{ asset('img/loading.svg') }}"/>
                                             </a>
                                             <a class="block category_link" href="{{ URL::to('account/lend') }}/{{ $category->id }}">
                                                 <div class="text-center" style="margin-top: 1em;">
