@@ -28,6 +28,10 @@
     <script src="{{ asset('js/jquery.geocomplete.min.js') }}"></script>
     <style>
         body::-webkit-scrollbar {display:none;}
+        ol.breadcrumbs, ol.breadcrumbs > li {
+            margin-bottom: 0;
+            font-size: 1.08em;
+        }
         .menu-horizontal > li:not(:hover) > a {
             opacity: 0.8;
         }
@@ -178,6 +182,11 @@
 <script src="{{ asset('js/smooth-scroll.min.js') }}"></script>
 <script src="{{ asset('js/flickity.min.js') }}"></script>
 <script src="{{ asset('js/scripts.js') }}"></script>
+<script>
+    $('.hiring_div').on('click', function () {
+        window.location.href = '{{ route('careers') }}';
+    })
+</script>
 
 </body>
 

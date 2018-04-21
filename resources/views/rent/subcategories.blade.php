@@ -6,8 +6,9 @@
         .loading {
             background: url({{ asset('img/loading.svg') }}) center no-repeat;
         }
-        ol.breadcrumbs, ol.breadcrumbs > li {
-            margin-bottom: 0;
+        .subcategory_title {
+            font-size: 1.3em;
+            font-weight: 500;
         }
         .account-tab {
             min-height: 400px;
@@ -36,7 +37,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <h1>{{ ucwords(str_replace('_', ' ', $category->name)) }}</h1>
+                        <h1 style="margin-bottom: 0.2em;">{{ ucwords(str_replace('_', ' ', $category->name)) }}</h1>
                         <ol class="breadcrumbs">
                             <li>
                                 <a href="{{ route('home') }}">Home</a>
@@ -55,10 +56,10 @@
         <section class="bg--secondary space--xs" style="min-height: 100vh;">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="boxed boxed--lg boxed--border">
                             <div class="text-block text-center">
-                                <span class="h5">Subcategories</span>
+                                <span class="h5 subcategory_title">Subcategories</span>
                             </div>
                             <hr>
                             <div class="text-block">
@@ -81,7 +82,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-8">
+                    <div class="col-lg-9">
                         <div class="boxed boxed--lg boxed--border">
                             <div id="subcategory-all" class="account-tab"></div>
                             @foreach( $subcategories as $subcategory )
@@ -145,7 +146,7 @@
                         var sum = 0;
                         $.each(response.count, function (i, d) {
                             $('#subcategory' + d.subcategory_id).find('.badge-count').html(d.total);
-                            sum += d.total;
+                            sum += parseInt(d.total);
                         });
                         $('#subcategory0').find('.badge-count').html(sum);
 

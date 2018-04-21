@@ -1,1 +1,9 @@
 /*! Place your custom styles here */
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+
+h3.logo-light, h3.logo-dark, #menu1 h3, .bar.visible-xs h2 {
+    font-family: Raleway, sans-serif;
+}
+body * {
+    font-family: Raleway, sans-serif;
+}

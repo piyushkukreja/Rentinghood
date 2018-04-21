@@ -4,24 +4,25 @@
     <style>
         #scroll_to_content {
             position: absolute;
-            width: 3em;
-            height: 3em;
+            width: 3.71428571em;
+            height: 3.71428571em;
             background: #fff;
-            right: 1em;
+            left: 50%;
             margin-left: -1.85em;
             border-radius: 50%;
             text-align: center;
-            top: 1em;
-            padding-top: 8px;
+            bottom: 2.71428571em;
+            padding-top: 12px;
             box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.04);
             z-index: 98;
             border: 1px solid #ececec;
             transition: 0.2s ease-out;
             -webkit-transition: 0.2s ease-out;
             -moz-transition: 0.2s ease-out;
+            display: block;
         }
         #scroll_to_content i {
-            color: #03A9F4;
+            color: #252525;
         }
         #scroll_to_content:hover {
             transform: translate3d(0, -5px, 0);

@@ -4,9 +4,38 @@
         <img src="{{ asset('img/loading-16.gif') }}" alt="">
     </div>
     <style>
+        #btn--lend, #btn--rent {
+            background: #03A9F3;
+        }
+        .hiring_div {
+            position: fixed;
+            width: 6em;
+            bottom: 0;
+            right: 0;
+            z-index: 10;
+            cursor: pointer;
+            transition: transform 0.3s ease-out;
+        }
+        .hiring_div:hover {
+            transform: translate(0,-5px);
+        }
         @media (min-width: 1024px) {
             .bar-2 .bar__module + .bar__module {
                 margin-left: 1.85714286em;
+            }
+            #btn--rent, #btn--lend {
+                font-size: 1.7em;
+                padding-top: 0.28035714em;
+                padding-bottom: 0.28035714em;
+                padding-right: 1.48214286em;
+                padding-left: 1.48214286em;
+            }
+            .hiring_div {
+                position: fixed;
+                width: 10em;
+                bottom: 0;
+                right: 0;
+                z-index: 10;
             }
         }
         .bar-2 .menu-horizontal > li > a {
@@ -150,6 +179,7 @@
 @endsection
 @section('content')
     <div class="main-container">
+        <div class="hiring_div"><img src="{{ asset('img/hiring1.png') }}"></div>
         <section class="cover height-90 imagebg text-center" data-overlay="5" id="home">
             <div class="background-image-holder">
                 <img alt="background" src="{{ asset('img/home/home5.jpg') }}"/>
@@ -158,15 +188,15 @@
                 <div class="row">
                     <div class="col-md-8">
                         <img alt="Image" class="unmarg--bottom" src="{{ asset('img/home/logo-heading.png') }}"/>
-                        <h3 style="font-weight: 600;">
+                        <h3 style="font-weight: 600; font-family: Raleway, sans-serif;">
                             Rent anything, right from your neighbourhood
                         </h3>
-                        <a class="btn btn--primary btn--lg" href="{{ route('rent_categories') }}" data-tooltip="Let's save some money.">
+                        <a id="btn--rent" class="btn btn--primary btn--lg" href="{{ route('rent_categories') }}" data-tooltip="Let's save some money.">
                                 <span class="btn__text">
                                     RENT
                                 </span>
                         </a>
-                        <a class="btn btn--primary btn--lg" href="{{ route('lend_categories') }}" data-tooltip="Let's make some money.">
+                        <a id="btn--lend" class="btn btn--primary btn--lg" href="{{ route('lend_categories') }}" data-tooltip="Let's make some money.">
                                 <span class="btn__text">
                                     LEND
                                 </span>

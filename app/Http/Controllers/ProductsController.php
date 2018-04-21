@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use DateTime;
+use Illuminate\Support\Facades\Input;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductsController extends Controller
 {
@@ -83,6 +85,45 @@ class ProductsController extends Controller
         else
             return ['placed' => false, 'from_date' => DateTime::createFromFormat('d-m-Y', $request->input('from_date'))];
 
+    }
+
+    public function importExport()
+    {
+        return view('importExport');
+    }
+
+    public function importExcel()
+    {
+        if(Input::hasFile('import_file')) {
+            $path = Input::file('import_file')->getRealPath();
+            $data = Excel::load($path, function($reader) {})->get();
+            if(!empty($data) && $data->count()) {
+                foreach ($data as $key => $value) {
+                    if($value->name != "") {
+                        $temp = str_replace(" ", "", $value->name);
+                        $temp = str_replace("'", "_", $temp);
+                        $temp = str_replace("&", "_", $temp);
+                        $temp = str_replace(".", "", $temp);
+                        $file_name = $temp . '.jpg';
+                        $file_name1 = $temp . '1.jpg';
+                        $product = ['name' => $value->name, 'subcategory_id' => intval($value->subcategory_id), 'availability' => 1,
+                            'description' => (trim($value->authors) != '' ? 'By ' . $value->authors . '<br>' : '') . $value->description, 'duration' => '2',
+                            'lender_id' => 4,
+                            'rate_1' => intval($value->rate_1), 'rate_2' => intval($value->rate_2), 'rate_3' => intval($value->rate_3),
+                            'address' => $value->address, 'lat' => floatval(str_replace("° N", "", $value->lat)), 'lng' => floatval(str_replace("° E", "", $value->lng)),
+                            'image' => $file_name];
+                        $product_id = DB::table('products')->insertGetId($product);
+                        $product_pictures = ['product_id' => $product_id, 'file_name' => $file_name];
+                        DB::table('product_pictures')->insert($product_pictures);
+                        if (intval($value->image_num) == 2) {
+                            $product_pictures = ['product_id' => $product_id, 'file_name' => $file_name1];
+                            DB::table('product_pictures')->insert($product_pictures);
+                        }
+                    }
+                }
+            }
+        }
+        return back();
     }
 
 }

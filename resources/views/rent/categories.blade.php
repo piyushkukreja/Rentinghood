@@ -86,7 +86,7 @@
         $(document).ready(function () {
 
             //js for LOCATION FIELD
-            function saveLocation() {
+            function saveLocation(url = null) {
                 var csrf_token = '{{ csrf_token() }}';
                 var location = $('#location_field').val();
                 var lat = $('#lat_field').val();
@@ -105,6 +105,9 @@
                     dataType: 'JSON',
                     success: function (response) {
                         console.log(response.message);
+                        if(url != null) {
+                            window.location.href = url;
+                        }
                     }
                 });
             }
@@ -145,9 +148,9 @@
                     type: 'GET',
                     dataType: 'JSON',
                     success: function (response) {
+                        var name =  clicked_category.siblings('.category_name_info').html();
+                        var url = '{{ \Illuminate\Support\Facades\URL::to('/rent/category') }}/' + name;
                         if(response.message == 'success') {
-                            var name =  clicked_category.siblings('.category_name_info').html();
-                            var url = '{{ \Illuminate\Support\Facades\URL::to('/rent/category') }}/' + name;
                             $(location).attr('href', url);
                         } else {
                             swal({
@@ -165,7 +168,7 @@
                                         details: '#location_form'
                                     }).bind("geocode:result", function (event, result) {
                                         $('#location_field').val($('#swal_location_field').val());
-                                        saveLocation();
+                                        saveLocation(url);
                                         swal.close();
                                     });
                                     $('#swal_location_field').focus();

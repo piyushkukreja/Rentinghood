@@ -1,9 +1,31 @@
 @extends('layouts.app')
 @section('navbar')
     <style>
+        .hiring_div {
+            position: fixed;
+            width: 6em;
+            bottom: 0;
+            right: 0;
+            z-index: 10;
+            cursor: pointer;
+            transition: transform 0.3s ease-out;
+        }
+        .hiring_div:hover {
+            transform: translate(0,-5px);
+        }
+        .back-to-top {
+            bottom: 11em;
+        }
         @media (min-width: 1024px) {
             .bar-2 .bar__module + .bar__module {
                 margin-left: 1.85714286em;
+            }
+            .hiring_div {
+                position: fixed;
+                width: 10em;
+                bottom: 0;
+                right: 0;
+                z-index: 10;
             }
         }
         .bar-2 .menu-horizontal > li > a {
@@ -114,6 +136,7 @@
 @endsection
 @section('content')
     <div class="main-container">
+        <div class="hiring_div"><img src="{{ asset('img/hiring2.png') }}"></div>
         <section class="text-center imagebg space--lg" data-overlay="6">
             <div class="background-image-holder">
                 <img alt="background" src="{{ asset('img/aboutus/home3.jpg') }}" />
@@ -250,6 +273,11 @@
                                 <li>
                                     <a target="_blank" href="mailto:pankaj.ajwani0409@gmail.com">
                                         <i class="socicon socicon-mail icon icon--xs"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a target="_blank" href="https://www.linkedin.com/in/pankaj-ajwani-0409/">
+                                        <i class="socicon socicon-linkedin icon icon--xs"></i>
                                     </a>
                                 </li>
                             </ul>

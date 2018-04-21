@@ -44,7 +44,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <h1>{{ ucwords($product->name) }}</h1>
+                        <h1 style="margin-bottom: 0.2em;">{{ ucwords($product->name) }}</h1>
                         <ol class="breadcrumbs">
                             <li>
                                 <a href="{{ route('home') }}">Home</a>
@@ -83,9 +83,13 @@
                     <div class="col-md-6 col-lg-6">
                         <h2>{{ ucwords($product->name) }}</h2>
                         <p>
-                            {{ $product->description }}
+                            @foreach(explode('<br>', $product->description) as $line)
+                                {{ $line }}
+                                <br />
+                            @endforeach
                         </p>
                         <div class="row">
+                            @if( $product->rate_1 != 0 )
                             <div class="col-md-6 col-lg-4">
                                 <div class="pricing pricing-3">
                                     <div class="pricing__head bg--secondary boxed">
@@ -96,6 +100,7 @@
                                 </div>
                                 <!--end pricing-->
                             </div>
+                            @endif
                             @if($product->duration > 0)
                                 <div class="col-md-6 col-lg-4">
                                     <div class="pricing pricing-3">

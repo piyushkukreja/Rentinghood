@@ -13,14 +13,24 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+//Import Excel
+/*Route::get('import', 'ProductsController@importExport')->name('import');
+Route::post('import', 'ProductsController@importExcel')->name('import_backend');*/
+
 //Landing Page
 Route::get('/', function () {
     return view('dashboard.home');
 })->name('home');
 
+//About Us Page
 Route::get('/about', function () {
     return view('dashboard.aboutus');
 })->name('about_us');
+
+//Careers Page
+Route::get('/careers', function () {
+    return view('dashboard.careers');
+})->name('careers');
 
 
 Route::get('/clear-cache', function() {
