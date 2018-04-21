@@ -83,6 +83,7 @@
                                 <li><a href="{{ route('rent_categories') }}">Categories</a></li>
                                 <li><a href="{{ route('lend_categories') }}">Lend</a></li>
                                 <li><a href="{{ route('about_us') }}">About Us</a></li>
+                                <li><a href="{{ route('contact') }}">Contact Us</a></li>
                                 @auth
                                     <li><a href="{{ route('account') }}">Account</a></li>
                                 @endauth

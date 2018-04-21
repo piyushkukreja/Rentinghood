@@ -143,6 +143,9 @@
                 <p class="type--fine-print">
                     Rent anything, right from your neighbourhood
                 </p>
+                <a class="type--fine-print" style="margin-left: 0;" href="{{ route('contact') }}">
+                    Have something to say?
+                </a>
             </div>
             <div class="col-md-6">
                 <div class="text-right text-center-xs">

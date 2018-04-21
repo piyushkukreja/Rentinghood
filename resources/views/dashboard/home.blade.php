@@ -137,6 +137,7 @@
                                 @auth
                                     <li><a href="{{ route('account') }}">Account</a></li>
                                 @endauth
+                                <li><a href="{{ route('contact') }}">Contact Us</a></li>
                             </ul>
                         </div>
                         <!--end module-->

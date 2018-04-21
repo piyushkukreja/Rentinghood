@@ -17,12 +17,12 @@
         }
         .feature .apply-btn {
             color: #fff;
-            background: #4a90e2;
-            border-color: #4a90e2;
+            background: #34A9DE;
+            border-color: #34A9DE;
         }
         .feature .apply-btn:hover {
-            border-color: #609DE6;
-            background: #609DE6;
+            border-color: #51b5e3;
+            background: #51b5e3;
         }
         .feature .apply-btn .btn__text {
             color: #fff;
@@ -157,6 +157,7 @@
                                 @auth
                                     <li><a href="{{ route('account') }}">Account</a></li>
                                 @endauth
+                                <li><a href="{{ route('contact') }}">Contact Us</a></li>
                             </ul>
                         </div>
                         <!--end module-->

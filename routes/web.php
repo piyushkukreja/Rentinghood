@@ -32,6 +32,10 @@ Route::get('/careers', function () {
     return view('dashboard.careers');
 })->name('careers');
 
+//Contact Us Page
+Route::get('/contactus', function () {
+    return view('dashboard.contact');
+})->name('contact');
 
 Route::get('/clear-cache', function() {
     $exitCode = Artisan::call('cache:clear');
