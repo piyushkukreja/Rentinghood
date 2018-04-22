@@ -191,7 +191,7 @@
             <div class="container">
                 <div class="row justify-content-around">
                     <div class="col-md-5">
-                        <img alt="Image" class="rounded-circle" src="{{ asset('img/aboutus/avatar-1.JPG') }}" />
+                        <img alt="Image" class="rounded-circle" src="{{ asset('img/aboutus/avatar-12.jpeg') }}" />
                     </div>
                     <div class="col-md-6 col-lg-5">
                         <div class="switchable__text">
@@ -259,7 +259,7 @@
             <div class="container">
                 <div class="row justify-content-around">
                     <div class="col-md-5">
-                        <img alt="Image" class="rounded-circle" src="{{ asset('img/aboutus/avatar-3.jpeg') }}" />
+                        <img alt="Image" class="rounded-circle" src="{{ asset('img/aboutus/avatar-32.jpg') }}" />
                     </div>
                     <div class="col-md-8 col-lg-5">
                         <div class="switchable__text">

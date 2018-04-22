@@ -188,7 +188,7 @@
             <div class="container pos-vertical-center">
                 <div class="row">
                     <div class="col-md-8">
-                        <img alt="Image" class="unmarg--bottom" src="{{ asset('img/home/logo-heading.png') }}"/>
+                        <img alt="Image" class="unmarg--bottom" src="{{ asset('img/home/logo3.png') }}"/>
                         <h3 style="font-weight: 600; font-family: Raleway, sans-serif;">
                             Rent anything, right from your neighbourhood
                         </h3>

@@ -1,48 +1,75 @@
 @extends('layouts.app')
 @extends('layouts.navbar')
 @section('content')
+<style>
+    #contact-form {
+        margin-top: 0;
+    }
+    @media (min-width: 767px) {
+        #email-container {
+            padding-right: 0;
+        }
 
+    }
+    @media (max-width: 767px) {
+        #form-container {
+            padding-top: 1.5em;
+        }
+    }
+</style>
     <div class="main-container">
-        <section class="title_section text-center bg--secondary">
-            <div class="container">
+        <section class="imageblock switchable feature-large height-100">
+            <div class="imageblock__content col-md-6 pos-right hidden-xs">
+                <div class="background-image-holder">
+                    <img alt="image" src="{{ asset('img/contactleft.jpg') }}" />
+                </div>
+            </div>
+            <div class="imageblock__content col-md-6 pos-right visible-xs">
+                <div class="background-image-holder">
+                    <img alt="image" src="{{ asset('img/contactbg5.jpg') }}" />
+                </div>
+            </div>
+            <div id="form-container" class="container pos-vertical-center" style="z-index: 5;">
                 <div class="row">
-                    <div class="col-md-10 col-lg-8">
-                        <h1>Get In Touch</h1>
+                    <div class="col-md-5">
                         <p class="lead">
-                            Have a query? Just fill out a few fields and we will get back to you!
+                            Have a query? Suggestion ?
+                            <br>Or want to share any gossip from around the neighbourhood ?
                         </p>
+                        <p class="lead">
+                            We are all ears.
+                        </p>
+                        <hr class="short">
+                        <form id="contact-form" class="text-left row">
+                            <div class="col-md-12">
+                                <input type="text" id="name" name="name" placeholder="Your Name" required/>
+                            </div>
+                            <div class="col-md-6" id="email-container">
+                                <input type="email" id="email" name="email" placeholder="E-mail Address" required/>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="number" id="contact" name="contact" placeholder="Phone Number" required/>
+                            </div>
+                            <div class="col-md-12">
+                                <textarea rows="6" id="message" name="message" placeholder="Message" required></textarea>
+                            </div>
+                            <div class="col-md-5 col-lg-4">
+                                <button type="submit" class="btn btn--primary btn--lg">Send Message</button>
+                            </div>
+                        </form>
                     </div>
+                    <div class="col-md-1 h100">
+                    </div>
+                    <div class="col-md-6 hidden-xs d-flex align-items-center h100" style="padding: 0;">
+                        <div style="padding-bottom: 14em;">
+                            <h1 style="color: #fff!important; font-weight: 600; font-size: 4em;">Hello Neighbour :)</h1>
+                        </div>
+                    </div>
+
                 </div>
                 <!--end of row-->
             </div>
             <!--end of container-->
-        </section>
-        <section class="text-center">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-8 col-lg-7">
-                        <form id="contact-form" class="text-left row">
-                            <div class="col-md-12">
-                                <input type="text" id="name" name="name" placeholder="Your Name"/>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="email" id="email" name="email" placeholder="E-mail Address"/>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="number" id="contact" name="contact" placeholder="Phone Number"/>
-                            </div>
-                            <div class="col-md-12">
-                                <textarea rows="6" id="message" name="message" placeholder="Message"></textarea>
-                            </div>
-                            <div class="col-md-5 col-lg-4">
-                                <button type="submit" class="btn btn--primary type--uppercase">Send Enquiry</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!--end of row-->
-            </div>
-        <!--end of container-->
         </section>
     </div>
 
@@ -57,6 +84,10 @@
             var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
             $form.on('submit', function(e) {
                 e.preventDefault();
+
+                swal({ title: 'Sending your message...'});
+                swal.showLoading();
+
                 var currentTime = new Date();
                 var dateTime = currentTime.getHours() + ':' + currentTime.getMinutes() + ', ' + currentTime.getDate() + ' ' + months[currentTime.getMonth()] + ', ' + currentTime.getFullYear();
                 $('#contact-form').append('<input type="hidden" id="time" name="time" value="' + dateTime + '">');
@@ -68,8 +99,8 @@
                     data: $form.serialize(),
                     success: function (response) {
                         swal({
-                            title: 'Your request has been placed!',
-                            text: 'We have got your message. We will get back to you shortly.',
+                            title: 'Message Sent ;)',
+                            text: 'One of our Neighbour will revert you shortly.',
                             type: 'success'
                         });
                         console.log(response);

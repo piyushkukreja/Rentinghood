@@ -4,25 +4,24 @@
     <style>
         #scroll_to_content {
             position: absolute;
-            width: 3.71428571em;
-            height: 3.71428571em;
+            width: 3em;
+            height: 3em;
             background: #fff;
-            left: 50%;
+            right: 1em;
             margin-left: -1.85em;
             border-radius: 50%;
             text-align: center;
-            bottom: 2.71428571em;
-            padding-top: 12px;
+            top: 1em;
+            padding-top: 8px;
             box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.04);
             z-index: 98;
             border: 1px solid #ececec;
             transition: 0.2s ease-out;
             -webkit-transition: 0.2s ease-out;
             -moz-transition: 0.2s ease-out;
-            display: block;
         }
         #scroll_to_content i {
-            color: #252525;
+            color: #03A9F4;
         }
         #scroll_to_content:hover {
             transform: translate3d(0, -5px, 0);
@@ -109,7 +108,6 @@
                         <div class="feature feature-3 boxed boxed--sm boxed--border">
                             <i class="fa fa-bell fa-5x"></i>
                             <h4>Get notified</h4>
-                            <a id="content"></a>
                             <p>
                                 You’ll get a notification on your mobile number if any neighbour is interested in your product.
                             </p>
@@ -122,6 +120,7 @@
             <!--end of container-->
         </section>
         <section class="space--sm categories_section">
+            <a id="content"></a>
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -170,7 +169,7 @@
 
             function scrollToItem(item) {
                 $('html, body').animate({
-                    scrollTop: item.offset().top
+                    scrollTop: item.offset().top-100
                 }, 1000);
             }
 

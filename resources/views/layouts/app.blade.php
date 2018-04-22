@@ -27,6 +27,10 @@
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDtfAuKKrycjdbscKGGfbCg0R5udw3N73g&amp;libraries=places"></script>
     <script src="{{ asset('js/jquery.geocomplete.min.js') }}"></script>
     <style>
+        footer {
+            padding-top: 2em !important;
+            padding-bottom: 2em !important;
+        }
         body::-webkit-scrollbar {display:none;}
         ol.breadcrumbs, ol.breadcrumbs > li {
             margin-bottom: 0;

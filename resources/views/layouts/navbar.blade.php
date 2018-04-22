@@ -18,8 +18,17 @@
             background: #03A9F4;
         }
         #menu1 .btn--primary {
-            background: #303F9F;
+            background: #303F9F ;
             border-color: #303F9F;
+        }
+        #menu1 .bg--white {
+            border-color: #fff;
+        }
+        #menu1 .bg--white:hover {
+            border-color: #fff;
+        }
+        #menu1 .bg--white .btn__text {
+            color: #03A9F4;
         }
         #register_nav_button {
             border-color: white;
@@ -92,7 +101,7 @@
                         <!--end module-->
                         <div class="bar__module">
                             @guest
-                                <a class="btn btn--sm btn--primary type--uppercase" href="{{ route('login') }}">
+                                <a class="btn btn--sm bg--white type--uppercase" href="{{ route('login') }}">
                                 <span class="btn__text">
                                     Login
                                 </span>
