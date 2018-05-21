@@ -1,5 +1,5 @@
-@extends('layouts.app')
-@extends('layouts.navbar')
+@extends('layouts.public')
+@extends('layouts.public_parts.navbar_blue')
 @section('content')
 <div class="container">
     <div class="row">

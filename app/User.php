@@ -26,4 +26,19 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function isAdmin() {
+        if($this->privileges > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function notes() {
+        return $this->hasMany('App\Note')->orderBy('created_at', 'DESC');
+    }
+
+    public function inventory() {
+        return $this->hasMany('App\Product', 'lender_id');
+    }
 }

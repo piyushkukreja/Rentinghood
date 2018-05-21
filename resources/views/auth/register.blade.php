@@ -1,5 +1,5 @@
-@extends('layouts.app')
-@extends('layouts.navbar')
+@extends('layouts.public')
+@extends('layouts.public_parts.navbar_blue')
 @section('content')
     <style>
         @media (max-width: 767px) {
@@ -28,7 +28,7 @@
                         <div class="map_canvas h-100"></div>
                     </div>
                     <div class="col-md-6 col-12">
-                        <h2 style="font-weight: 500;">Become a Rentinghood neighbour</h2>
+                        <h2 style="font-weight: 500;">Become a RentingHood neighbour</h2>
 
                         <form method="POST" action="{{ route('register') }}">
                             {{ csrf_field() }}

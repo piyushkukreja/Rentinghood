@@ -1,12 +1,283 @@
-/*! Place your custom styles here */
 @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
-
-h3.logo-light, h3.logo-dark, #menu1 h3, .bar.visible-xs h2 {
-    font-family: Raleway, sans-serif;
-}
 body * {
     font-family: Raleway, sans-serif;
 }
 .btn {
     font-family: Raleway, sans-serif;
+}
+footer {
+    padding-top: 2em !important;
+    padding-bottom: 2em !important;
+}
+body::-webkit-scrollbar {display:none;}
+ol.breadcrumbs, ol.breadcrumbs > li {
+    margin-bottom: 0;
+    font-size: 1.08em;
+}
+ .menu-horizontal > li:not(:hover) > a {
+    opacity: 0.8;
+}
+.nav-container {
+    font-size: 1.15em;
+}
+.title_section {
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+}
+.title_section h1 {
+    margin-bottom: 0.1em;
+}
+section.categories_section.space--sm {
+    padding-top: 2em;
+}
+.modal-container .modal-content {
+    max-width: 90vw;
+    border-radius: 12px;
+}
+.modal-container .modal-content .container {
+    max-width: 100%;
+}
+#pre-loader {
+    background-color: #34A9DE;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    margin-top: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow: hidden !important;
+    right: 0;
+    z-index: 100;
+}
+#pre-loader img {
+    text-align: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    z-index: 99;
+    margin: 0 auto;
+}
+@media (min-width: 768px) {
+    footer.footer-3 .row:last-child {
+        margin-top: 0.5em;
+    }
+
+    footer .row > :last-child > :last-child {
+        padding-top: 0.75em;
+    }
+
+    #otp_modal .modal-content, #login_modal .modal-content, #new_message_modal .modal-content {
+        max-width: 500px;
+    }
+
+    .modal-container .modal-content {
+        max-width: 80vw;
+    }
+}
+@media (min-width: 992px) {
+    .modal-container .modal-content {
+        max-width: 70vw;
+    }
+}
+@media (max-width: 575px) {
+    #new_message_modal .modal-content, #location_modal .modal-content {
+        width: 90vw;
+        padding-top: 0.5em;
+        padding-bottom: 0;
+    }
+    #new_message_modal .modal-content .modal-close-cross, #location_modal .modal-content .modal-close-cross {
+        top: 2em;
+    }
+}
+@media (max-width: 767px) {
+    .btn:not(:last-child) {
+        margin-bottom: 0;
+    }
+}
+
+/* CSS for Home Page */
+#btn--lend, #btn--rent {
+    background: transparent;
+    border-color: #fff;
+}
+#btn--lend .btn__text, #btn--rent .btn__text {
+    color: #fff;
+}
+.hiring_div {
+    position: fixed;
+    width: 6em;
+    bottom: 0;
+    right: 0;
+    z-index: 10;
+    cursor: pointer;
+    transition: transform 0.3s ease-out;
+}
+.hiring_div:hover {
+    transform: translate(0,-5px);
+}
+.logo-dark, .logo-light {
+    font-weight: 900; margin-bottom: 0;
+}
+h3.logo-dark {
+    color: #555555;
+}
+h3.logo-light {
+    color: #ffffff;
+}
+#scroll_to_content {
+    position: absolute;
+    width: 3.71428571em;
+    height: 3.71428571em;
+    background: #fff;
+    left: 50%;
+    margin-left: -1.85em;
+    border-radius: 50%;
+    text-align: center;
+    bottom: 2.71428571em;
+    padding-top: 12px;
+    box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.04);
+    z-index: 98;
+    border: 1px solid #ececec;
+    transition: 0.2s ease-out;
+    -webkit-transition: 0.2s ease-out;
+    -moz-transition: 0.2s ease-out;
+    display: block;
+}
+#scroll_to_content i {
+    color: #252525;
+}
+#scroll_to_content:hover {
+    transform: translate3d(0, -5px, 0);
+    -webkit-transform: translate3d(0, -5px, 0);
+}
+@media (max-width: 767px) {
+    #home {
+        padding: 12em 0;
+        min-height: calc(100vh - 5em);
+    }
+    footer .social-list {
+        margin: 1.5em 0;
+    }
+}
+@media (min-width: 767px) {
+    #home {
+        min-height: 100vh;
+    }
+    #transparent-nav-container h3.logo-light {
+        display: none;
+    }
+}
+@media (min-width: 990px) {
+    #transparent-nav-container h3.logo-dark {
+        display: none;
+    }
+    #transparent-nav-container h3.logo-light {
+        display: inline-block;
+    }
+}
+@media (min-width: 1024px) {
+    .bar-2 .bar__module + .bar__module {
+        margin-left: 1.85714286em;
+    }
+    #btn--rent, #btn--lend {
+        font-size: 1.7em;
+        padding: 0.28em 1.48em;
+    }
+    .hiring_div {
+        position: fixed;
+        width: 10em;
+        bottom: 0;
+        right: 0;
+        z-index: 10;
+    }
+}
+
+/* CSS For About Us Page */
+h1.about-heading, h2.about-heading {
+    font-weight: 600;
+}
+.back-to-top {
+    bottom: 11em;
+}
+.about-heading-section {
+    padding-bottom: 1em;
+    padding-top: 2em;
+    box-shadow: 0 23px 40px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* CSS For Navbar(Global) */
+.menu-horizontal li:hover {
+    transform: translate(0, -5px);
+}
+.menu-horizontal li {
+    transition: transform .3s ease-out;
+}
+.menu-horizontal > li > a {
+    font-size: 1em !important;
+    line-height: 2.166666666666667em;
+    letter-spacing: 0.5px;
+    text-transform: none !important;
+    font-weight: 500 !important;
+}
+#blue-nav-container .menu-horizontal > li > a {
+    opacity: 1 !important;
+}
+.hidden-xs .bar__module {
+    margin-bottom: 0;
+}
+
+/* CSS For Transparent Navbar */
+@media (min-width: 991px) {
+    #register_nav_button {
+        border-color: #ffffff;
+    }
+    #register_nav_button .btn__text {
+        color: #ffffff;
+    }
+}
+#transparent-nav-container #login_nav_button .btn__text {
+    color: #ffffff;
+}
+#transparent-nav-container #login_nav_button {
+    background: #03A9F4;
+    border-color: #03A9F4;
+}
+#transparent-nav-container #login_nav_button:hover {
+    background: #3ec1fd;
+}
+
+/* CSS For Blue Navbar */
+#blue-nav-container .menu-horizontal > li > a {
+    color: white;
+}
+#menu1, #blue-nav-container.nav-container {
+    background: #03A9F4;
+}
+#menu1 .bg--white {
+    border-color: #fff;
+}
+#menu1 .bg--white:hover {
+    border-color: #fff;
+}
+#menu1 .bg--white .btn__text {
+    color: #03A9F4;
+}
+#location_field, #swal_location_field {
+    font-family: FontAwesome, Raleway, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+#blue-nav-container #register_nav_button{
+    border-color: #ffffff;
+}
+#blue-nav-container #register_nav_button .btn__text {
+    color: #ffffff;
 }

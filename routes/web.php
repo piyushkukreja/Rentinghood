@@ -37,11 +37,6 @@ Route::get('/contactus', function () {
     return view('dashboard.contact');
 })->name('contact');
 
-Route::get('/clear-cache', function() {
-    $exitCode = Artisan::call('cache:clear');
-    return 'done';
-});
-
 Route::post('/save-location', function (Request $request) {
 
     Session::put('location', $request->input('location'));
@@ -120,3 +115,18 @@ Route::get('/lend', function () {
 Route::get('/account/lend/{id}', 'Dashboard\LendController@showLendForm')->name('lend_form');
 Route::post('/lend/submit', 'Dashboard\LendController@lend')->name('lend_form_processing');
 
+//Admin Routes
+Route::group(['middleware' => ['auth', 'admin']], function() {
+    Route::get('/a', 'AdminController@index')->name('admin');
+    Route::get('/a/users/get-all', 'AdminController@getAllUsers')->name('users.get-all');
+    Route::get('/a/users', 'AdminController@usersIndex')->name('users.index');
+    Route::get('/a/users/{user}', 'AdminController@usersShow')->name('users.show');
+    Route::put('/a/users/{user}', 'AdminController@usersUpdate')->name('users.update');
+    Route::get('/a/users/{user}/notes', 'AdminController@notes')->name('notes.index');
+    Route::post('/a/users/{user}/notes', 'AdminController@notesStore')->name('notes.store');
+    Route::get('/a/users/{user}/inventory', 'AdminController@loadInventory')->name('users.get-inventory');
+    Route::get('/a/products/{user}/edit', 'AdminController@productsEdit')->name('products.edit');
+    Route::put('/a/products/{product}', 'AdminController@productsUpdate')->name('products.update');
+    Route::post('/a/products/{product}/update-image', 'AdminController@updateDefaultImage')->name('products.update-image');
+    Route::post('/a/products/{product}/remove-image', 'AdminController@removeProductImage')->name('products.remove-image');
+});

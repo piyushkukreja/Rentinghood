@@ -1,8 +1,9 @@
-@extends('layouts.app')
-@extends('layouts.navbar')
-@extends('layouts.location_field')
-@section('content')
-    <style>
+@extends('layouts.public')
+@extends('layouts.public_parts.navbar_blue')
+@extends('layouts.public_parts.location_field')
+@section('head')
+    @parent
+    <style type="text/css">
         .category_image {
             padding-right: 1em;
             padding-left: 1em;
@@ -25,64 +26,13 @@
             }
         }
     </style>
-
-    <div class="main-container">
-        <section class="title_section text-center bg--secondary">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-10 col-lg-8">
-                        <h1>Rent</h1>
-                        <p class="lead">
-                            Why spend excessively when you can rent..
-                        </p>
-                    </div>
-                </div>
-                <!--end of row-->
-            </div>
-            <!--end of container-->
-        </section>
-        <section class="space--sm categories_section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="masonry">
-                            <div class="masonry__container row">
-
-                                @foreach($categories as $category)
-
-                                    <div class="masonry__item col-6 col-lg-3">
-                                        <div class="category">
-                                            <span class="category_id_info hidden">{{ $category->id }}</span>
-                                            <span class="category_name_info hidden">{{ $category->name }}</span>
-                                            <a class="category_link" href="#">
-                                                <img alt="{{ $category->name }}" class="img-fluid category_image" data-src="{{ asset('img/categories') }}/{{ $category->name }}.png" src="{{ asset('img/loading.svg') }}"/>
-                                            </a>
-                                            <a class="block category_link" href="#">
-                                                <div class="text-center" style="margin-top: 1em;">
-                                                    <h4>{{ ucwords(str_replace('_', ' ', $category->name)) }}</h4>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <!--end item-->
-                                @endforeach
-
-                            </div>
-                            <!--end masonry container-->
-                        </div>
-                        <!--end masonry-->
-                    </div>
-                </div>
-                <!--end of row-->
-            </div>
-            <!--end of container-->
-        </section>
-    </div>
-
+@endsection
+@section('scripts')
+    @parent
     {{-- Sweet Alert 2 Plugin--}}
-    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js" type="text/javascript"></script>
 
-    <script>
+    <script type="text/javascript">
         $(document).ready(function () {
 
             //js for LOCATION FIELD
@@ -190,5 +140,58 @@
 
         });
     </script>
+@endsection
+@section('content')
+    <div class="main-container">
+        <section class="title_section text-center bg--secondary">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 col-lg-8">
+                        <h1>Rent</h1>
+                        <p class="lead">
+                            Why spend excessively when you can rent..
+                        </p>
+                    </div>
+                </div>
+                <!--end of row-->
+            </div>
+            <!--end of container-->
+        </section>
+        <section class="space--sm categories_section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="masonry">
+                            <div class="masonry__container row">
 
+                                @foreach($categories as $category)
+
+                                    <div class="masonry__item col-6 col-lg-3">
+                                        <div class="category">
+                                            <span class="category_id_info hidden">{{ $category->id }}</span>
+                                            <span class="category_name_info hidden">{{ $category->name }}</span>
+                                            <a class="category_link" href="#">
+                                                <img alt="{{ $category->name }}" class="img-fluid category_image" data-src="{{ asset('img/categories') }}/{{ $category->name }}.png" src="{{ asset('img/loading.svg') }}"/>
+                                            </a>
+                                            <a class="block category_link" href="#">
+                                                <div class="text-center" style="margin-top: 1em;">
+                                                    <h4>{{ ucwords(str_replace('_', ' ', $category->name)) }}</h4>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!--end item-->
+                                @endforeach
+
+                            </div>
+                            <!--end masonry container-->
+                        </div>
+                        <!--end masonry-->
+                    </div>
+                </div>
+                <!--end of row-->
+            </div>
+            <!--end of container-->
+        </section>
+    </div>
 @endsection

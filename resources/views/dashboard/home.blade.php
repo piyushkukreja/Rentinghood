@@ -1,196 +1,136 @@
-@extends('layouts.app')
-@section('navbar')
-    <div id="pre-loader">
-        <img src="{{ asset('img/loading-16.gif') }}" alt="">
-    </div>
-    <style>
-        #btn--lend, #btn--rent {
-            background: #03A9F3;
-        }
-        .hiring_div {
-            position: fixed;
-            width: 6em;
-            bottom: 0;
-            right: 0;
-            z-index: 10;
-            cursor: pointer;
-            transition: transform 0.3s ease-out;
-        }
-        .hiring_div:hover {
-            transform: translate(0,-5px);
-        }
-        @media (min-width: 1024px) {
-            .bar-2 .bar__module + .bar__module {
-                margin-left: 1.85714286em;
-            }
-            #btn--rent, #btn--lend {
-                font-size: 1.7em;
-                padding-top: 0.28035714em;
-                padding-bottom: 0.28035714em;
-                padding-right: 1.48214286em;
-                padding-left: 1.48214286em;
-            }
-            .hiring_div {
-                position: fixed;
-                width: 10em;
-                bottom: 0;
-                right: 0;
-                z-index: 10;
-            }
-        }
-        .bar-2 .menu-horizontal > li > a {
-            letter-spacing: 0.5px;
-        }
-        .menu-horizontal li:hover {
-            transform: translate(0, -5px);
-        }
-        .menu-horizontal li {
-            transition: transform .3s ease-out;
-        }
-        #scroll_to_content {
-            position: absolute;
-            width: 3.71428571em;
-            height: 3.71428571em;
-            background: #fff;
-            left: 50%;
-            margin-left: -1.85em;
-            border-radius: 50%;
-            text-align: center;
-            bottom: 2.71428571em;
-            padding-top: 12px;
-            box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.04);
-            z-index: 98;
-            border: 1px solid #ececec;
-            transition: 0.2s ease-out;
-            -webkit-transition: 0.2s ease-out;
-            -moz-transition: 0.2s ease-out;
-            display: none;
-        }
-        #scroll_to_content i {
-            color: #252525;
-        }
-        #scroll_to_content:hover {
-            transform: translate3d(0, -5px, 0);
-            -webkit-transform: translate3d(0, -5px, 0);
-        }
-        @media (max-width: 767px) {
-            #home {
-                padding: 12em 0;
-                min-height: calc(100vh - 5em);
-            }
-            footer .social-list {
-                margin: 1.5em 0;
-            }
-        }
-        #scroll_to_content {
-            display: block;
-        }
-        @media (min-width: 768px) {
-            #home {
-                min-height: 100vh;
+@extends('layouts.public')
+@extends('layouts.public_parts.navbar_transparent')
+@section('head')
+    @parent
+    <style type="text/css">
+        @media (min-width: 767px) {
+            #center-logo {
+                white-space: nowrap;
             }
         }
     </style>
-    <div class="nav-container">
-        <div class="bar bar--sm visible-xs">
-            <div class="container">
-                <div class="row">
-                    <div class="col-8 col-md-2">
-                        <a href="{{ route('home') }}">
-                            <h2 style="font-weight: 900; margin-bottom: 0; color: #333333; display: inline-block;">
-                                rentinghood
-                            </h2>
-                        </a>
-                    </div>
-                    <div class="col-4 col-md-10 text-right">
-                        <a href="#" class="hamburger-toggle" data-toggle-class="#menu2;hidden-xs">
-                            <i class="icon icon--sm stack-interface stack-menu"></i>
-                        </a>
-                    </div>
-                </div>
-                <!--end of row-->
-            </div>
-            <!--end of container-->
-        </div>
-        <!--end bar-->
-        <nav id="menu2" class="bar bar--sm bar-2 hidden-xs bar--transparent bar--absolute"
-             data-scroll-class='90vh:pos-fixed'>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3 col-md-4 hidden-xs">
-                        <div class="bar__module" style="margin-bottom: 0;">
-                            <a href="{{ route('home') }}">
-                                <h3 class="logo-light" style="font-weight: 900; margin-bottom: 0; color: white;">
-                                    rentinghood
-                                </h3>
-                                <h3 class="logo-dark" style="font-weight: 900; margin-bottom: 0; color: #555555 ;">
-                                    rentinghood
-                                </h3>
-                            </a>
-                        </div>
-                        <!--end module-->
-                    </div>
-                    <div class="col-lg-9 col-md-12 text-right text-left-xs text-left-sm">
-                        <div class="bar__module" style="margin-bottom: 0;">
-                            <ul class="menu-horizontal text-left">
-                                <li><a href="{{ route('about_us') }}">About Us</a></li>
-                                @auth
-                                    <li><a href="{{ route('account') }}">Account</a></li>
-                                @endauth
-                                <li><a href="{{ route('contact') }}">Contact Us</a></li>
-                            </ul>
-                        </div>
-                        <!--end module-->
-                        <div class="bar__module">
-                            @guest
-                                <a class="btn btn--sm btn--primary type--uppercase" href="{{ route('login') }}">
-                                <span class="btn__text">
-                                    Login
-                                </span>
-                                </a>
-                                <a class="btn btn--sm type--uppercase" href="{{ route('register') }}">
-                                <span class="btn__text">
-                                    Sign Up
-                                </span>
-                                </a>
-                            @else
-                                <a class="btn btn--sm btn--primary type--uppercase" href="{{ route('login') }}"
-                                   onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                <span class="btn__text">
-                                    Logout
-                                </span>
-                                </a>
+@endsection
+@section('scripts')
+    @parent
+    {{-- Sweet Alert 2 Plugin--}}
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
+    <script>
+        (function( $ ){
+            $.fn.fitText = function( kompressor, options ) {
+                // Setup options
+                var compressor = kompressor || 1,
+                    settings = $.extend({
+                        'minFontSize' : Number.NEGATIVE_INFINITY,
+                        'maxFontSize' : Number.POSITIVE_INFINITY
+                    }, options);
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                      style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            @endguest
-                        </div>
-                        <!--end module-->
-                    </div>
-                </div>
-                <!--end of row-->
-            </div>
-            <!--end of container-->
-        </nav>
-        <!--end bar-->
-    </div>
+                return this.each(function(){
+
+                    // Store the object
+                    var $this = $(this);
+
+                    // Resizer() resizes items based on the object width divided by the compressor * 10
+                    var resizer = function () {
+                        $this.css('font-size', Math.max(Math.min($this.width() / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)));
+                    };
+
+                    // Call once to set.
+                    resizer();
+
+                    // Call on resize. Opera debounces their resize by default.
+                    $(window).on('resize.fittext orientationchange.fittext', resizer);
+
+                });
+            };
+        })( jQuery );
+
+        @auth
+        $('#center-logo').fitText(0.75);
+        @else
+        $('#center-logo').fitText(0.6);
+        @endauth
+
+        $(document).ready(function () {
+
+            var backgroundImage = document.getElementById('home-background-image');
+            if(!backgroundImage.complete) {
+                $(backgroundImage).on('load', function () {
+                    $('#pre-loader').fadeOut('slow', function () {
+                        $(this).remove();
+                    });
+                });
+            } else {
+                setTimeout(function () {
+                    $('#pre-loader').fadeOut('slow', function () {
+                        $(this).remove();
+                    });
+                }, 1000);
+            }
+
+            $('.hiring_div').on('click', function () {
+                window.location.href = '{{ route('careers') }}';
+            });
+
+            @auth
+            function getMessageCount() {
+                $.ajax({
+                    url: '{{ route('get_message_count') }}',
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (response) {
+                        if (parseInt(response.requests_count) + parseInt(response.replies_count) != 0) {
+                            swal({
+                                title: 'You have new messages',
+                                imageUrl: '{{ asset('img/message.gif') }}',
+                                imageWidth: 300,
+                                imageHeight: 225,
+                                text: 'Visit the messages tab to view requests for your products and to answer them',
+                                confirmButtonText: 'View Messages'
+                            }).then((result) => {
+                                if(result.value) {
+                                    window.location.href = "{{ route('account', ['messages']) }}"
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+            getMessageCount();
+            @endauth
+
+            $('#scroll_to_content').click(function (e) {
+                e.preventDefault();
+                scrollToItem($($(this).attr('href')));
+            });
+
+            function scrollToItem(item) {
+                $('html, body').animate({
+                    scrollTop: item.offset().top
+                }, 1000);
+            }
+        });
+    </script>
 @endsection
 @section('content')
     <div class="main-container">
-        <div class="hiring_div"><img src="{{ asset('img/hiring1.png') }}"></div>
+        <div class="hiring_div"><img src="{{ asset('img/hiring2.png') }}"></div>
         <section class="cover height-90 imagebg text-center" data-overlay="5" id="home">
             <div class="background-image-holder">
-                <img alt="background" src="{{ asset('img/home/home5.jpg') }}"/>
+                <img id="home-background-image" alt="background" src="{{ asset('img/contactleft.jpg') }}"/>
             </div>
+            {{--<div id="left-rent"></div>
+            <div id="right-lend"></div>--}}
             <div class="container pos-vertical-center">
                 <div class="row">
                     <div class="col-md-8">
-                        <img alt="Image" class="unmarg--bottom" src="{{ asset('img/home/logo3.png') }}"/>
+                        {{--<img alt="Image" class="unmarg--bottom" src="{{ asset('img/home/logo-brush.png') }}"/>--}}
+                        @auth
+                        <h1 id="center-logo" style="font-weight: 600; margin-bottom: 0;">Hello, {{ \Illuminate\Support\Facades\Auth::user()->first_name }} :)</h1>
+                        @else
+                        <h1 id="center-logo" style="font-weight: 600; margin-bottom: 0;">RentingHood</h1>
+                        @endauth
                         <h3 style="font-weight: 600; font-family: Raleway, sans-serif;">
-                            Rent anything, right from your neighbourhood
+                            Rent anything, right from your Neighbourhood
                         </h3>
                         <a id="btn--rent" class="btn btn--primary btn--lg" href="{{ route('rent_categories') }}" data-tooltip="Let's save some money.">
                                 <span class="btn__text">
@@ -264,68 +204,4 @@
             </section>
         @endguest
     </div>
-
-    {{-- Sweet Alert 2 Plugin--}}
-    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
-
-    <script>
-        $(document).ready(function () {
-
-            setTimeout(function () {
-                $('#pre-loader').fadeOut('slow', function () {
-                    $(this).remove();
-                });
-            }, 1500);
-
-            @auth
-            function getMessageCount() {
-
-                $.ajax({
-
-                    url: '{{ route('get_message_count') }}',
-                    type: 'GET',
-                    dataType: 'JSON',
-                    success: function (response) {
-
-                        if (parseInt(response.requests_count) + parseInt(response.replies_count) != 0) {
-
-                            swal({
-                                title: 'You have new messages',
-                                imageUrl: '{{ asset('img/message.gif') }}',
-                                imageWidth: 300,
-                                imageHeight: 225,
-                                text: 'Visit the messages tab to view requests for your products and to answer them',
-                                confirmButtonText: 'View Messages'
-                            }).then((result) => {
-                                if(result.value) {
-                                window.location.href = "{{ route('account', ['messages']) }}"
-                                }
-                            });
-
-                        }
-                    }
-                });
-            }
-
-            getMessageCount();
-            @endauth
-
-            $('#scroll_to_content').click(function (e) {
-
-                e.preventDefault();
-                scrollToItem($($(this).attr('href')));
-
-            });
-
-            function scrollToItem(item) {
-
-                $('html, body').animate({
-                    scrollTop: item.offset().top
-                }, 1000);
-
-            }
-
-        });
-
-    </script>
 @endsection

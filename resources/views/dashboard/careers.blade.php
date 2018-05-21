@@ -1,117 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.public')
 @section('navbar')
-    <style>
-        section.main-container-section {
-            padding-top: 2em;
-            padding-bottom: 2em;
-        }
-        .openings-heading-row.row {
-            margin-top: 3em;
-        }
-        .feature img {
-            height: 2.5em;
-        }
-        .feature p {
-            font-size: 1.2em;
-            margin-bottom: 0.5em;
-        }
-        .feature .apply-btn {
-            color: #fff;
-            background: #34A9DE;
-            border-color: #34A9DE;
-        }
-        .feature .apply-btn:hover {
-            border-color: #51b5e3;
-            background: #51b5e3;
-        }
-        .feature .apply-btn .btn__text {
-            color: #fff;
-        }
-        .openings-row .opening-container .feature {
-            margin-bottom: 30px !important;
-            height: 100%;
-        }
-        .row.openings-row {
-            display: -webkit-box;
-            display: -webkit-flex;
-            display: -ms-flexbox;
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .row.openings-row > [class*='col-'] {
-            display: flex;
-            flex-direction: column;
-        }
-        @media (max-width: 767px) {
-            section.main-container-section {
-                padding-top: 0;
-            }
-            .feature img {
-                height: 3em;
-            }
-            .heading-block {
-                margin-bottom: 1em;
-            }
-            .openings-heading-row.row {
-                margin-top: 4em;
-            }
-            .opening-container .feature {
-                margin: 1em 2em !important;
-            }
-        }
-        @media (min-width: 1024px) {
-            @media (max-width: 1200px) {
-                .feature img {
-                    height: 2em;
-                }
-            }
-        }
-        .menu-horizontal li:hover {
-            transform: translate(0, -5px);
-        }
-        .menu-horizontal li {
-            transition: transform .3s ease-out;
-        }
-        .bar-1 .menu-horizontal > li > .dropdown__trigger, .bar-1 .menu-horizontal > li > a {
-            font-size: 1em;
-            line-height: 2.166666666666667em;
-            text-transform: none;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-        #location_field, #swal_location_field {
-            font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
-            font-style: normal;
-            font-weight: normal;
-            text-decoration: inherit;
-        }
-        #scroll_to_content {
-            position: absolute;
-            width: 3.71428571em;
-            height: 3.71428571em;
-            background: #fff;
-            left: 50%;
-            margin-left: -1.85em;
-            border-radius: 50%;
-            text-align: center;
-            bottom: 0;
-            padding-top: 12px;
-            box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.04);
-            z-index: 98;
-            border: 1px solid #ececec;
-            transition: 0.2s ease-out;
-            -webkit-transition: 0.2s ease-out;
-            -moz-transition: 0.2s ease-out;
-            display: block;
-        }
-        #scroll_to_content i {
-            color: #252525;
-        }
-        #scroll_to_content:hover {
-            transform: translate3d(0, -5px, 0);
-            -webkit-transform: translate3d(0, -5px, 0);
-        }
-    </style>
     <div class="nav-container">
         <div class="bar bar--sm visible-xs bar--mobile-sticky box-shadow" data-scroll-class="59px:pos-fixed">
             <div class="container">
@@ -163,18 +51,18 @@
                         <!--end module-->
                         <div class="bar__module">
                             @guest
-                                <a class="btn btn--sm btn--primary type--uppercase" href="{{ route('login') }}">
+                                <a class="btn btn--sm btn--primary type--uppercase" id="login_nav_button" href="{{ route('login') }}">
                                 <span class="btn__text">
                                     Login
                                 </span>
                                 </a>
-                                <a id="register_nav_button" class="btn btn--sm type--uppercase" href="{{ route('register') }}">
+                                <a id="register_nav_button" class="btn btn--sm type--uppercase" id="register_nav_button" href="{{ route('register') }}">
                                 <span class="btn__text">
                                     Sign Up
                                 </span>
                                 </a>
                             @else
-                                <a class="btn btn--sm btn--primary type--uppercase" href="{{ route('login') }}"
+                                <a class="btn btn--sm btn--primary type--uppercase" id="logout_nav_button" href="{{ route('login') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                 <span class="btn__text">
@@ -198,6 +86,133 @@
         <!--end bar-->
         @yield('location_field')
     </div>
+@endsection
+@section('head')
+    @parent
+    <style type="text/css">
+        .nav-container, #menu1 {
+            background: #fff;
+        }
+        #login_nav_button, #logout_nav_button {
+            background: #34A9DE;
+            border-color: #34A9DE;
+        }
+        #login_nav_button:hover, #logout_nav_button:hover {
+            background: #43afe0;
+        }
+        #register_nav_button {
+            background: #fff;
+            border-color: #626262;
+        }
+        #register_nav_button .btn__text {
+            color: #626262;
+        }
+        section.main-container-section {
+            padding-top: 2em;
+            padding-bottom: 2em;
+        }
+        .openings-heading-row.row {
+            margin-top: 3em;
+        }
+        .feature img {
+            height: 2.5em;
+        }
+        .feature p {
+            font-size: 1.2em;
+            margin-bottom: 0.5em;
+        }
+
+        .feature .apply-btn {
+            color: #fff;
+            background: #34A9DE;
+            border-color: #34A9DE;
+        }
+
+        .feature .apply-btn:hover {
+            border-color: #51b5e3;
+            background: #51b5e3;
+        }
+
+        .feature .apply-btn .btn__text {
+            color: #fff;
+        }
+
+        .openings-row .opening-container .feature {
+            margin-bottom: 30px !important;
+            height: 100%;
+        }
+        .row.openings-row {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .row.openings-row > [class*='col-'] {
+            display: flex;
+            flex-direction: column;
+        }
+        @media (max-width: 767px) {
+            section.main-container-section {
+                padding-top: 0;
+            }
+
+            .feature img {
+                height: 3em;
+            }
+
+            .heading-block {
+                margin-bottom: 1em;
+            }
+
+            .openings-heading-row.row {
+                margin-top: 4em;
+            }
+
+            .opening-container .feature {
+                margin: 1em 2em !important;
+            }
+        }
+        @media (min-width: 1024px) {
+            @media (max-width: 1200px) {
+                .feature img {
+                    height: 2em;
+                }
+            }
+        }
+        #location_field, #swal_location_field {
+            font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: inherit;
+        }
+        #scroll_to_content {
+            position: absolute;
+            width: 3.71428571em;
+            height: 3.71428571em;
+            background: #fff;
+            left: 50%;
+            margin-left: -1.85em;
+            border-radius: 50%;
+            text-align: center;
+            bottom: 0;
+            padding-top: 12px;
+            box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.04);
+            z-index: 98;
+            border: 1px solid #ececec;
+            transition: 0.2s ease-out;
+            -webkit-transition: 0.2s ease-out;
+            -moz-transition: 0.2s ease-out;
+            display: block;
+        }
+        #scroll_to_content i {
+            color: #252525;
+        }
+        #scroll_to_content:hover {
+            transform: translate3d(0, -5px, 0);
+            -webkit-transform: translate3d(0, -5px, 0);
+        }
+    </style>
 @endsection
 @section('content')
     <div class="main-container">

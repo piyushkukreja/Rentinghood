@@ -1,5 +1,5 @@
-@extends('layouts.app')
-@extends('layouts.navbar')
+@extends('layouts.public')
+@extends('layouts.public_parts.navbar_blue')
 @section('content')
     <div class="main-container">
         <section class="height-100 imagebg text-center" data-overlay="4">
@@ -11,7 +11,7 @@
                     <div class="col-md-7 col-lg-5">
                         <h2>Login to continue</h2>
                         <p class="lead">
-                            Welcome back, sign in with your existing Rentinghood account credentials
+                            Welcome back, sign in with your existing RentingHood account credentials
                         </p>
                         <form method="POST" action="{{ route('login') }}">
                             {{ csrf_field() }}

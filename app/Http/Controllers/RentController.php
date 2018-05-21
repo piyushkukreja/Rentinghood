@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Subcategories;
+use App\Subcategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Categories;
+use App\Category;
 use Illuminate\Support\Facades\Session;
 
 class RentController extends Controller
@@ -56,7 +56,7 @@ class RentController extends Controller
             $response['count'] = DB::table('products')
                 ->whereIn('subcategory_id', function ($query) use ($category_id) {
                     $query->select('id')
-                        ->from(with(new Subcategories)->getTable())
+                        ->from(with(new Subcategory)->getTable())
                         ->where('category_id', $category_id);
                 })->where('availability', 1)
                 ->whereRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng) < 10')
@@ -116,7 +116,7 @@ class RentController extends Controller
             return DB::table('products')
                 ->whereIn('subcategory_id', function ($query) use ($category_id) {
                     $query->select('id')
-                        ->from(with(new Subcategories)->getTable())
+                        ->from(with(new Subcategory)->getTable())
                         ->where('category_id', $category_id);
             })->where('availability', 1)
                 ->whereRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng) < 10')

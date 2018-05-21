@@ -1,8 +1,9 @@
-@extends('layouts.app')
-@extends('layouts.navbar')
-@section('content')
+@extends('layouts.public')
+@extends('layouts.public_parts.navbar_blue')
+@section('head')
+    @parent
     <style>
-        #scroll_to_content {
+        #lend_scroll {
             position: absolute;
             width: 3em;
             height: 3em;
@@ -20,10 +21,10 @@
             -webkit-transition: 0.2s ease-out;
             -moz-transition: 0.2s ease-out;
         }
-        #scroll_to_content i {
+        #lend_scroll i {
             color: #03A9F4;
         }
-        #scroll_to_content:hover {
+        #lend_scroll:hover {
             transform: translate3d(0, -5px, 0);
             -webkit-transform: translate3d(0, -5px, 0);
         }
@@ -60,6 +61,8 @@
             }
         }
     </style>
+@endsection
+@section('content')
     <div class="main-container">
         <section class="title_section text-center bg--secondary">
             <div class="container">
@@ -80,7 +83,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="feature feature-3 boxed boxed--sm boxed--border">
-                            <a id="scroll_to_content" href="#content">
+                            <a id="lend_scroll" href="#content">
                                 <i class="stack-interface stack-down-open-big"></i>
                             </a>
                             <i class="fa fa-sitemap fa-5x"></i>
@@ -162,7 +165,7 @@
                 $( this ).attr( 'src', $( this ).attr( 'data-src' ) );
             });
 
-            $('#scroll_to_content').click(function (e) {
+            $('#lend_scroll').click(function (e) {
                 e.preventDefault();
                 scrollToItem($($(this).attr('href')));
             });

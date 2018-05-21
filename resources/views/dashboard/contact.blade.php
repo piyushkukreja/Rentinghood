@@ -1,9 +1,21 @@
-@extends('layouts.app')
-@extends('layouts.navbar')
+@extends('layouts.public')
+@extends('layouts.public_parts.navbar_blue')
 @section('content')
 <style>
     #contact-form {
         margin-top: 0;
+    }
+    #title-col {
+        padding: 0;
+    }
+    #title-container {
+        padding-bottom: 14em;
+        cursor: default;
+    }
+    #title {
+        color: #fff !important;
+        font-weight: 500;
+        font-size: 4em;
     }
     @media (min-width: 767px) {
         #email-container {
@@ -14,6 +26,9 @@
     @media (max-width: 767px) {
         #form-container {
             padding-top: 1.5em;
+        }
+        #contact-form > div {
+            padding-right: 0;
         }
     }
 </style>
@@ -60,9 +75,9 @@
                     </div>
                     <div class="col-md-1 h100">
                     </div>
-                    <div class="col-md-6 hidden-xs d-flex align-items-center h100" style="padding: 0;">
-                        <div style="padding-bottom: 14em;">
-                            <h1 style="color: #fff!important; font-weight: 600; font-size: 4em;">Hello Neighbour :)</h1>
+                    <div id="title-col" class="col-md-6 hidden-xs d-flex align-items-center h100">
+                        <div id="title-container">
+                            <h1 id="title">Hello Neighbour :)</h1>
                         </div>
                     </div>
 

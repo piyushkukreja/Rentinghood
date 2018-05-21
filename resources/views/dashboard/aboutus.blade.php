@@ -1,139 +1,14 @@
-@extends('layouts.app')
-@section('navbar')
-    <style>
-        .hiring_div {
-            position: fixed;
-            width: 6em;
-            bottom: 0;
-            right: 0;
-            z-index: 10;
-            cursor: pointer;
-            transition: transform 0.3s ease-out;
-        }
-        .hiring_div:hover {
-            transform: translate(0,-5px);
-        }
-        .back-to-top {
-            bottom: 11em;
-        }
-        @media (min-width: 1024px) {
-            .bar-2 .bar__module + .bar__module {
-                margin-left: 1.85714286em;
-            }
-            .hiring_div {
-                position: fixed;
-                width: 10em;
-                bottom: 0;
-                right: 0;
-                z-index: 10;
-            }
-        }
-        .bar-2 .menu-horizontal > li > a {
-            letter-spacing: 0.5px;
-        }
-        h1.about_heading, h2.about_heading {
-            font-weight: 600;
-        }
-
-        .menu-horizontal li:hover {
-            transform: translate(0, -5px);
-        }
-
-        .menu-horizontal li {
-            transition: transform .3s ease-out;
-        }
-
-        .logo-dark, .logo-light {
-            font-weight: 900; margin-bottom: 0;
-        }
-    </style>
-    <div class="nav-container">
-        <div class="bar bar--sm visible-xs">
-            <div class="container">
-                <div class="row">
-                    <div class="col-8 col-md-2">
-                        <a href="{{ route('home') }}">
-                            <h2 style="font-weight: 900; margin-bottom: 0; color: #333333; display: inline-block;">
-                                rentinghood
-                            </h2>
-                        </a>
-                    </div>
-                    <div class="col-4 col-md-10 text-right">
-                        <a href="#" class="hamburger-toggle" data-toggle-class="#menu2;hidden-xs">
-                            <i class="icon icon--sm stack-interface stack-menu"></i>
-                        </a>
-                    </div>
-                </div>
-                <!--end of row-->
-            </div>
-            <!--end of container-->
-        </div>
-        <!--end bar-->
-        <nav id="menu2" class="bar bar--sm bar-2 hidden-xs bar--transparent bar--absolute" data-scroll-class='90vh:pos-fixed'>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3 col-md-4 hidden-xs">
-                        <div class="bar__module" style="margin-bottom: 0;">
-                            <a href="{{ route('home') }}">
-                                <h3 class="logo-light" style="color: white;">
-                                    rentinghood
-                                </h3>
-                                <h3 class="logo-dark" style="color: #555555 ;">
-                                    rentinghood
-                                </h3>
-                            </a>
-                        </div>
-                        <!--end module-->
-                    </div>
-                    <div class="col-lg-9 col-md-12 text-right text-left-xs text-left-sm">
-                        <div class="bar__module" style="margin-bottom: 0;">
-                            <ul class="menu-horizontal text-left">
-                                <li><a href="{{ route('home') }}">Home</a></li>
-                                <li><a href="{{ route('rent_categories') }}">Categories</a></li>
-                                <li><a href="{{ route('lend_categories') }}">Lend</a></li>
-                                @auth
-                                    <li><a href="{{ route('account') }}">Account</a></li>
-                                @endauth
-                                <li><a href="{{ route('contact') }}">Contact Us</a></li>
-                            </ul>
-                        </div>
-                        <!--end module-->
-                        <div class="bar__module">
-                            @guest
-                                <a class="btn btn--sm btn--primary type--uppercase" href="{{ route('login') }}">
-                                <span class="btn__text">
-                                    Login
-                                </span>
-                                </a>
-                                <a class="btn btn--sm type--uppercase" href="{{ route('register') }}">
-                                <span class="btn__text">
-                                    Sign Up
-                                </span>
-                                </a>
-                            @else
-                                <a class="btn btn--sm btn--primary type--uppercase" href="{{ route('login') }}"
-                                   onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                <span class="btn__text">
-                                    Logout
-                                </span>
-                                </a>
-
-                                <form id="logout-form"   action="{{ route('logout') }}" method="POST"
-                                      style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            @endguest
-                        </div>
-                        <!--end module-->
-                    </div>
-                </div>
-                <!--end of row-->
-            </div>
-            <!--end of container-->
-        </nav>
-        <!--end bar-->
-    </div>
+@extends('layouts.public')
+@include('layouts.public_parts.navbar_transparent')
+@section('scripts')
+    @parent
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.hiring_div').on('click', function () {
+                window.location.href = '{{ route('careers') }}';
+            });
+        })
+    </script>
 @endsection
 @section('content')
     <div class="main-container">
@@ -145,16 +20,16 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-lg-6">
-                        <h1 class="about_heading">Hi, We're RentingHood</h1>
+                        <h1 class="about-heading">Hi, We're RentingHood</h1>
                     </div>
                 </div>
             </div>
         </section>
-        <section class="text-center bg--primary" style="padding-bottom: 1em; padding-top: 2em; box-shadow: 0 23px 40px rgba(0, 0, 0, 0.2);">
+        <section class="text-center bg--primary about-heading-section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-                        <h2 class="about_heading">Who we are?</h2>
+                        <h2 class="about-heading">Who we are?</h2>
                     </div>
                 </div>
                 <!--end of row-->
@@ -176,11 +51,11 @@
             </div>
             <!--end of container-->
         </section>
-        <section class="text-center bg--primary" style="padding-bottom: 1em; padding-top: 2em; box-shadow: 0 23px 40px 0 rgba(0, 0, 0, 0.2);">
+        <section class="text-center bg--primary about-heading-section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-                        <h2 class="about_heading">Founding neighbours</h2>
+                        <h2 class="about-heading">Founding neighbours</h2>
                     </div>
                 </div>
                 <!--end of row-->
@@ -200,7 +75,7 @@
                                 <span>Founder &amp; CEO</span>
                             </div>
                             <p class="lead">
-                                Prior to Rentinghood, founder Bhushan Punjabi spent his days working as a distribution partner for a multinational company ‘XS’ and built a team of over 50 individuals and successfully launched the XS energy drink in the ever flourishing Indian Market. He had also been a part of Uber. But even when his days were busy, his ideas and cups of coffee kept him awake at night. And in this journey of being a nocturnal, Rentinghood took its foundation.
+                                Prior to RentingHood, founder Bhushan Punjabi spent his days working as a distribution partner for a multinational company ‘XS’ and built a team of over 50 individuals and successfully launched the XS energy drink in the ever flourishing Indian Market. He had also been a part of Uber. But even when his days were busy, his ideas and cups of coffee kept him awake at night. And in this journey of being a nocturnal, Rentinghood took its foundation.
                             </p>
                             <ul class="social-list list-inline list--hover">
                                 <li>

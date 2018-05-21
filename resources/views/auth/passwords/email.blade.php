@@ -1,5 +1,5 @@
-@extends('layouts.app')
-@extends('layouts.navbar')
+@extends('layouts.public')
+@extends('layouts.public_parts.navbar_blue')
 @section('content')
     <div class="main-container" style="min-height: 100vh;">
         <section class="text-center bg--light" style="padding-top: 10em;">

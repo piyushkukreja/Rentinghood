@@ -1,5 +1,5 @@
-@extends('layouts.app')
-@extends('layouts.navbar')
+@extends('layouts.public')
+@extends('layouts.public_parts.navbar_blue')
 @section('content')
     <style>
         #alert .fa-close {
@@ -1172,41 +1172,37 @@
                 loadInventory();
             @endif
 
-            //js for DURATION AND RATES
-            function changeRequiredStates(form_container) {
-
-
-                var rate1 = form_container.find('input[name="rate1"]');
-                var rate2 = form_container.find('input[name="rate2"]');
-                var rate3 = form_container.find('input[name="rate3"]');
-                switch (form_container.find('select[name="duration"]').val()) {
-                    case '0' :
-                        rate1.prop('required', true).parent().slideDown();
-                        rate2.prop('required', false).parent().slideUp();
-                        rate3.prop('required', false).parent().slideUp();
-                        break;
-                    case '1' :
-                        rate1.prop('required', true).parent().slideDown();
-                        rate2.prop('required', true).parent().slideDown();
-                        rate3.prop('required', false).parent().slideUp();
-                        break;
-                    case '2' :
-                        rate1.prop('required', true).parent().slideDown();
-                        rate2.prop('required', true).parent().slideDown();
-                        rate3.prop('required', true).parent().slideDown();
-                        break;
-
+                //js for DURATION AND RATES
+                function changeRequiredStates(form_container) {
+                    var rate1 = form_container.find('input[name="rate1"]');
+                    var rate2 = form_container.find('input[name="rate2"]');
+                    var rate3 = form_container.find('input[name="rate3"]');
+                    switch (form_container.find('select[name="duration"]').val()) {
+                        case '0' :
+                            rate1.prop('required', true).parent().slideDown();
+                            rate2.prop('required', false).parent().slideUp();
+                            rate3.prop('required', false).parent().slideUp();
+                            break;
+                        case '1' :
+                            rate1.prop('required', true).parent().slideDown();
+                            rate2.prop('required', true).parent().slideDown();
+                            rate3.prop('required', false).parent().slideUp();
+                            break;
+                        case '2' :
+                            rate1.prop('required', true).parent().slideDown();
+                            rate2.prop('required', true).parent().slideDown();
+                            rate3.prop('required', true).parent().slideDown();
+                            break;
+                    }
                 }
 
-            }
-
-            changeRequiredStates($('#lend-form'));
-            $('#lend-form').find('select[name="duration"]').on('change', function () {
                 changeRequiredStates($('#lend-form'));
-            });
-            $('#update-form').find('select[name="duration"]').on('change', function () {
-                changeRequiredStates($('#update-form'));
-            });
+                $('#lend-form').find('select[name="duration"]').on('change', function () {
+                    changeRequiredStates($('#lend-form'));
+                });
+                $('#update-form').find('select[name="duration"]').on('change', function () {
+                    changeRequiredStates($('#update-form'));
+                });
 
             //js for ADDRESS/LOCATION
             var defaultBounds = new google.maps.LatLngBounds(

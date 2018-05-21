@@ -1,8 +1,8 @@
-@extends('layouts.app')
-@extends('layouts.navbar')
-@section('content')
-
-    <style>
+@extends('layouts.public')
+@extends('layouts.public_parts.navbar_blue')
+@section('head')
+    @parent
+    <style type="text/css">
         ol.breadcrumbs, ol.breadcrumbs > li {
             margin-bottom: 0;
         }
@@ -39,296 +39,14 @@
             margin-bottom: 5em;
         }
     </style>
-    <div class="main-container">
-        <section class="bg--secondary" style="padding-bottom: 3em; padding-top: 3em;">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h1 style="margin-bottom: 0.2em;">{{ ucwords($product->name) }}</h1>
-                        <ol class="breadcrumbs">
-                            <li>
-                                <a href="{{ route('home') }}">Home</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('rent_categories') }}">Rent</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('rent_subcategories', array('category_name' => $product->category->name)) }}">{{ ucwords($product->category->name) }}</a>
-                            </li>
-                            <li>{{ ucwords($product->name) }}</li>
-                        </ol>
-                    </div>
-                </div>
-                <!--end of row-->
-            </div>
-            <!--end of container-->
-        </section>
-        <section style="padding-top: 2em;">
-            <div class="container">
-                <div class="row justify-content-around">
-                    <div class="col-md-6 col-lg-6">
-                        <div class="slider border--round boxed--border" data-paging="true" data-arrows="true"
-                             data-autoplay="false">
-                            <ul class="slides">
-                                @foreach($product_pictures as $picture)
-                                    <li>
-                                        <img alt="Image"
-                                             src="{{ asset('img/uploads/products/large/' . $picture->file_name) }}"/>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        <!--end slider-->
-                    </div>
-                    <div class="col-md-6 col-lg-6">
-                        <h2>{{ ucwords($product->name) }}</h2>
-                        <p>
-                            @foreach(explode('<br>', $product->description) as $line)
-                                {{ $line }}
-                                <br />
-                            @endforeach
-                        </p>
-                        <div class="row">
-                            @if( $product->rate_1 != 0 )
-                            <div class="col-md-6 col-lg-4">
-                                <div class="pricing pricing-3">
-                                    <div class="pricing__head bg--secondary boxed">
-                                            <span class="h3">
-                                                        &#8377;{{ $product->rate_1 }}</span>
-                                        <p class="type--fine-print">Per Day.</p>
-                                    </div>
-                                </div>
-                                <!--end pricing-->
-                            </div>
-                            @endif
-                            @if($product->duration > 0)
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="pricing pricing-3">
-                                        <div class="pricing__head bg--secondary boxed">
-                                                <span class="h3">
-                                                            &#8377;{{ $product->rate_2 }}</span>
-                                            <p class="type--fine-print">Per Week.</p>
-                                        </div>
-                                    </div>
-                                    <!--end pricing-->
-                                </div>
-                            @endif
-                            @if($product->duration > 1)
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="pricing pricing-3">
-                                        <div class="pricing__head bg--secondary boxed">
-                                                <span class="h3">
-                                                            &#8377;{{ $product->rate_3 }}</span>
-                                            <p class="type--fine-print">Per Month.</p>
-                                        </div>
-                                    </div>
-                                    <!--end pricing-->
-                                </div>
-                            @endif
-                        </div>
-                        <!--end of row-->
-                        <hr id="product_hr">
-                        <form id="contact_owner_form" method="post" action="{{ route('contact_owner') }}">
-                            {{ csrf_field() }}
-                            <div id="availability_message" class="col-12 h5 color--error boxed boxed--border"
-                                 style="padding: 1em; display: none;">
-                                This product may not be available for the selected range.
-                            </div>
-                            <div class="col-md-12">
-                                <label>Duration :</label>
-                                <input type="text" id="from" name="from" placeholder="From" required>
-                                <input type="text" id="to" name="to" placeholder="to" required>
-                            </div>
-                            <hr>
-                            <div class="col-12 text-center">
-                                <button id="contact_owner" type="submit" class="btn btn--primary">
-                                    Place a request
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    @guest
-
-        <!-- LOGIN MODAL   -->
-        <div class="modal-instance">
-            <a id="login_modal_trigger" href="#" class="modal-trigger hidden">Login</a>
-            <div id="login_modal" class="modal-container">
-                <div class="modal-content section-modal">
-                    <section class="unpad ">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-12">
-                                    <div class="boxed boxed--lg text-center feature">
-                                        <div class="modal-close modal-close-cross"></div>
-                                        <div class="text-block">
-                                            <h3>Login to Your Account</h3>
-                                            <p>
-                                                Welcome back, sign in with your existing account credentials.
-                                            </p>
-                                        </div>
-                                        <div class="feature__body">
-                                            <form id="login_form" method="POST" action="{{ route('login') }}">
-                                                {{ csrf_field() }}
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <input id="email" type="email" name="email" value="" placeholder="Email"
-                                                               required autofocus>
-
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <input id="password" type="password" name="password" placeholder="Password"
-                                                               required>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <button class="btn btn--primary type--uppercase" type="submit">
-                                                            Login
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                            </form>
-                                            <span class="type--fine-print block">
-                                                Don't have an account yet? <a id="register_link" href="#">Create account</a>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </div>
-
-        <!-- REGISTER MODAL   -->
-        <div class="modal-instance">
-            <a id="register_modal_trigger" class="btn modal-trigger hidden" href="#"></a>
-            <div id="register_modal" class="modal-container">
-                <div class="modal-content">
-                    <section class="imageblock feature-large border--round ">
-                        <div class="imageblock__content col-lg-5 col-md-3 pos-left">
-                            <div class="background-image-holder">
-                                <img alt="image" src="{{ asset('img/cowork-8.jpg') }}">
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row justify-content-end">
-                                <div class="col-lg-6 col-md-7">
-                                    <div class="row">
-                                        <div class="col-md-11 col-lg-10">
-                                            <h1>Become a RentingHood neighbour</h1>
-                                            <hr class="short">
-                                            <form id="register_form" method="POST" action="{{ route('register') }}">
-                                                {{ csrf_field() }}
-                                                <div class="row">
-
-                                                    <div class="col-md-6">
-                                                        <input id="first_name" type="text" name="first_name" placeholder="First Name" value="" required autofocus>
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <input id="last_name" type="text" placeholder="Last Name" name="last_name" value="" required>
-                                                    </div>
-
-                                                    <div class="col-md-12">
-                                                        <input id="email2" type="email" placeholder="Email" name="email" value="" required>
-                                                    </div>
-
-                                                    <div class="col-md-12">
-                                                        <input id="address" type="text" placeholder="Address" name="address"
-                                                               value="{{ old('address') }}" required>
-                                                    </div>
-
-                                                    <div id="latlng" class="hidden">
-                                                        <input id="lat" type="hidden" name="lat" value="">
-                                                        <input id="lng" type="hidden" name="lng" value="">
-                                                    </div>
-
-                                                    <div class="col-md-12">
-                                                        <input id="contact" placeholder="Contact" type="number"
-                                                               name="contact" value="">
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <input id="password2" placeholder="Password" type="password"
-                                                               name="password" required>
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <input id="password-confirm" placeholder="Confirm Password"
-                                                               type="password" name="password_confirmation" required>
-                                                    </div>
-
-                                                    <div class="col-md-12">
-                                                        <button type="submit" class="btn btn--primary type--uppercase">
-                                                            Register
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <div class="modal-close modal-close-cross"></div>
-                </div>
-            </div>
-        </div>
-    @endguest
-
-    <!-- OTP VERIFICATION MODAL -->
-    <div class="modal-instance">
-        <a id="otp_modal_trigger" class="btn modal-trigger hidden" href="#"></a>
-        <div id="otp_modal" class="modal-container">
-            <div class="modal-content">
-                <section class="unpad ">
-                    <div class="container">
-                        <div class="row" id="send_otp_div">
-                            <div class="col-12 boxed boxed--border border--round box-shadow">
-                                <h2>Verify Your Contact</h2>
-                                <p class="lead">
-                                    We will send a OTP to your mobile ******<span class="otp_contact">@auth{{ substr(Auth::user()->contact, 6, 4) }}@endauth</span>
-                                </p>
-                                <form id="send_otp_form">
-                                    {{ csrf_field() }}
-                                    <button id="send_otp" class="btn btn--primary type--uppercase" style="margin-top: 0;" type="submit">Send</button>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row" id="otp_div" style="display: none;">
-                            <div class="col-md-12 boxed boxed--border border--round box-shadow">
-                                <h2>Verify Your Contact</h2>
-                                <p class="lead">
-                                    Enter OTP sent to ******<span class="otp_contact">@auth{{ substr(Auth::user()->contact, 6, 4) }}@endauth</span>
-                                </p>
-                                <form id="otp_form" class="text-center">
-                                    {{ csrf_field() }}
-                                    <input id="otp" placeholder="OTP" type="number" class="form-control" name="otp" required autofocus>
-                                    <button id="verify_otp" class="btn btn--primary type--uppercase" type="submit">Verify</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </div>
-
-    <!-- CONTACT OWNER MODAL -->
-    <a id="scroll_to_end" href="#end" class="hidden"></a>
-
+@endsection
+@section('scripts')
+    @parent
     {{-- DATEPICKER --}}
-    <script src="{{ asset('js/datepicker.js') }}"></script>
+    <script src="{{ asset('js/datepicker.js') }}" type="text/javascript"></script>
 
     {{-- SWEETALERT2 --}}
-    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js" type="text/javascript"></script>
 
     <script type="text/javascript">
 
@@ -386,7 +104,7 @@
             });
 
             //js for Login Modal
-            @guest
+                    @guest
             var logged_in = false;
             var login_form = $('#login_form');
             login_form.submit(function (e) {
@@ -484,7 +202,7 @@
             });
 
 
-            @else
+                    @else
             var logged_in = true;
             @endguest
 
@@ -774,4 +492,289 @@
         });
 
     </script>
+@endsection
+@section('content')
+    <div class="main-container">
+        <section class="bg--secondary" style="padding-bottom: 3em; padding-top: 3em;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 style="margin-bottom: 0.2em;">{{ ucwords($product->name) }}</h1>
+                        <ol class="breadcrumbs">
+                            <li>
+                                <a href="{{ route('home') }}">Home</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('rent_categories') }}">Rent</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('rent_subcategories', array('category_name' => $product->category->name)) }}">{{ ucwords($product->category->name) }}</a>
+                            </li>
+                            <li>{{ ucwords($product->name) }}</li>
+                        </ol>
+                    </div>
+                </div>
+                <!--end of row-->
+            </div>
+            <!--end of container-->
+        </section>
+        <section style="padding-top: 2em;">
+            <div class="container">
+                <div class="row justify-content-around">
+                    <div class="col-md-6 col-lg-6">
+                        <div class="slider border--round boxed--border" data-paging="true" data-arrows="true"
+                             data-autoplay="false">
+                            <ul class="slides">
+                                @foreach($product_pictures as $picture)
+                                    <li>
+                                        <img alt="Image"
+                                             src="{{ asset('img/uploads/products/large/' . $picture->file_name) }}"/>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <!--end slider-->
+                    </div>
+                    <div class="col-md-6 col-lg-6">
+                        <h2>{{ ucwords($product->name) }}</h2>
+                        <p>
+                            @foreach(explode('<br>', $product->description) as $line)
+                                {{ $line }}
+                                <br />
+                            @endforeach
+                        </p>
+                        <div class="row">
+                            @if( $product->rate_1 != 0 )
+                            <div class="col-md-6 col-lg-4">
+                                <div class="pricing pricing-3">
+                                    <div class="pricing__head bg--secondary boxed">
+                                            <span class="h3">
+                                                        &#8377;{{ $product->rate_1 }}</span>
+                                        <p class="type--fine-print">Per Day.</p>
+                                    </div>
+                                </div>
+                                <!--end pricing-->
+                            </div>
+                            @endif
+                            @if($product->duration > 0)
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="pricing pricing-3">
+                                        <div class="pricing__head bg--secondary boxed">
+                                                <span class="h3">
+                                                            &#8377;{{ $product->rate_2 }}</span>
+                                            <p class="type--fine-print">Per Week.</p>
+                                        </div>
+                                    </div>
+                                    <!--end pricing-->
+                                </div>
+                            @endif
+                            @if($product->duration > 1)
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="pricing pricing-3">
+                                        <div class="pricing__head bg--secondary boxed">
+                                                <span class="h3">
+                                                            &#8377;{{ $product->rate_3 }}</span>
+                                            <p class="type--fine-print">Per Month.</p>
+                                        </div>
+                                    </div>
+                                    <!--end pricing-->
+                                </div>
+                            @endif
+                        </div>
+                        <!--end of row-->
+                        <hr id="product_hr">
+                        <form id="contact_owner_form" method="post" action="{{ route('contact_owner') }}">
+                            {{ csrf_field() }}
+                            <div id="availability_message" class="col-12 h5 color--error boxed boxed--border"
+                                 style="padding: 1em; display: none;">
+                                This product may not be available for the selected range.
+                            </div>
+                            <div class="col-md-12">
+                                <label>Duration :</label>
+                                <input type="text" id="from" name="from" placeholder="From" required>
+                                <input type="text" id="to" name="to" placeholder="to" required>
+                            </div>
+                            <hr>
+                            <div class="col-12 text-center">
+                                <button id="contact_owner" type="submit" class="btn btn--primary">
+                                    Place a request
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    @guest
+
+        <!-- LOGIN MODAL   -->
+        <div class="modal-instance">
+            <a id="login_modal_trigger" href="#" class="modal-trigger hidden">Login</a>
+            <div id="login_modal" class="modal-container">
+                <div class="modal-content section-modal">
+                    <section class="unpad ">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <div class="boxed boxed--lg text-center feature">
+                                        <div class="modal-close modal-close-cross"></div>
+                                        <div class="text-block">
+                                            <h3>Login to Your Account</h3>
+                                            <p>
+                                                Welcome back, sign in with your existing account credentials.
+                                            </p>
+                                        </div>
+                                        <div class="feature__body">
+                                            <form id="login_form" method="POST" action="{{ route('login') }}">
+                                                {{ csrf_field() }}
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input id="email" type="email" name="email" value="" placeholder="Email"
+                                                               required autofocus>
+
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <input id="password" type="password" name="password" placeholder="Password"
+                                                               required>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <button class="btn btn--primary type--uppercase" type="submit">
+                                                            Login
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+                                            <span class="type--fine-print block">
+                                                Don't have an account yet? <a id="register_link" href="#">Create account</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <!-- REGISTER MODAL   -->
+        <div class="modal-instance">
+            <a id="register_modal_trigger" class="btn modal-trigger hidden" href="#"></a>
+            <div id="register_modal" class="modal-container">
+                <div class="modal-content">
+                    <section class="imageblock feature-large border--round ">
+                        <div class="imageblock__content col-lg-5 col-md-3 pos-left">
+                            <div class="background-image-holder">
+                                <img alt="image" src="{{ asset('img/cowork-8.jpg') }}">
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="row justify-content-end">
+                                <div class="col-lg-6 col-md-7">
+                                    <div class="row">
+                                        <div class="col-md-11 col-lg-10">
+                                            <h1>Become a RentingHood neighbour</h1>
+                                            <hr class="short">
+                                            <form id="register_form" method="POST" action="{{ route('register') }}">
+                                                {{ csrf_field() }}
+                                                <div class="row">
+
+                                                    <div class="col-md-6">
+                                                        <input id="first_name" type="text" name="first_name" placeholder="First Name" value="" required autofocus>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <input id="last_name" type="text" placeholder="Last Name" name="last_name" value="" required>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <input id="email2" type="email" placeholder="Email" name="email" value="" required>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <input id="address" type="text" placeholder="Address" name="address"
+                                                               value="{{ old('address') }}" required>
+                                                    </div>
+
+                                                    <div id="latlng" class="hidden">
+                                                        <input id="lat" type="hidden" name="lat" value="">
+                                                        <input id="lng" type="hidden" name="lng" value="">
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <input id="contact" placeholder="Contact" type="number"
+                                                               name="contact" value="">
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <input id="password2" placeholder="Password" type="password"
+                                                               name="password" required>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <input id="password-confirm" placeholder="Confirm Password"
+                                                               type="password" name="password_confirmation" required>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <button type="submit" class="btn btn--primary type--uppercase">
+                                                            Register
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="modal-close modal-close-cross"></div>
+                </div>
+            </div>
+        </div>
+    @endguest
+
+    <!-- OTP VERIFICATION MODAL -->
+    <div class="modal-instance">
+        <a id="otp_modal_trigger" class="btn modal-trigger hidden" href="#"></a>
+        <div id="otp_modal" class="modal-container">
+            <div class="modal-content">
+                <section class="unpad ">
+                    <div class="container">
+                        <div class="row" id="send_otp_div">
+                            <div class="col-12 boxed boxed--border border--round box-shadow">
+                                <h2>Verify Your Contact</h2>
+                                <p class="lead">
+                                    We will send a OTP to your mobile ******<span class="otp_contact">@auth{{ substr(Auth::user()->contact, 6, 4) }}@endauth</span>
+                                </p>
+                                <form id="send_otp_form">
+                                    {{ csrf_field() }}
+                                    <button id="send_otp" class="btn btn--primary type--uppercase" style="margin-top: 0;" type="submit">Send</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row" id="otp_div" style="display: none;">
+                            <div class="col-md-12 boxed boxed--border border--round box-shadow">
+                                <h2>Verify Your Contact</h2>
+                                <p class="lead">
+                                    Enter OTP sent to ******<span class="otp_contact">@auth{{ substr(Auth::user()->contact, 6, 4) }}@endauth</span>
+                                </p>
+                                <form id="otp_form" class="text-center">
+                                    {{ csrf_field() }}
+                                    <input id="otp" placeholder="OTP" type="number" class="form-control" name="otp" required autofocus>
+                                    <button id="verify_otp" class="btn btn--primary type--uppercase" type="submit">Verify</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!-- CONTACT OWNER MODAL -->
+    <a id="scroll_to_end" href="#end" class="hidden"></a>
 @endsection

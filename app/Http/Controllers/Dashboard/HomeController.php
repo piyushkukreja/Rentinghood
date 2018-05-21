@@ -52,7 +52,7 @@ class HomeController extends Controller
     public function updateAvailability(Request $request)
     {
         $product = DB::table('products')->where('id', $request->input('product_id'))->first();
-        if($product->lender_id == Auth::user()->id)
+        if($product->lender_id == Auth::user()->id || Auth::user()->isAdmin())
         {
             DB::table('products')->where('id', $product->id)->update(['availability' => $request->input('availability')]);
             return ['message' => 'success'];
