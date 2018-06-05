@@ -111,7 +111,7 @@ class ProductsController extends Controller
                             'lender_id' => 4,
                             'rate_1' => intval($value->rate_1), 'rate_2' => intval($value->rate_2), 'rate_3' => intval($value->rate_3),
                             'address' => $value->address, 'lat' => floatval(str_replace("° N", "", $value->lat)), 'lng' => floatval(str_replace("° E", "", $value->lng)),
-                            'image' => $file_name];
+                            'image' => $file_name, 'verified' => 1, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()];
                         $product_id = DB::table('products')->insertGetId($product);
                         $product_pictures = ['product_id' => $product_id, 'file_name' => $file_name];
                         DB::table('product_pictures')->insert($product_pictures);

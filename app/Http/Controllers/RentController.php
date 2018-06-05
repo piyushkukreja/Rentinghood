@@ -59,6 +59,7 @@ class RentController extends Controller
                         ->from(with(new Subcategory)->getTable())
                         ->where('category_id', $category_id);
                 })->where('availability', 1)
+                ->where('verified', 1)
                 ->whereRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng) < 10')
                 ->groupBy('subcategory_id')
                 ->select('subcategory_id', DB::raw('count(*) as total'))
@@ -108,6 +109,7 @@ class RentController extends Controller
             return DB::table('products')
                 ->where('subcategory_id', $request->input('subcategory_id'))
                 ->where('availability', 1)
+                ->where('verified', 1)
                 ->whereRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng) < 10')
                 ->orderByRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng)')
                 ->get();
@@ -119,6 +121,7 @@ class RentController extends Controller
                         ->from(with(new Subcategory)->getTable())
                         ->where('category_id', $category_id);
             })->where('availability', 1)
+                ->where('verified', 1)
                 ->whereRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng) < 10')
                 ->orderByRaw('haversine(' . $lat . ', ' .$lng . ', products.lat, products.lng)')
                 ->get();
@@ -129,7 +132,7 @@ class RentController extends Controller
     {
 
         $product = DB::table('products')->where('id', $id)->first();
-        if(!$product)
+        if(!$product || $product->verified == 0)
             abort('404');
         $subcategory = DB::table('subcategories')->where('id', $product->subcategory_id)->first();
         $category = DB::table('categories')->where('id', $subcategory->category_id)->first();

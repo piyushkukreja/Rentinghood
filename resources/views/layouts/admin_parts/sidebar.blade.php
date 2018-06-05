@@ -36,6 +36,13 @@
                         <span class="arrow"></span>
                     </a>
                 </li>
+                <li class="nav-item {{ $data['section'] == 'products-new' ? ' active open' : '' }}">
+                    <a href="{{ route('products.new') }}" class="nav-link nav-toggle">
+                        <i class="fa fa-archive"></i>
+                        <span class="title"> New Product Posts </span>
+                        <span class="arrow"></span>
+                    </a>
+                </li>
                 <li class="nav-item ">
                     <a href="{{ route('logout') }}" class="nav-link nav-toggle">
                         <i class="fa fa-sign-out"></i>

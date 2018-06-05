@@ -63,6 +63,17 @@ class AdminController extends Controller
         return view('admin.users_view', ['data' => $data]);
     }
 
+    public function usersDestroy($id) {
+        $user = User::findOrFail($id);
+        $notes = $user->notes;
+        foreach ($notes as $note) {
+            $note->delete();
+        }
+        $user->delete();
+        Session::flash('success', 'User has been successfully deleted.');
+        return redirect('/a/users');
+    }
+
     public function notes($id) {
         $user = User::findOrFail($id);
 
@@ -89,6 +100,16 @@ class AdminController extends Controller
         $response['data'] = $user->inventory;
         $response['status'] = 'success';
         return $response;
+    }
+
+    public function productsNew() {
+        $data = [];
+        $data['section'] = 'products-new';
+        return view('admin.products_new', ['data' => $data]);
+    }
+
+    public function productsGetNew() {
+        return ['products' => Product::where('verified', 0)->get()];
     }
 
     public function productsEdit($id) {
@@ -141,6 +162,17 @@ class AdminController extends Controller
         return redirect()->route('products.edit', [$product->id]);
     }
 
+    public function productsDestroy($id) {
+        $product = Product::findOrFail($id);
+        $pictures = $product->pictures;
+        foreach ($pictures as $picture) {
+            $picture->delete();
+        }
+        $product->delete();
+        Session::flash('success', 'Product has been successfully deleted');
+        return redirect()->back();
+    }
+
     public function updateDefaultImage(Request $request, $id) {
         $product = Product::findOrFail($id);
         $productPicture = ProductPicture::findorFail((int)$request->input('file_id'));
@@ -161,6 +193,17 @@ class AdminController extends Controller
             $response['status'] = 'success';
         }
         return $response;
+    }
+
+    public function changeProductState(Request $request, $id) {
+        $product = Product::findOrFail($id);
+        if($request->input('accepted') == 'true') {
+            $product->verified = 1;
+        } else {
+            $product->verified = 0;
+        }
+        $product->save();
+        return ['status' => 'success'];
     }
 
 }

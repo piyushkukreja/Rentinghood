@@ -8,6 +8,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             var productForm = $('#product-form');
+            var csrf_token = '{{ csrf_token() }}';
 
             function ucwords (str) {
                 str = str.replace('_', ' ');
@@ -17,6 +18,20 @@
                     });
             }
 
+            //js FOR ACCEPTING PRODUCT
+            var acceptanceCheckbox = $('#accepted-checkbox');
+            @if($data['product']->verified == 1)
+                acceptanceCheckbox.prop('checked', true);
+            @endif
+            acceptanceCheckbox.on('change', function () {
+                $.ajax({
+                    url: '{{ route('products.update-state', [$data['product']->id]) }}',
+                    type: 'POST',
+                    data: { _token: csrf_token, accepted: acceptanceCheckbox.is(':checked') },
+                    dataType: 'JSON'
+                });
+            });
+
             //js for SUBCATERGORIES
             var categorySelector = productForm.find($('#category_id'));
 
@@ -25,7 +40,6 @@
                 var subcategorySelector = productForm.find($('#subcategory_id'));
                 subcategorySelector.empty();
                 var category_id = categorySelector.val();
-                var csrf_token = '{{ csrf_token() }}';
 
                 subcategorySelector.empty();
                 subcategorySelector.append('<option value="" selected disabled>Select a subcategory</option>');
@@ -136,9 +150,11 @@
         <div class="page-head">
             <!-- BEGIN PAGE TITLE -->
             <div class="page-title">
-                <h1>{{ $data['product']->name }}
-                    <small>edit product</small>
-                </h1>
+                <h1>{{ $data['product']->name }}</h1>
+                <label style="margin-top: 1em;" class="mt-checkbox"> Accepted
+                    <input id="accepted-checkbox" type="checkbox" name="verified">
+                    <span></span>
+                </label>
             </div>
             <!-- END PAGE TITLE -->
         </div>

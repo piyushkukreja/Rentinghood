@@ -127,8 +127,9 @@
                             }
                             $.each(response.data, function (i, product) {
                                 var productDiv = $(productTemplate);
+                                productDiv.find('.mt-card-item').css('overflow', 'hidden');
                                 productDiv.find('img').attr('src', base_url + '/img/uploads/products/small/' + product.image);
-                                productDiv.find('h3.mt-card-name').html(product.name);
+                                productDiv.find('h3.mt-card-name').html('<span style="white-space: nowrap;">' + product.name + '</span>');
                                 productDiv.find('p.mt-card-desc').html(product.subcategory_id);
                                 productDiv.find('a.edit').attr('href', base_url + '/a/products/' + product.id + '/edit');
                                 productDiv.find('.md-checkbox').find('input').attr('id', 'checkbox' + product.id).attr('checked', product.availability === 1).on('change',  function () {

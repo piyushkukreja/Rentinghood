@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Product;
+use App\ProductPicture;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -30,7 +31,6 @@ class LendController extends Controller
 
     public function lend(Request $request)
     {
-
         $rules = [
             'category_id' => 'required|integer',
             'subcategory_id' => 'required|integer',
@@ -40,7 +40,6 @@ class LendController extends Controller
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
             'file.0' => 'image|max:2000|required'
-
         ];
 
         if($request->has('duration'))
@@ -55,23 +54,23 @@ class LendController extends Controller
         $rate2 = $request->input('rate2') ? $request->input('rate2') : 0;
         $rate3 = $request->input('rate3') ? $request->input('rate3') : 0;
 
-        $values = [
-            'name' => $request->input('name'),
-            'subcategory_id' => $request->input('subcategory_id'),
-            'lender_id' => Auth::user()->id,
-            'availability'=> 1,
-            'description' => $request->input('description'),
-            'duration' => $request->input('duration'),
-            'address' => $request->input('address'),
-            'lat' => $request->input('lat'),
-            'lng' => $request->input('lng'),
-            'rate_1' => $request->input('rate1'),
-            'rate_2' => $rate2,
-            'rate_3' => $rate3,
-            'image' => '',
-        ];
+        $product = new Product;
+        $product->name = $request->input('name');
+        $product->subcategory_id = $request->input('subcategory_id');
+        $product->lender_id = Auth::user()->id;
+        $product->availability= 1;
+        $product->description = $request->input('description');
+        $product->duration = $request->input('duration');
+        $product->address = $request->input('address');
+        $product->lat = $request->input('lat');
+        $product->lng = $request->input('lng');
+        $product->rate_1 = $request->input('rate1');
+        $product->rate_2 = $rate2;
+        $product->rate_3 = $rate3;
+        $product->image = '';
+        $product->verified = 0;
+        $product->save();
 
-        $product_id = DB::table('products')->insertGetId($values);
         $original = public_path('/img/uploads/products/original');
         $large = public_path('/img/uploads/products/large');
         $small = public_path('/img/uploads/products/small');
@@ -87,18 +86,17 @@ class LendController extends Controller
             Image::make($original . '/' . $file_name)->resize(200, 200)->save($small . '/' . $file_name);
             Image::make($original . '/' . $file_name)->resize(500, 500)->save($large . '/' . $file_name);
 
-            $result2 = DB::table('product_pictures')->insert([
-                'product_id' => $product_id,
-                'file_name' => $file_name,
-            ]);
-            if($i == 1)
-                DB::table('products')->where('id', $product_id)->update(['image' => $file_name]);
-        }
-        if($product_id != 0 && $result2)
-            $request->session()->flash('success', 'Your product was successfully posted.');
-        else
-            $request->session()->flash('failure', 'Post was unsuccessful');
+            $product_picture = new ProductPicture;
+            $product_picture->product_id = $product->id;
+            $product_picture->file_name = $file_name;
+            $product_picture->save();
 
+            if($i == 1) {
+                $product->image = $file_name;
+                $product->save();
+            }
+        }
+        $request->session()->flash('success', 'Your product was successfully posted.');
     }
 
     public function getProductDetails($id)
@@ -124,7 +122,7 @@ class LendController extends Controller
 
     public function editPost(Request $request)
     {
-        $product = DB::table('products')->where('id', $request->input('id'))->first();
+        $product = Product::findOrFail($request->input('id'));
         if((!$product) || (!($product->lender_id == Auth::user()->id)))
         {
             $request->session()->flash('failure', 'You are not authorized to edit this product.');
@@ -149,24 +147,17 @@ class LendController extends Controller
         $rate2 = $request->input('rate2') ? $request->input('rate2') : 0;
         $rate3 = $request->input('rate3') ? $request->input('rate3') : 0;
 
-        $values = [
-            'description' => $request->input('description'),
-            'duration' => $request->input('duration'),
-            'address' => $request->input('address'),
-            'lat' => $request->input('lat'),
-            'lng' => $request->input('lng'),
-            'rate_1' => $request->input('rate1'),
-            'rate_2' => $rate2,
-            'rate_3' => $rate3,
-        ];
+        $product->description = $request->input('description');
+        $product->duration = $request->input('duration');
+        $product->address = $request->input('address');
+        $product->lat = $request->input('lat');
+        $product->lng = $request->input('lng');
+        $product->rate_1 = $request->input('rate1');
+        $product->rate_2 = $rate2;
+        $product->rate_3 = $rate3;
+        $product->save();
 
-        $result = DB::table('products')->where('id', $request->input('id'))->update($values);
-
-        if($result)
-            $request->session()->flash('success', 'Your inventory was successfully updated.');
-        else
-            $request->session()->flash('failure', 'Update was unsuccessful');
-
+        $request->session()->flash('success', 'Your inventory was successfully updated.');
         return redirect()->route('account', 'inventory');
     }
 }

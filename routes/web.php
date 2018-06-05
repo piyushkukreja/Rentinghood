@@ -122,11 +122,16 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/a/users', 'AdminController@usersIndex')->name('users.index');
     Route::get('/a/users/{user}', 'AdminController@usersShow')->name('users.show');
     Route::put('/a/users/{user}', 'AdminController@usersUpdate')->name('users.update');
+    Route::delete('/a/users/{user}', 'AdminController@usersDestroy')->name('users.destroy');
     Route::get('/a/users/{user}/notes', 'AdminController@notes')->name('notes.index');
     Route::post('/a/users/{user}/notes', 'AdminController@notesStore')->name('notes.store');
     Route::get('/a/users/{user}/inventory', 'AdminController@loadInventory')->name('users.get-inventory');
+    Route::get('/a/products/new', 'AdminController@productsNew')->name('products.new');
+    Route::get('/a/products/get-new', 'AdminController@productsGetNew')->name('products.get-new');
     Route::get('/a/products/{user}/edit', 'AdminController@productsEdit')->name('products.edit');
     Route::put('/a/products/{product}', 'AdminController@productsUpdate')->name('products.update');
+    Route::delete('/a/products/{product}', 'AdminController@productsDestroy')->name('products.destroy');
     Route::post('/a/products/{product}/update-image', 'AdminController@updateDefaultImage')->name('products.update-image');
     Route::post('/a/products/{product}/remove-image', 'AdminController@removeProductImage')->name('products.remove-image');
+    Route::post('/a/products/{product}/update-state', 'AdminController@changeProductState')->name('products.update-state');
 });
