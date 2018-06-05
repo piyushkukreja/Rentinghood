@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
-    //
+    //Hey there...this is a sample commit and push(phpstorm)
     public function __construct()
     {
         $this->middleware(['auth', 'admin']);
