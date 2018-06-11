@@ -134,4 +134,8 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::post('/a/products/{product}/update-image', 'AdminController@updateDefaultImage')->name('products.update-image');
     Route::post('/a/products/{product}/remove-image', 'AdminController@removeProductImage')->name('products.remove-image');
     Route::post('/a/products/{product}/update-state', 'AdminController@changeProductState')->name('products.update-state');
+    Route::get('/a/categories','AdminController@categories')->name('categories.index');
+    Route::get('/a/categories/show-all','AdminController@getAllCategories')->name('categories.show-all');
+    Route::post('/a/categories/{id}','AdminController@editCategories')->name('categories.edit');
+    Route::post('/a/categories/','AdminController@addCategories')->name('categories.add');
 });

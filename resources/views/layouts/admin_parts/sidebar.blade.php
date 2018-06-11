@@ -29,6 +29,15 @@
                         <span class="arrow"></span>
                     </a>
                 </li>
+
+                <li class="nav-item {{ $data['section'] == 'categories' ? ' active open' : '' }}">
+                    <a href="{{ route('categories.index') }}" class="nav-link nav-toggle">
+                        <i class="fa fa-list"></i>
+                        <span class="title"> Categories </span>
+                        <span class="arrow"></span>
+                    </a>
+                </li>
+
                 <li class="nav-item {{ $data['section'] == 'products' ? ' active open' : '' }}">
                     <a href="{{ route('users.index') }}" class="nav-link nav-toggle">
                         <i class="fa fa-archive"></i>

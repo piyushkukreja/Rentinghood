@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
-    //Hey there...this is a sample commit and push(phpstorm)
     public function __construct()
     {
         $this->middleware(['auth', 'admin']);
@@ -204,6 +203,34 @@ class AdminController extends Controller
         }
         $product->save();
         return ['status' => 'success'];
+    }
+
+    public function categories(){
+        $data = [];
+        $data['section'] = 'categories';
+        return view('admin.category_index', ['data' => $data]);
+    }
+
+    public function getAllCategories(){
+        $response = [];
+        $response['data'] = \App\Category::all();
+        return $response;
+    }
+    public function editCategories(Request $request, $id){
+        //this method should give the name that the usr enters in the modal
+        $category = Category::findOrFail($id);//checks whether Category with that id exists, if fails then die(s) the script
+        $category->name = $request->input('category-name');//method requests value using the name of the input
+        $category->save();//make changes to db
+        return redirect()->route('categories.index');//redirect to the categories page
+    }
+
+
+    public function addCategories(Request $request){
+        //this method should give the name that the usr enters in the modal
+        $category = new Category;
+        $category->name = $request->input('category-name');//method requests value using the name of the input
+        $category->save();//make changes to db
+        return redirect()->route('categories.index');//redirect to the categories page
     }
 
 }
