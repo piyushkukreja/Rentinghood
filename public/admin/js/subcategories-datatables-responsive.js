@@ -1,7 +1,7 @@
 var TableDatatablesResponsive = function () {
 
     var initTable1 = function (base_url) {
-        var table = $('#categories-table');
+        var table = $('#subcategories-table');
         var oTable = table.dataTable({
             // Internationalisation. For more info refer to http://datatables.net/manual/i18n
             "language": {
@@ -19,7 +19,7 @@ var TableDatatablesResponsive = function () {
             },
 
             "ajax": {
-                "url" : base_url + "/a/categories/show-all",
+                "url" : base_url + "/a/subcategories/show-all",
                 "type" : "GET",
                 "dataType" : "JSON",
                 "dataSrc": function (response) {
@@ -28,9 +28,11 @@ var TableDatatablesResponsive = function () {
                     for(var i = 0; i < json.length; i++){
                         return_data.push([
                             json[i].name,
+                            json[i].category.name,
                             '<a href="javascript:;" class="edit blue btn btn-outline" style="padding: 3px 6px 3px 6px;">' +
                             '<i class="fa fa-pencil"></i></a> ',
-                            json[i].id
+                            json[i].id,
+                            json[i].category.id
                         ]);
                     }
                     return (return_data);
@@ -45,21 +47,21 @@ var TableDatatablesResponsive = function () {
             // setup buttons extentension: http://datatables.net/extensions/buttons/
             buttons: [],
 
-            // setup responsive extension: http://datatables.net/extensions/responsive/
-            responsive: { details: { } },
+                // setup responsive extension: http://datatables.net/extensions/responsive/
+                responsive: { details: { } },
 
             "order": [
                 [0, 'asc']
             ],
 
-            "lengthMenu": [
+                "lengthMenu": [
                 [5, 10, 15, 20, -1],
                 [5, 10, 15, 20, "All"] // change per page values here
             ],
-            // set the initial value
-            "pageLength": 10,
+                // set the initial value
+                "pageLength": 10,
 
-            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
+                "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
 
             // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
             // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
@@ -69,10 +71,36 @@ var TableDatatablesResponsive = function () {
 
         table.on('click', '.edit', function () {
             var aData = oTable.fnGetData($(this).parents('tr')[0]);
-            //below line gets the name from the same page instead of fetching from db
-            $('#edit-category-modal').find('input[name="name"]').val(aData[0]);//this finds the name with the associated id and sets the value of input in modal
-            $('#edit-form').attr('action', base_url + '/a/categories/' + aData[2]);//to use post method for updating data in db and page
-            $('#edit-category-modal-trigger').trigger('click');//triggers modal on click with the specified id
+            var editModal = $('#edit-subcategory-modal');
+            editModal.find('[name="category_id"]').val(aData[4]);
+            editModal.find('[name="name"]').val(aData[0]);
+            $('#edit-form').attr('action', base_url + '/a/subcategories/' + aData[3]);
+            $('#edit-subcategory-modal-trigger').trigger('click');
+        });
+
+        $('#add-subcategory-modal-trigger').on('click', function () {
+            var addModal = $('#add-subcategory-modal');
+            addModal.find('[name="name"]').val('');
+            addModal.find('[name="category_id"]').val('');
+        });
+
+        $('#add-form').on('submit', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var addModal = $('#add-subcategory-modal');
+            if(isNaN(parseInt(addModal.find('[name="category_id"]').val()))) {
+                swal({
+                    title: 'Please select a category',
+                    type: 'warning'
+                });
+            } else if(addModal.find('[name="name"]').val() === '') {
+                swal({
+                    title: 'Please provide a name',
+                    type: 'warning'
+                });
+            } else {
+                $('#add-form')[0].submit();
+            }
         })
 
     };

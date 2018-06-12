@@ -134,8 +134,12 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::post('/a/products/{product}/update-image', 'AdminController@updateDefaultImage')->name('products.update-image');
     Route::post('/a/products/{product}/remove-image', 'AdminController@removeProductImage')->name('products.remove-image');
     Route::post('/a/products/{product}/update-state', 'AdminController@changeProductState')->name('products.update-state');
-    Route::get('/a/categories','AdminController@categories')->name('categories.index');
+    Route::get('/a/categories','AdminController@categoriesIndex')->name('categories.index');
     Route::get('/a/categories/show-all','AdminController@getAllCategories')->name('categories.show-all');
-    Route::post('/a/categories/{id}','AdminController@editCategories')->name('categories.edit');
-    Route::post('/a/categories/','AdminController@addCategories')->name('categories.add');
+    Route::post('/a/categories/{id}','AdminController@categoriesUpdate')->name('categories.update');
+    Route::post('/a/categories','AdminController@categoriesStore')->name('categories.store');
+    Route::get('/a/subcategories','AdminController@subcategoriesIndex')->name('subcategories.index');
+    Route::get('/a/subcategories/show-all','AdminController@getAllsubcategories')->name('subcategories.show-all');
+    Route::post('/a/subcategories/{id}','AdminController@subcategoriesUpdate')->name('subcategories.update');
+    Route::post('/a/subcategories','AdminController@subcategoriesStore')->name('subcategories.store');
 });

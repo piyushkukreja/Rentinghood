@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Product;
 use App\ProductPicture;
+use App\Subcategory;
 use App\User;
 use App\Note;
 use Illuminate\Http\Request;
@@ -205,7 +206,7 @@ class AdminController extends Controller
         return ['status' => 'success'];
     }
 
-    public function categories(){
+    public function categoriesIndex(){
         $data = [];
         $data['section'] = 'categories';
         return view('admin.category_index', ['data' => $data]);
@@ -213,24 +214,55 @@ class AdminController extends Controller
 
     public function getAllCategories(){
         $response = [];
-        $response['data'] = \App\Category::all();
+        $response['data'] = Category::all();
         return $response;
     }
-    public function editCategories(Request $request, $id){
+
+    public function categoriesUpdate(Request $request, $id){
         //this method should give the name that the usr enters in the modal
         $category = Category::findOrFail($id);//checks whether Category with that id exists, if fails then die(s) the script
-        $category->name = $request->input('category-name');//method requests value using the name of the input
+        $category->name = $request->input('name');//method requests value using the name of the input
         $category->save();//make changes to db
         return redirect()->route('categories.index');//redirect to the categories page
     }
 
-
-    public function addCategories(Request $request){
+    public function categoriesStore(Request $request){
         //this method should give the name that the usr enters in the modal
         $category = new Category;
-        $category->name = $request->input('category-name');//method requests value using the name of the input
+        $category->name = $request->input('name');//method requests value using the name of the input
         $category->save();//make changes to db
         return redirect()->route('categories.index');//redirect to the categories page
+    }
+
+    public function subcategoriesIndex(){
+        $data = [];
+        $data['section'] = 'subcategories';
+        $data['categories'] = Category::all();
+        return view('admin.subcategory_index', ['data' => $data]);
+    }
+
+    public function getAllSubcategories(){
+        $response = [];
+        $response['data'] = Subcategory::all();
+        return $response;
+    }
+
+    public function subcategoriesUpdate(Request $request, $id){
+        //this method should give the name that the usr enters in the modal
+        $subcategory = Subcategory::findOrFail($id);//checks whether Category with that id exists, if fails then die(s) the script
+        $subcategory->name = $request->input('name');//method requests value using the name of the input
+        $subcategory->category_id = $request->input('category_id');
+        $subcategory->save();//make changes to db
+        return redirect()->route('subcategories.index');//redirect to the categories page
+    }
+
+    public function subcategoriesStore(Request $request){
+        //this method should give the name that the usr enters in the modal
+        $subcategory = new Subcategory();
+        $subcategory->name = $request->input('name');//method requests value using the name of the input
+        $subcategory->category_id = $request->input('category_id');
+        $subcategory->save();//make changes to db
+        return redirect()->route('subcategories.index');//redirect to the categories page
     }
 
 }

@@ -10,6 +10,11 @@ class Category extends Model
         return ucwords(str_replace('_', ' ', $name));
     }
 
+    public function setNameAttribute($name) {
+        $name = strtolower(str_replace(' ', '_', $name));
+        $this->attributes['name'] = $name;
+    }
+
     public function subcategories() {
         return $this->hasMany('App\Subcategory');
     }
