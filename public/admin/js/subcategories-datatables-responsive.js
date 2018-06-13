@@ -84,22 +84,22 @@ var TableDatatablesResponsive = function () {
             addModal.find('[name="category_id"]').val('');
         });
 
-        $('#add-form').on('submit', function (e) {
+        $('#add-form,#edit-form').on('submit', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            var addModal = $('#add-subcategory-modal');
-            if(isNaN(parseInt(addModal.find('[name="category_id"]').val()))) {
+            var modal = $(this).parents('.modal-content');
+            if(isNaN(parseInt(modal.find('[name="category_id"]').val()))) {
                 swal({
                     title: 'Please select a category',
                     type: 'warning'
                 });
-            } else if(addModal.find('[name="name"]').val() === '') {
+            } else if(modal.find('[name="name"]').val() === '') {
                 swal({
                     title: 'Please provide a name',
                     type: 'warning'
                 });
             } else {
-                $('#add-form')[0].submit();
+                $(this)[0].submit();
             }
         })
 

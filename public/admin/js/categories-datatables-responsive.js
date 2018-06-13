@@ -75,6 +75,20 @@ var TableDatatablesResponsive = function () {
             $('#edit-category-modal-trigger').trigger('click');//triggers modal on click with the specified id
         })
 
+        $('#add-form,#edit-form').on('submit', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var modal = $(this).parents('.modal-content');
+            if(modal.find('[name="name"]').val() === '') {
+                swal({
+                    title: 'Please provide a name',
+                    type: 'warning'
+                });
+            } else {
+                $(this)[0].submit();
+            }
+        })
+
     };
 
     return {

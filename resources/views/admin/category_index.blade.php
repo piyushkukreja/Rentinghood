@@ -1,7 +1,13 @@
 @extends('layouts.admin_dashboard')
-
+@section('head')
+	@parent
+	<style type="text/css">
+		.swal2-container {
+			z-index: 11000 !important;
+		}
+	</style>
+@endsection
 @section('scripts')
-
 	@parent
 	<script src="{{ asset('admin/js/sweetalert2.all.js') }}" type="text/javascript"></script>
 	<script src="{{ asset('admin/js/datatable.js') }}" type="text/javascript"></script>
