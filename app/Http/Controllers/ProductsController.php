@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
+use App\Product;
+use App\ProductPicture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use DateTime;
-use Illuminate\Support\Facades\Input;
 use Maatwebsite\Excel\Facades\Excel;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class ProductsController extends Controller
 {
@@ -87,40 +88,99 @@ class ProductsController extends Controller
 
     }
 
-    public function importExport()
+    public function productsBulk()
     {
-        return view('importExport');
+        $data = [];
+        $data['section'] = 'products-bulk';
+        return view('admin.products_bulk', ['data' => $data]);
     }
 
-    public function importExcel()
+    public function productsUpload(Request $request)
     {
-        if(Input::hasFile('import_file')) {
-            $path = Input::file('import_file')->getRealPath();
-            $data = Excel::load($path, function($reader) {})->get();
-            if(!empty($data) && $data->count()) {
-                foreach ($data as $key => $value) {
-                    if($value->name != "") {
-                        $temp = str_replace(" ", "", $value->name);
-                        $temp = str_replace("'", "_", $temp);
-                        $temp = str_replace("&", "_", $temp);
-                        $temp = str_replace(".", "", $temp);
-                        $file_name = $temp . '.jpg';
-                        $file_name1 = $temp . '1.jpg';
-                        $product = ['name' => $value->name, 'subcategory_id' => intval($value->subcategory_id), 'availability' => 1,
-                            'description' => (trim($value->authors) != '' ? 'By ' . $value->authors . '<br>' : '') . $value->description, 'duration' => '2',
-                            'lender_id' => 4,
-                            'rate_1' => intval($value->rate_1), 'rate_2' => intval($value->rate_2), 'rate_3' => intval($value->rate_3),
-                            'address' => $value->address, 'lat' => floatval(str_replace("° N", "", $value->lat)), 'lng' => floatval(str_replace("° E", "", $value->lng)),
-                            'image' => $file_name, 'verified' => 1, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()];
-                        $product_id = DB::table('products')->insertGetId($product);
-                        $product_pictures = ['product_id' => $product_id, 'file_name' => $file_name];
-                        DB::table('product_pictures')->insert($product_pictures);
-                        if (intval($value->image_num) == 2) {
-                            $product_pictures = ['product_id' => $product_id, 'file_name' => $file_name1];
-                            DB::table('product_pictures')->insert($product_pictures);
-                        }
-                    }
+        $request->validate([
+            'lender_id' => 'required|integer',
+            'import_file' => 'required|file'
+        ]);
+        $productIds = [];
+        $path = $request->file('import_file')->getRealPath();
+        $data = Excel::load($path, function($reader) {})->get();
+        if(!empty($data) && $data->count()) {
+            foreach ($data as $key => $value) {
+                if($value->name != "") {
+                    $simplified_name = $value->name;
+                    $simplified_name = preg_replace("/[^A-Za-z0-9]/", '', $simplified_name);
+
+                    $product = new Product;
+                    $product->name = $value->name;
+                    $product->subcategory_id = intval($value->subcategory_id);
+                    $product->availability = 1;
+                    $product->description = $value->description;
+                    $product->duration = '2';
+                    $product->lender_id = intval($request->input('lender_id'));
+                    $product->rate_1 = intval($value->rate_1);
+                    $product->rate_2 = intval($value->rate_2);
+                    $product->rate_3 = intval($value->rate_3);
+                    $product->address = $value->address;
+                    $product->lat = floatval(str_replace("° N", "", $value->lat));
+                    $product->lng = floatval(str_replace("° E", "", $value->lng));
+                    $product->image = '';
+                    $product->verified = 1;
+                    $product->save();
+
+                    $productIds[$simplified_name] = $product->id;
                 }
+            }
+
+            $original = public_path('/img/uploads/products/original');
+            $large = public_path('/img/uploads/products/large');
+            $small = public_path('/img/uploads/products/small');
+
+            $i = 0;
+            foreach ($request->file as $file) {
+                $file = $request->file('file.' . $i);
+                $extension = $file->getClientOriginalExtension();
+                $original_name = str_replace('.' . $extension, '', $file->getClientOriginalName());
+                $product_name = substr($original_name, 0, strlen($original_name) - 1);
+                $image_number = intval(substr($original_name, strlen($original_name) - 1, 1));
+
+                //get Product ID from filename
+                $product = Product::find($productIds[$product_name]);
+                if(!$product) {
+                    continue;
+                }
+
+                $file_name = rand(1000, 9999) . sha1(time()) . '.' . $extension;
+                $file->move($original, $file_name);
+
+                //Resizing and saving image
+                $canvasSmall = Image::canvas(200, 200);
+                $canvasBig = Image::canvas(500, 500);
+
+                $imageSmall  = Image::make($original . '/' . $file_name)->resize(200, 200, function($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $imageBig  = Image::make($original . '/' . $file_name)->resize(500, 500, function($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+                $canvasSmall->insert($imageSmall, 'center');
+                $canvasBig->insert($imageBig, 'center');
+
+                $canvasSmall->save($small . '/' . $file_name);
+                $canvasBig->save($large . '/' . $file_name);
+                /*Image::make($original . '/' . $file_name)->resize(200, 200)->save($small . '/' . $file_name);
+                Image::make($original . '/' . $file_name)->resize(500, 500)->save($large . '/' . $file_name);*/
+
+                $product_picture = new ProductPicture;
+                $product_picture->product_id = $product->id;
+                $product_picture->file_name = $file_name;
+                $product_picture->save();
+
+                if($image_number == 1) {
+                    $product->image = $file_name;
+                    $product->save();
+                }
+                $i++;
             }
         }
         return back();

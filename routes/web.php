@@ -13,10 +13,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-//Import Excel
-/*Route::get('import', 'ProductsController@importExport')->name('import');
-Route::post('import', 'ProductsController@importExcel')->name('import_backend');*/
-
 //Landing Page
 Route::get('/', function () {
     return view('dashboard.home');
@@ -142,4 +138,6 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/a/subcategories/show-all','AdminController@getAllsubcategories')->name('subcategories.show-all');
     Route::post('/a/subcategories/{id}','AdminController@subcategoriesUpdate')->name('subcategories.update');
     Route::post('/a/subcategories','AdminController@subcategoriesStore')->name('subcategories.store');
+    Route::get('/a/products/bulk', 'ProductsController@productsBulk')->name('products.bulk');
+    Route::post('/a/products/bulk', 'ProductsController@productsUpload')->name('products.upload');
 });

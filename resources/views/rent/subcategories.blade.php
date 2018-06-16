@@ -38,11 +38,8 @@
     @parent
     {{-- Sweet Alert 2 Plugin--}}
     <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js" type="text/javascript"></script>
-
     <script type="text/javascript">
         $(document).ready(function () {
-
-
             //js for LOCATION FIELD
             function saveLocation() {
                 var csrf_token = '{{ csrf_token() }}';
@@ -144,7 +141,7 @@
                                 var image = '{{ asset('img/uploads/products/small') }}/' + d.image;
                                 var product_link = '{{ \Illuminate\Support\Facades\URL::to('rent/product') }}' + '/' + d.id;
                                 var product_html = '<div class="masonry__item col-6 col-lg-4">' +
-                                    '<div class="product">' +
+                                    '<div class="product text-center">' +
                                     '<span class="product_id_info hidden">' + d.name + '</span>' +
                                     '<a class="product_link" href="' + product_link + '">' +
                                     '<img class="img-fluid" style="border-radius: 5px;" alt="Image" id="" data-src="' + image + '" src="' + loading_url + '"/>' +

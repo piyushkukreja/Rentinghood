@@ -116,6 +116,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'lender_id' => 'Lender',
+        'import_file' => 'Excel File',
+    ],
 
 ];

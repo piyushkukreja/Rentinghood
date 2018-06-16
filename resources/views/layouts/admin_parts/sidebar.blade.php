@@ -57,6 +57,13 @@
                         <span class="arrow"></span>
                     </a>
                 </li>
+                <li class="nav-item {{ $data['section'] == 'products-bulk' ? ' active open' : '' }}">
+                    <a href="{{ route('products.bulk') }}" class="nav-link nav-toggle">
+                        <i class="fa fa-archive"></i>
+                        <span class="title"> Bulk Upload </span>
+                        <span class="arrow"></span>
+                    </a>
+                </li>
                 <li class="nav-item ">
                     <a href="{{ route('logout') }}" class="nav-link nav-toggle">
                         <i class="fa fa-sign-out"></i>
