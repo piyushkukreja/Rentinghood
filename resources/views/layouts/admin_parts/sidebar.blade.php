@@ -38,7 +38,7 @@
                 </li>
                 <li class="nav-item {{ $data['section'] == 'subcategories' ? ' active open' : '' }}">
                     <a href="{{ route('subcategories.index') }}" class="nav-link nav-toggle">
-                        <i class="fa fa-list"></i>
+                        <i class="fa fa-list-alt"></i>
                         <span class="title"> Subcategories </span>
                         <span class="arrow"></span>
                     </a>
@@ -52,14 +52,14 @@
                 </li>
                 <li class="nav-item {{ $data['section'] == 'products-new' ? ' active open' : '' }}">
                     <a href="{{ route('products.new') }}" class="nav-link nav-toggle">
-                        <i class="fa fa-archive"></i>
-                        <span class="title"> New Product Posts </span>
+                        <i class="fa fa-plus-square"></i>
+                        <span class="title"> New Posts </span>
                         <span class="arrow"></span>
                     </a>
                 </li>
                 <li class="nav-item {{ $data['section'] == 'products-bulk' ? ' active open' : '' }}">
                     <a href="{{ route('products.bulk') }}" class="nav-link nav-toggle">
-                        <i class="fa fa-archive"></i>
+                        <i class="fa fa-upload"></i>
                         <span class="title"> Bulk Upload </span>
                         <span class="arrow"></span>
                     </a>
