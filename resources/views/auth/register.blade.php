@@ -3,24 +3,24 @@
 @section('content')
     <style>
         @media (max-width: 767px) {
-
             .map_canvas {
                 min-height: 50vh;
             }
             .main-container > section h2 {
                 margin-top: 1em;
-                color: #fff;
             }
-
         }
         .main-container > section {
             font-size: 1.05em;
         }
+        .main-container > section h2 {
+            color: #fff;
+        }
     </style>
     <div class="main-container">
-        <section class="feature-large height-100 image--light imagebg">
+        <section class="feature-large height-100 imagebg" data-overlay="5">
             <div class="background-image-holder">
-                <img alt="background" src="{{ asset('img/agency-1.jpg') }}">
+                <img alt="background" src="{{ asset('img/register-bg.jpg') }}">
             </div>
             <div class="container pos-vertical-center">
                 <div class="row">

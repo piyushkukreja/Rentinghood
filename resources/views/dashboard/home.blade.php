@@ -116,7 +116,7 @@
         <div class="hiring_div"><img src="{{ asset('img/hiring2.png') }}"></div>
         <section class="cover height-90 imagebg text-center" data-overlay="5" id="home">
             <div class="background-image-holder">
-                <img id="home-background-image" alt="background" src="{{ asset('img/contactleft.jpg') }}"/>
+                <img id="home-background-image" alt="background" src="{{ asset('img/contact-bg.jpg') }}"/>
             </div>
             {{--<div id="left-rent"></div>
             <div id="right-lend"></div>--}}

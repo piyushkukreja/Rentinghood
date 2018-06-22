@@ -13,7 +13,12 @@
                         Have something to say?
                     </a>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <div class="text-right text-center-xs">
+                        <a href="https://msg91.com/startups/?utm_source=startup-banner"><img src="https://msg91.com/images/startups/msg91Badge.png" width="120" height="90" title="MSG91 - SMS for Startups" alt="Bulk SMS - MSG91"></a>
+                    </div>
+                </div>
+                <div class="col-md-2">
                     <div class="text-right text-center-xs">
                         <ul class="social-list list-inline list--hover">
                             <li class="list-inline-item">
