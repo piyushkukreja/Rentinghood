@@ -28,7 +28,15 @@ class User extends Authenticatable
     ];
 
     public function isAdmin() {
-        if($this->privileges > 0) {
+        if($this->privileges === 2) {
+            return true;
+        }
+        return false;
+    }
+
+
+    public function isVendor() {
+        if($this->privileges === 1) {
             return true;
         }
         return false;

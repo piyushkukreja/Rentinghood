@@ -141,3 +141,8 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/a/products/bulk', 'ProductsController@productsBulk')->name('products.bulk');
     Route::post('/a/products/bulk', 'ProductsController@productsUpload')->name('products.upload');
 });
+
+//Vendor Routes
+Route::group(['middleware' => ['auth', 'vendor']], function() {
+    Route::get('/vendor', 'VendorController@index')->name('vendor');
+});

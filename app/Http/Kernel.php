@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Middleware\RedirectIfMobileAuthenticated;
+use App\Http\Middleware\VendorAuthenticate;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -62,5 +63,6 @@ class Kernel extends HttpKernel
         'mobile_auth' => \App\Http\Middleware\MobileAuth::class,
         'mobile_guest' => RedirectIfMobileAuthenticated::class,
         'admin' => AdminAuthenticate::class,
+        'vendor' => VendorAuthenticate::class,
     ];
 }
