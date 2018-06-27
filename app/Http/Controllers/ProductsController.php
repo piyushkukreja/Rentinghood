@@ -88,11 +88,18 @@ class ProductsController extends Controller
 
     }
 
-    public function productsBulk()
+    public function adminProductsBulk()
     {
         $data = [];
         $data['section'] = 'products-bulk';
         return view('admin.products_bulk', ['data' => $data]);
+    }
+
+    public function vendorProductsBulk()
+    {
+        $data = [];
+        $data['section'] = 'products-bulk';
+        return view('vendor.products_bulk', ['data' => $data]);
     }
 
     public function productsUpload(Request $request)

@@ -22,7 +22,7 @@ class VendorController
 {
     public function index() {
         $data = [];
-        $data['section'] = 'users';
+        $data['section'] = 'products-bulk';
         return view('layouts.vendor_dashboard', ['data' => $data]);
     }
 }

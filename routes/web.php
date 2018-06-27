@@ -47,7 +47,7 @@ Route::post('/save-location', function (Request $request) {
 //Login and logout routes
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
 //Register Routes
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
@@ -138,11 +138,13 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/a/subcategories/show-all','AdminController@getAllsubcategories')->name('subcategories.show-all');
     Route::post('/a/subcategories/{id}','AdminController@subcategoriesUpdate')->name('subcategories.update');
     Route::post('/a/subcategories','AdminController@subcategoriesStore')->name('subcategories.store');
-    Route::get('/a/products/bulk', 'ProductsController@productsBulk')->name('products.bulk');
+    Route::get('/a/products/bulk', 'ProductsController@adminProductsBulk')->name('products.bulk');
     Route::post('/a/products/bulk', 'ProductsController@productsUpload')->name('products.upload');
 });
 
 //Vendor Routes
 Route::group(['middleware' => ['auth', 'vendor']], function() {
     Route::get('/vendor', 'VendorController@index')->name('vendor');
+    Route::get('/vendor/products/bulk', 'ProductsController@vendorProductsBulk')->name('products.bulk');
+    Route::post('/vendor/products/bulk', 'ProductsController@productsUpload')->name('products.upload');
 });
