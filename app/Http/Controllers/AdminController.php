@@ -102,6 +102,18 @@ class AdminController extends Controller
         return $response;
     }
 
+    public function productsAll() {
+        $data = [];
+        $data['section'] = 'products';
+        return view('admin.products_all', ['data' => $data]);
+    }
+
+    public function productsGetAll() {
+        $response = [];
+        $response['data'] = Product::all();
+        return $response;
+    }
+
     public function productsNew() {
         $data = [];
         $data['section'] = 'products-new';

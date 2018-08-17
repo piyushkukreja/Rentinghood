@@ -7,10 +7,10 @@
 <![endif]-->
 <!-- BEGIN CORE PLUGINS -->
 <script src="{{ asset('admin/js/jquery.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('admin/js/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('admin/js/js.cookie.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('admin/js/jquery.slimscroll.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('admin/js/jquery.blockui.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('admin/js/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('admin/js/bootstrap-switch.min.js') }}" type="text/javascript"></script>
 <!-- END CORE PLUGINS -->
 <!-- BEGIN THEME GLOBAL SCRIPTS -->
@@ -20,5 +20,9 @@
 <script src="{{ asset('admin/js/layout.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('admin/js/demo.min.js') }}" type="text/javascript"></script>
 <!-- END THEME LAYOUT SCRIPTS -->
+<!--FULL CALENDAR AND MOMENT JS-->
+<script src="{{ asset('admin/js/moment.js')  }}"></script>
+<script src="{{ asset('admin/js/fullcalendar.js') }}"></script>
+<!--END FULL CALENDAR AND MOMENT JS-->
 
 @endsection

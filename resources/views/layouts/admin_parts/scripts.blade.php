@@ -15,6 +15,9 @@
 <!-- END CORE PLUGINS -->
 <!-- BEGIN THEME GLOBAL SCRIPTS -->
 <script src="{{ asset('admin/js/app.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('admin/js/fullcalendar.js') }}"></script>
+<script src="{{ asset('admin/js/fullcalendar.min.js') }}"></script>
+<script src="{{ asset('admin/js/moment.js')  }}"></script>
 <!-- END THEME GLOBAL SCRIPTS -->
 <!-- BEGIN THEME LAYOUT SCRIPTS -->
 <script src="{{ asset('admin/js/layout.min.js') }}" type="text/javascript"></script>

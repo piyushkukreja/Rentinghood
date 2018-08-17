@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Event;
 use App\Product;
 use App\ProductPicture;
+use App\Transaction;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -88,26 +91,55 @@ class ProductsController extends Controller
 
     }
 
-    public function adminProductsBulk()
+    public function newOrders()
     {
+        //$transaction = Auth::user()->transactions();
         $data = [];
-        $data['section'] = 'products-bulk';
-        return view('admin.products_bulk', ['data' => $data]);
+        $data['section'] = 'new-orders';
+        return view('vendor.new_orders',['data' => $data]);
     }
 
-    public function vendorProductsBulk()
+    public function inventory()
+    {
+        //$transaction = Auth::user()->transactions();
+        $data = [];
+        $data['section'] = 'inventory';
+        return view('vendor.inventory',['data' => $data]);
+    }
+
+
+    public function getNewOrders()
+    {
+        $response = [];
+        $response['data'] = Auth::user()->transactions();
+        return $response;
+    }
+
+    /*public function acceptNewOrder($id) {
+
+    }*/
+
+    public function productsBulk()
     {
         $data = [];
         $data['section'] = 'products-bulk';
-        return view('vendor.products_bulk', ['data' => $data]);
+        if(Auth::user()->isAdmin())
+            return view('admin.products_bulk', ['data' => $data]);
+        else
+            return view('vendor.products_bulk', ['data' => $data]);
     }
 
     public function productsUpload(Request $request)
     {
-        $request->validate([
-            'lender_id' => 'required|integer',
-            'import_file' => 'required|file'
-        ]);
+        $user = Auth::user();
+
+        //Validations
+        $rules = [];
+        $rules['import_file'] = 'required|file';
+        if($user->isAdmin())
+            $rules['lender_id'] = 'required|integer';
+        $request->validate($rules);
+
         $productIds = [];
         $path = $request->file('import_file')->getRealPath();
         $data = Excel::load($path, function($reader) {})->get();
@@ -123,7 +155,7 @@ class ProductsController extends Controller
                     $product->availability = 1;
                     $product->description = $value->description;
                     $product->duration = '2';
-                    $product->lender_id = intval($request->input('lender_id'));
+                    $product->lender_id = $user->isAdmin() ? intval($request->input('lender_id')) : $user->id;
                     $product->rate_1 = intval($value->rate_1);
                     $product->rate_2 = intval($value->rate_2);
                     $product->rate_3 = intval($value->rate_3);

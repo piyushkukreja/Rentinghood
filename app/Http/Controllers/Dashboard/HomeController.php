@@ -44,6 +44,27 @@ class HomeController extends Controller
 
     }
 
+
+    /*public function vendorIndex($tab = 'undefined')
+    {
+
+        $data = [];
+        if ($tab == 'undefined')
+        {
+            $data['fixhome'] = true;
+            $data['tab'] = 'inventory';
+        }
+        else
+        {
+            $data['fixhome'] = false;
+            $data['tab'] = $tab;
+        }
+        $data['categories'] = DB::table('categories')->get();
+
+        return view('dashboard.account', $data);
+
+    }*/
+
     public function getInventory()
     {
         return DB::table('products')->where('lender_id', Auth::user()->id)->get();

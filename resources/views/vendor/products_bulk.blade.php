@@ -9,24 +9,6 @@
     <script src="{{ asset('admin/js/dropzone/dropzone.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/dropzone/form-dropzone.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function() {
-            var base_url = '{{ \Illuminate\Support\Facades\URL::to('/') }}';
-            var csrf = '{{ csrf_token() }}';
-            FormDropzone.init(base_url, csrf);
-            $.ajax({
-                url: '{{ route('users.get-all') }}',
-                type: 'GET',
-                dataType: 'JSON',
-                success: function (response) {
-                    var json = response.data;
-                    var lenderSelect = $('#lender_id');
-                    lenderSelect.append('<option value="" disabled selected>Select the lender</option>');
-                    $.each(json, function (i, user) {
-                        lenderSelect.append('<option value="' + user.id + '">' + user.first_name + ' ' + user.last_name + ' (' + user.id + ')</option>')
-                    });
-                }
-            })
-        });
     </script>
 @endsection
 @section('content')
@@ -55,7 +37,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <form id="bulk-upload-form" role="form" action="{{ route('products.upload') }}" method="post" enctype="multipart/form-data">
+                        <form id="bulk-upload-form" role="form" action="{{ route('vendor.products.upload') }}" method="post" enctype="multipart/form-data">
                             <div class="form-body">
                                 <div class="form-group">
                                     <label>Choose Excel File</label>
@@ -64,9 +46,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Choose Owner (Lender) </label>
                                     <div class="input-group">
-                                        <select class="form-control" name="lender_id" id="lender_id"></select>
+                                            <option class='form-control hidden' name='lender_id' id='lender_id' value={{Auth::id()}}>{{Auth::id()}}</option>
                                     </div>
                                 </div>
                                 <div class="form-group">

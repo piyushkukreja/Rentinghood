@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    //
-    protected $fillable = ['name', 'description', ];
     protected $appends = ['category_id', 'category'];
     protected $with = array('subcategory', 'lender');
 

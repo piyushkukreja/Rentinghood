@@ -49,4 +49,11 @@ class User extends Authenticatable
     public function inventory() {
         return $this->hasMany('App\Product', 'lender_id');
     }
+
+    public function transactions() {
+        return Transaction::whereHas('product', function ($query) {
+            $query->where('lender_id', \Auth::user()->id)
+            ->where('status', '=', "1");
+        })->get();
+    }
 }
