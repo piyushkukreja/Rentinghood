@@ -7,7 +7,9 @@
     <script src="{{ asset('admin/js/datatable.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/datatables.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/datatables.bootstrap.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('admin/js/vendor-new-orders.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('admin/js/new-orders-datatables.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('admin/js/moment.js')}}" type="text/javascript"></script>
+    <script src="{{ asset('admin/js/fullcalendar.js')}}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/full_calendar.js') }}" type="text/javascript"></script>
     {{--<script src="{{ asset('admin/js/fcalendar.js') }}" type="text"></script>--}}
     <script type="text/javascript">
@@ -16,9 +18,13 @@
             var csrf = '{{ csrf_token() }}';
             TableDatatablesResponsive.init(base_url, csrf);
         });
-
-
     </script>
+@endsection
+
+@section('head')
+    @parent
+    <link rel="stylesheet" href="{{asset('admin/css/fullcalendar.css')}}">
+    <link rel="stylesheet" href="{{asset('admin/css/fullcalendar.print.css')}}" media="print">
 @endsection
 
 @section('content')
@@ -52,9 +58,6 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="calendar">
-                    <div id="appointments-create">
-                        <div id="create-appointments-modal"></div>
-                    </div>
                 </div>
                 <div id="event_date_range"></div>
                 <div class="start_hidden"></div>
