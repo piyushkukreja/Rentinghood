@@ -1,4 +1,8 @@
 var initialize_calendar;
+var createModal = $('#create-appointment-modal');
+var createModalTrigger = $('#create-appointment-modal-trigger');
+var editModal = $('#edit-appointment-modal');
+var editModalTrigger = $('#edit-appointment-modal-trigger');
 initialize_calendar = function () {
     $.ajaxSetup({
         beforeSend: function(xhr, type) {

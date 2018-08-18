@@ -52,6 +52,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="calendar">
+                    <div id="appointments-create">
+                        <div id="create-appointments-modal"></div>
+                    </div>
                 </div>
                 <div id="event_date_range"></div>
                 <div class="start_hidden"></div>
