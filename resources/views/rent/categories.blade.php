@@ -4,18 +4,22 @@
 @section('head')
     @parent
     <style type="text/css">
+        .category:not(.disabled) {
+            transition: transform 0.3s ease-out;
+        }
+        .category.disabled * {
+            cursor: unset;
+        }
+        .category:not(.disabled):hover {
+            transform: translate(0,-5px);
+        }
         .category_image {
             padding-right: 1em;
             padding-left: 1em;
+            width: 100%;
         }
         .swal2-container {
-            z-index: 999;
-        }
-        .category {
-            transition: transform 0.3s ease-out;
-        }
-        .category:hover {
-            transform: translate(0,-5px);
+            z-index: 999 !important;
         }
         @media (max-width: 577px) {
             h4 {
@@ -89,8 +93,7 @@
             });
 
             //js for CATEGORY CLICK
-            $('.category_link').on('click', function (e) {
-
+            $('.category_link:not(.disabled)').on('click', function (e) {
                 var clicked_category = $(this);
                 e.preventDefault();
                 $.ajax({
@@ -127,17 +130,16 @@
                         }
                     }
                 });
+            });
 
+            $('.category_link.disabled').on('click', function (e) {
+               e.preventDefault();
             });
 
             //js for ASYNC IMAGE LOAD
             $('.category').find('img').each( function(){
-
                 $( this ).attr( 'src', $( this ).attr( 'data-src' ) );
-
             });
-
-
         });
     </script>
 @endsection
@@ -162,11 +164,11 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="masonry">
-                            <div class="masonry__container row">
-
+                            <div class="masonry__container row categories-row">
                                 @foreach($categories as $category)
-
-                                    <div class="masonry__item col-6 col-lg-3">
+                                    <div class="masonry__item
+                                                @if(count($categories) == 2) col-6 col-lg-3 offset-lg-2
+                                                @else col-6 col-lg-3 @endif">
                                         <div class="category">
                                             <span class="category_id_info hidden">{{ $category->id }}</span>
                                             <span class="category_name_info hidden">{{ $category->name }}</span>
@@ -182,7 +184,47 @@
                                     </div>
                                     <!--end item-->
                                 @endforeach
-
+                            </div>
+                            <!--end masonry container-->
+                        </div>
+                        <!--end masonry-->
+                    </div>
+                </div>
+                <!--end of row-->
+            </div>
+            <!--end of container-->
+        </section>
+        <section class="title_section text-center bg--secondary">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Coming Soon...</h2>
+                </div>
+            </div>
+        </section>
+        <section class="space--sm categories_section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="masonry">
+                            <div class="masonry__container row">
+                                @foreach($disabled_categories as $category)
+                                    <div class="masonry__item col-6 col-lg-2">
+                                        <div class="category disabled">
+                                            <a class="category_link disabled" href="#">
+                                                <img alt="{{ $category->name }}" class="img-fluid category_image"
+                                                     data-src="{{ asset('img/categories') }}/{{ $category->name }}.png"
+                                                     src="{{ asset('img/loading.svg') }}"
+                                                     style="opacity: 0.6"/>
+                                            </a>
+                                            <a class="block category_link disabled" href="#">
+                                                <div class="text-center" style="margin-top: 1em;">
+                                                    <h5>{{ ucwords(str_replace('_', ' ', $category->name)) }}</h5>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!--end item-->
+                                @endforeach
                             </div>
                             <!--end masonry container-->
                         </div>

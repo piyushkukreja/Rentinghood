@@ -28,7 +28,8 @@ class RentController extends Controller
     public function index()
     {
         $data = [];
-        $data['categories'] = DB::table('categories')->orderBy('name')->get();
+        $data['categories'] = DB::table('categories')->where('is_disabled', 0)->orderBy('name')->get();
+        $data['disabled_categories'] = DB::table('categories')->where('is_disabled', 1)->orderBy('name')->get();
         return view('rent.categories', $data);
     }
 

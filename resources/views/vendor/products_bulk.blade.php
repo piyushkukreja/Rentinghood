@@ -37,7 +37,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <form id="bulk-upload-form" role="form" action="{{ route('vendor.products.upload') }}" method="post" enctype="multipart/form-data">
+                        <form id="bulk-upload-form" role="form" action="{{ route('vendor.products.upload', ['vendor']) }}" method="post" enctype="multipart/form-data">
                             <div class="form-body">
                                 <div class="form-group">
                                     <label>Choose Excel File</label>

@@ -77,26 +77,9 @@
                         </div>
                     </div>
                     <div class="portlet-body">
-                        {{--<div class="table-toolbar">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="btn-group">
-                                        <a class="btn sbold green" href="{{ route('users.create') }}"> {{ __('words.add') }}
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>--}}
                         <table id="products-table" class="table table-striped table-bordered table-hover dt-responsive">
                             <thead>
                             <tr>
-                                {{--<th class="all">
-                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        <input type="checkbox" class="group-checkable" data-set="#users-table .checkboxes" />
-                                        <span></span>
-                                    </label>
-                                </th>--}}
                                 <th class="all">Name</th>
                                 <th class="all">Category</th>
                                 <th class="all">Subcategory</th>

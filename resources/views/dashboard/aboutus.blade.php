@@ -140,7 +140,7 @@
                         <div class="switchable__text">
                             <div class="text-block">
                                 <h2>Pankaj Ajwani</h2>
-                                <span>Chief Technical Officer</span>
+                                <span>Web Developer</span>
                             </div>
                             <p class="lead">
                                 Being an undergrad hasn't stopped Pankaj from taking on multidisciplinary projects, which showcase his exemplary work. Having skills which span through the dimensions of website and application development, he is self-disciplined in multiple programming languages.

@@ -73,6 +73,7 @@
 							<thead>
 							<tr>
 								<th class="all">Name</th>
+								<th class="all">Enabled</th>
 								<th class="all">Edit</th>
 							</tr>
 							</thead>

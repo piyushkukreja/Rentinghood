@@ -25,4 +25,25 @@ class VendorController
         $data['section'] = 'products-bulk';
         return view('layouts.vendor_dashboard', ['data' => $data]);
     }
+
+    public function newOrders()
+    {
+        $data = [];
+        $data['section'] = 'new-orders';
+        return view('vendor.new_orders',['data' => $data]);
+    }
+
+    public function getNewOrders()
+    {
+        $response = [];
+        $response['data'] = Auth::user()->transactions();
+        return $response;
+    }
+
+    public function inventory()
+    {
+        $data = [];
+        $data['section'] = 'inventory';
+        return view('vendor.inventory',['data' => $data]);
+    }
 }

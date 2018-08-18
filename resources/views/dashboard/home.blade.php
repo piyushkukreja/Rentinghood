@@ -8,13 +8,16 @@
                 white-space: nowrap;
             }
         }
+        .font-bold {
+            font-weight: 600;
+        }
     </style>
 @endsection
 @section('scripts')
     @parent
     {{-- Sweet Alert 2 Plugin--}}
     <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
-    <script>
+    <script type="text/javascript">
         (function( $ ){
             $.fn.fitText = function( kompressor, options ) {
                 // Setup options
@@ -116,20 +119,17 @@
         <div class="hiring_div"><img src="{{ asset('img/hiring2.png') }}"></div>
         <section class="cover height-90 imagebg text-center" data-overlay="5" id="home">
             <div class="background-image-holder">
-                <img id="home-background-image" alt="background" src="{{ asset('img/contact-bg.jpg') }}"/>
+                <img id="home-background-image" alt="background" src="{{ asset('img/home/home.jpg') }}"/>
             </div>
-            {{--<div id="left-rent"></div>
-            <div id="right-lend"></div>--}}
             <div class="container pos-vertical-center">
                 <div class="row">
                     <div class="col-md-8">
-                        {{--<img alt="Image" class="unmarg--bottom" src="{{ asset('img/home/logo-brush.png') }}"/>--}}
                         @auth
-                        <h1 id="center-logo" style="font-weight: 600; margin-bottom: 0;">Hello, {{ \Illuminate\Support\Facades\Auth::user()->first_name }} :)</h1>
+                        <h1 id="center-logo" class="font-bold" style="margin-bottom: 0;">Hello, {{ \Illuminate\Support\Facades\Auth::user()->first_name }} :)</h1>
                         @else
-                        <h1 id="center-logo" style="font-weight: 600; margin-bottom: 0;">RentingHood</h1>
+                        <h1 id="center-logo" class="font-bold" style="margin-bottom: 0;">RentingHood</h1>
                         @endauth
-                        <h3 style="font-weight: 600; font-family: Raleway, sans-serif;">
+                        <h3 class="font-bold">
                             Rent anything, right from your Neighbourhood
                         </h3>
                         <a id="btn--rent" class="btn btn--primary btn--lg" href="{{ route('rent_categories') }}" data-tooltip="Let's save some money.">

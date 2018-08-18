@@ -91,52 +91,24 @@ class ProductsController extends Controller
 
     }
 
-    public function newOrders()
-    {
-        //$transaction = Auth::user()->transactions();
-        $data = [];
-        $data['section'] = 'new-orders';
-        return view('vendor.new_orders',['data' => $data]);
-    }
-
-    public function inventory()
-    {
-        //$transaction = Auth::user()->transactions();
-        $data = [];
-        $data['section'] = 'inventory';
-        return view('vendor.inventory',['data' => $data]);
-    }
-
-
-    public function getNewOrders()
-    {
-        $response = [];
-        $response['data'] = Auth::user()->transactions();
-        return $response;
-    }
-
-    /*public function acceptNewOrder($id) {
-
-    }*/
-
-    public function productsBulk()
+    public function productsBulk($user_type)
     {
         $data = [];
         $data['section'] = 'products-bulk';
-        if(Auth::user()->isAdmin())
+        if(Auth::user()->isAdmin() && $user_type == 'admin')
             return view('admin.products_bulk', ['data' => $data]);
         else
             return view('vendor.products_bulk', ['data' => $data]);
     }
 
-    public function productsUpload(Request $request)
+    public function productsUpload(Request $request, $user_type)
     {
         $user = Auth::user();
 
         //Validations
         $rules = [];
         $rules['import_file'] = 'required|file';
-        if($user->isAdmin())
+        if($user->isAdmin() && $user_type == 'admin')
             $rules['lender_id'] = 'required|integer';
         $request->validate($rules);
 

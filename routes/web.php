@@ -138,22 +138,23 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/a/categories','AdminController@categoriesIndex')->name('categories.index');
     Route::get('/a/categories/show-all','AdminController@getAllCategories')->name('categories.show-all');
     Route::post('/a/categories/{id}','AdminController@categoriesUpdate')->name('categories.update');
+    Route::get('/a/categories/{id}/change-availability/{value}','AdminController@categoriesUpdateAvailability')->name('categories.update-availability');
     Route::post('/a/categories','AdminController@categoriesStore')->name('categories.store');
     Route::get('/a/subcategories','AdminController@subcategoriesIndex')->name('subcategories.index');
     Route::get('/a/subcategories/show-all','AdminController@getAllsubcategories')->name('subcategories.show-all');
     Route::post('/a/subcategories/{id}','AdminController@subcategoriesUpdate')->name('subcategories.update');
     Route::post('/a/subcategories','AdminController@subcategoriesStore')->name('subcategories.store');
-    Route::get('/a/products/bulk', 'ProductsController@productsBulk')->name('admin.products.bulk');
-    Route::post('/a/products/bulk', 'ProductsController@productsUpload')->name('admin.products.upload');
+    Route::get('/a/products/bulk/{type}', 'ProductsController@productsBulk')->name('admin.products.bulk');
+    Route::post('/a/products/bulk/{type}', 'ProductsController@productsUpload')->name('admin.products.upload');
 });
 
 //Vendor Routes
 Route::group(['middleware' => ['auth', 'vendor']], function() {
     Route::get('/vendor', 'VendorController@index')->name('vendor');
-    Route::get('/vendor/products/bulk', 'ProductsController@productsBulk')->name('vendor.products.bulk');
-    Route::post('/vendor/products/bulk', 'ProductsController@productsUpload')->name('vendor.products.upload');
-    Route::get('/vendor/products/new-orders', 'ProductsController@newOrders')->name('vendor.new.orders');
-    Route::get('/vendor/products/get-new-orders', 'ProductsController@getNewOrders')->name('vendor.get.new.orders');
+    Route::get('/vendor/products/bulk/{type}', 'ProductsController@productsBulk')->name('vendor.products.bulk');
+    Route::post('/vendor/products/bulk/{type}', 'ProductsController@productsUpload')->name('vendor.products.upload');
+    Route::get('/vendor/products/new-orders', 'VendorController@newOrders')->name('vendor.new.orders');
+    Route::get('/vendor/products/get-new-orders', 'VendorController@getNewOrders')->name('vendor.get.new.orders');
     Route::get('/vendor/products/inventory', 'Dashboard\HomeController@getInventory')->name('vendor.get.inventory');
     Route::get('/vendor/events', 'EventController@events')->name('vendor.calendar');
     Route::post('/vendor/events/insert', 'EventController@insertIntoCalendar')->name('vendor.calendar.insert');

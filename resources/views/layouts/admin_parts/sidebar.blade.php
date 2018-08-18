@@ -58,7 +58,7 @@
                     </a>
                 </li>
                 <li class="nav-item {{ $data['section'] == 'products-bulk' ? ' active open' : '' }}">
-                    <a href="{{ route('admin.products.bulk') }}" class="nav-link nav-toggle">
+                    <a href="{{ route('admin.products.bulk', ['admin']) }}" class="nav-link nav-toggle">
                         <i class="fa fa-upload"></i>
                         <span class="title"> Bulk Upload </span>
                         <span class="arrow"></span>

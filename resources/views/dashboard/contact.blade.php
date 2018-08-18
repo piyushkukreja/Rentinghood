@@ -36,12 +36,12 @@
         <section class="imageblock switchable feature-large height-100">
             <div class="imageblock__content col-md-6 pos-right hidden-xs">
                 <div class="background-image-holder">
-                    <img alt="image" src="{{ asset('img/contact-bg.jpg') }}" />
+                    <img alt="image" src="{{ asset('img/contact/contact-bg.jpg') }}" />
                 </div>
             </div>
             <div class="imageblock__content col-md-6 pos-right visible-xs">
                 <div class="background-image-holder">
-                    <img alt="image" src="{{ asset('img/contact-bg-mobile.jpg') }}" />
+                    <img alt="image" src="{{ asset('img/contact/contact-bg-mobile.jpg') }}" />
                 </div>
             </div>
             <div id="form-container" class="container pos-vertical-center" style="z-index: 5;">

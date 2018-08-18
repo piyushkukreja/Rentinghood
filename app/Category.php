@@ -15,6 +15,10 @@ class Category extends Model
         $this->attributes['name'] = $name;
     }
 
+    public function getIsDisabledAttribute($value) {
+        return intval($value);
+    }
+
     public function subcategories() {
         return $this->hasMany('App\Subcategory');
     }

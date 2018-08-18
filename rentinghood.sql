@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 05, 2018 at 05:37 PM
+-- Generation Time: Aug 18, 2018 at 01:02 PM
 -- Server version: 10.1.28-MariaDB
 -- PHP Version: 7.1.10
 
@@ -59,23 +59,39 @@ CREATE TABLE `categories` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `is_disabled` int(10) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'books', NULL, NULL),
-(2, 'clothes', NULL, NULL),
-(3, 'vehicles', NULL, NULL),
-(4, 'real_estate', NULL, NULL),
-(5, 'bags', NULL, NULL),
-(6, 'furniture', NULL, NULL),
-(7, 'appliances', NULL, NULL),
-(8, 'hardware', NULL, NULL),
-(9, 'gaming_consoles', NULL, NULL);
+INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`, `is_disabled`) VALUES
+(1, 'books', NULL, NULL, 1),
+(2, 'clothes', NULL, NULL, 1),
+(3, 'vehicles', NULL, NULL, 1),
+(4, 'real_estate', NULL, NULL, 1),
+(5, 'bags', NULL, '2018-08-18 05:15:36', 1),
+(6, 'furniture', NULL, NULL, 0),
+(7, 'appliances', NULL, '2018-06-12 00:47:41', 0),
+(8, 'hardware', NULL, NULL, 1),
+(9, 'gaming_consoles', NULL, NULL, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events`
+--
+
+CREATE TABLE `events` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -103,7 +119,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (18, '2018_02_02_000008_create_transactions_table', 3),
 (20, '2018_05_06_150011_add_privileges_users', 4),
 (21, '2018_05_06_145831_create_notes_table', 5),
-(22, '2018_06_04_175244_add_verified_products_table', 6);
+(22, '2018_06_04_175244_add_verified_products_table', 6),
+(23, '2018_08_11_172807_create_events_table', 7),
+(24, '2018_08_18_084843_add_disabled_categories', 7);
 
 -- --------------------------------------------------------
 
@@ -171,9 +189,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `subcategory_id`, `lender_id`, `availability`, `description`, `duration`, `rate_1`, `rate_2`, `rate_3`, `address`, `lat`, `lng`, `image`, `created_at`, `updated_at`, `verified`) VALUES
-(9, 'Dell 5570', 20, 3, 0, 'i7, 8GB RAM, 1TB Hard-drive', '1', 60, 300, 0, 'Kailash Colony, Ulhasnagar, Maharashtra, India', '19.199734', '73.169287', '68116c1192041e25cd3e78707bf4e334f81251cd9b0d.jpg', NULL, NULL, 0),
-(10, 'Crushing it', 3, 4, 1, 'Author - Gary Vaynerchuck', '1', 20, 0, 0, 'Kailash Colony, Ulhasnagar, Maharashtra, India', '19.199734', '73.169287', '873364b15beb8395e27aa362222e25775f662607901f.jpg', NULL, '2018-05-09 07:32:41', 0),
-(11, 'Acer Projector', 21, 4, 0, 'Black colored, supports 3D videos,\r\nComes with Complementary white Board stand.', '1', 1000, 4000, 0, 'Ulhasnagar, Maharashtra, India', '19.221512', '73.164463', '5613495ef30d55fd23f6b36dc938c0bb61152fce7e6b.png', NULL, NULL, 0),
+(9, 'Dell 5570', 20, 3, 1, 'i7, 8GB RAM, 1TB Hard-drive', '1', 60, 300, 0, 'Kailash Colony, Ulhasnagar, Maharashtra, India', '19.199734', '73.169287', '68116c1192041e25cd3e78707bf4e334f81251cd9b0d.jpg', NULL, NULL, 0),
+(10, 'Crushing it', 3, 4, 0, 'Author - Gary Vaynerchuck', '1', 20, 0, 0, 'Kailash Colony, Ulhasnagar, Maharashtra, India', '19.199734', '73.169287', '873364b15beb8395e27aa362222e25775f662607901f.jpg', NULL, '2018-05-09 07:32:41', 0),
+(11, 'Acer Projector', 21, 4, 1, 'Black colored, supports 3D videos,\r\nComes with Complementary white Board stand.', '1', 1000, 4000, 0, 'Ulhasnagar, Maharashtra, India', '19.221512', '73.164463', '5613495ef30d55fd23f6b36dc938c0bb61152fce7e6b.png', NULL, NULL, 0),
 (12, 'How to be a Bawse', 3, 5, 1, 'This is by Lilly Singh', '1', 20, 100, 0, 'Ulhasnagar, Maharashtra, India', '19.221512', '73.164463', '882033d1e42d81ddd14f2ddea02697fd056ece507338.jpg', NULL, '2018-06-04 13:43:45', 1),
 (13, 'Trekk Bag', 12, 4, 1, 'Colour Green', '1', 50, 350, 0, 'Ulhasnagar, Maharashtra, India', '19.221512', '73.164463', '6764a9bc3565095d1fded7d57aacb46a57d261695201.jpg', NULL, NULL, 0),
 (15, 'Camping Chair', 13, 4, 1, 'Colour- Black\r\nfoldable, lightweight, easy to carry.', '1', 30, 200, 0, 'Ulhasnagar, Maharashtra, India', '19.221512', '73.164463', '2033293d260f33245429a6a0ca2407e896de8ead375c.jpg', NULL, NULL, 0),
@@ -237,7 +255,8 @@ INSERT INTO `products` (`id`, `name`, `subcategory_id`, `lender_id`, `availabili
 (73, 'Eat that Frog', 3, 4, 1, 'By Brian tracy<br>In his trademark high-energy style, acclaimed speaker and best selling author Brian Tracy in his book Eat That Frog cuts to the core of what is vital to effective personal time management: decision, discipline, and determination.', '2', 0, 60, 80, 'Mumbai,maharashtra,india', '19.076000', '72.877700', 'EatthatFrog.jpg', NULL, NULL, 0),
 (74, 'How to talk to anyone', 3, 4, 1, 'By Lowndes<br>\"You\'ll not only break the ice, you\'ll melt it away with your new skills.\" -- Larry King \"The lost art of verbal communication may be revitalized by Leil Lowndes.\"', '2', 0, 60, 80, 'Mumbai,maharashtra,india', '19.076000', '72.877700', 'Howtotalktoanyone.jpg', NULL, NULL, 0),
 (75, 'Strategic Brand Management for B2B market', 34, 4, 1, 'By Sarin<br>This book aims to uncover the hidden and unexploited power of leveraging from the concept of brand and brand building for B2B marketers. It focuses on the need of B2B marketing from the point of view of Indian markets and economic conditions at home. With extensive discussions on the three most respected corporate brands in India Tata, Larsen & Toubro and Infosys the author demonstrates how these companies have created value through brands and how their branding initiatives are benchmarks in their journey to success.', '2', 0, 60, 80, 'Mumbai,maharashtra,india', '19.076000', '72.877700', 'StrategicBrandManagementforB2Bmarket.jpg', NULL, NULL, 0),
-(76, '2 states', 1, 4, 1, 'By Chetan bhagat<br>The Story of My Marriage commonly known as 2 States is a 2009 novel written by Chetan Bhagat. It is the story about a couple coming from two different states in India, who face hardships in convincing their parents to approve of their marriage. Bhagat wrote this novel after quitting his job as an investment banker. This is his fourth book after Five Point Someone, One Night @ the Call Center and The Three Mistakes of My Life.', '2', 0, 30, 50, 'Mumbai,maharashtra,india', '19.076000', '72.877700', '2states.jpg', NULL, NULL, 0);
+(76, '2 states', 1, 4, 1, 'By Chetan bhagat<br>The Story of My Marriage commonly known as 2 States is a 2009 novel written by Chetan Bhagat. It is the story about a couple coming from two different states in India, who face hardships in convincing their parents to approve of their marriage. Bhagat wrote this novel after quitting his job as an investment banker. This is his fourth book after Five Point Someone, One Night @ the Call Center and The Three Mistakes of My Life.', '2', 0, 30, 50, 'Mumbai,maharashtra,india', '19.076000', '72.877700', '2states.jpg', NULL, NULL, 0),
+(82, 'Gulliver\'s Travels', 1, 3, 1, 'Testing out a bulk upload', '2', 20, 60, 100, 'Kailash Colony, Ulhasnagar, Maharashtra, India', '19.199734', '73.169287', '8337707fd2bc17b85361b2945357961f572399e2470a.jpg', '2018-06-16 13:03:50', '2018-06-16 13:03:51', 1);
 
 -- --------------------------------------------------------
 
@@ -349,7 +368,9 @@ INSERT INTO `product_pictures` (`id`, `product_id`, `file_name`, `created_at`, `
 (96, 75, 'StrategicBrandManagementforB2Bmarket.jpg', NULL, NULL),
 (97, 75, 'StrategicBrandManagementforB2Bmarket1.jpg', NULL, NULL),
 (98, 76, '2states.jpg', NULL, NULL),
-(99, 76, '2states1.jpg', NULL, NULL);
+(99, 76, '2states1.jpg', NULL, NULL),
+(108, 82, '8337707fd2bc17b85361b2945357961f572399e2470a.jpg', '2018-06-16 13:03:50', '2018-06-16 13:03:50'),
+(109, 82, '3712edc91ac485255cc4d0cb3801004be486d082281c.jpg', '2018-06-16 13:03:51', '2018-06-16 13:03:51');
 
 -- --------------------------------------------------------
 
@@ -402,7 +423,8 @@ INSERT INTO `subcategories` (`id`, `category_id`, `name`, `created_at`, `updated
 (32, 9, 'playstation_4', NULL, NULL),
 (33, 9, 'xbox', NULL, NULL),
 (34, 1, 'business', NULL, NULL),
-(35, 1, 'autobiographies', NULL, NULL);
+(35, 1, 'autobiographies', NULL, NULL),
+(36, 6, 'cupboards', '2018-06-13 10:10:17', '2018-06-13 10:10:17');
 
 -- --------------------------------------------------------
 
@@ -437,7 +459,8 @@ INSERT INTO `transactions` (`id`, `renter_id`, `product_id`, `from_date`, `to_da
 (21, 3, 11, '2018-03-29', '2018-04-03', '2', 1, NULL, NULL),
 (22, 4, 13, '2018-03-29', '2018-03-30', '2', 1, NULL, NULL),
 (23, 4, 13, '2018-03-29', '2018-03-31', '2', 1, NULL, NULL),
-(24, 10, 21, '2018-04-07', '2018-05-07', '5', 1, NULL, NULL);
+(24, 10, 21, '2018-04-07', '2018-05-07', '5', 1, NULL, NULL),
+(25, 3, 82, '2018-08-20', '2018-08-30', '1', 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -471,7 +494,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `contact`, `password`, `aadhaar_id`, `reviews`, `total_rating`, `address`, `lat`, `lng`, `verified`, `profile_picture`, `remember_token`, `created_at`, `updated_at`, `privileges`) VALUES
-(3, 'Pankaj', 'Ajwani', 'pankaj.ajwani0409@gmail.com', 8805623480, '$2y$10$HX9PqQFCdCHnP6/g/kIP8erEYanqLoTC0Q1VrfG.GKnNVJ6gUKMyO', '0', 0, 0, 'Kailash Colony, Ulhasnagar, Maharashtra, India', '19.199734', '73.169287', 1, 'avatar.png', 'nhjQXbMGUYb41qsJnE0b6VIvDDYf573bcFZKc1VXOwCHxY7atPt6rILWYarv', '2018-03-26 00:43:18', '2018-05-06 09:22:46', 1),
+(3, 'Pankaj', 'Ajwani', 'pankaj.ajwani0409@gmail.com', 8805623480, '$2y$10$HX9PqQFCdCHnP6/g/kIP8erEYanqLoTC0Q1VrfG.GKnNVJ6gUKMyO', '0', 0, 0, 'Kailash Colony, Ulhasnagar, Maharashtra, India', '19.199734', '73.169287', 1, 'avatar.png', '5MuyUDDygsY2chuB8IqlIxlm64795GEYnDW5NiultSIdNqYY9ILz9rANR6pY', '2018-03-26 00:43:18', '2018-05-06 09:22:46', 2),
 (4, 'Bhushan', 'Punjabi', 'punjabibhushan@gmail.com', 9765584429, '$2y$10$73O7DHLRuk.j7kvbqTgYQ.K7va6ONn.t119w2O4iMuMVFwUIYa8lC', '0', 0, 0, 'Ulhasnagar, Maharashtra, India', '19.221512', '73.164463', 1, 'avatar.png', 'OHeobQv4qUYHgcGNMtsXEp38cwuPzPl5S2cQzGAHCWeP58VURMOVYtGIdPqh', '2018-03-26 01:04:42', '2018-03-26 01:05:20', 0),
 (5, 'Bharti', 'Narang', 'narangbharti1525@gmail.com', 9765707065, '$2y$10$pb/ee9osd6IFZwtYSw4oIeMp6Q95lgWs1jOO62iuRTAkh2nWibnJG', '0', 0, 0, 'Ulhasnagar, Maharashtra, India', '19.221512', '73.164463', 1, 'avatar.png', 'si8fOTDtpkJH259HCXGloWyi3OZSOpBerlyivzlqZEtJgq1ZRRMHrXV3E760', '2018-03-26 02:18:46', '2018-05-06 04:08:00', 0),
 (6, 'Mohit', 'Punjabi', 'mohitpunjabi.work@gmail.com', 9324023400, '$2y$10$icVe1tfANHKVJKA/7LVj7OpPkF5NoRhm0WXVMEi4uifxt10joZoLG', '0', 0, 0, 'Mumbai, Maharashtra, India', '19.075984', '72.877656', 1, 'avatar.png', NULL, '2018-03-26 02:23:26', '2018-03-26 02:25:58', 0),
@@ -492,6 +515,12 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `contact`, `passw
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `events`
+--
+ALTER TABLE `events`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -563,10 +592,16 @@ ALTER TABLE `categories`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT for table `events`
+--
+ALTER TABLE `events`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `notes`
@@ -578,25 +613,25 @@ ALTER TABLE `notes`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT for table `product_pictures`
 --
 ALTER TABLE `product_pictures`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT for table `subcategories`
 --
 ALTER TABLE `subcategories`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `users`

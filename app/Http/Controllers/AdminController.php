@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'admin']);
-    }
-
     public function index() {
         $data = [];
         $data['section'] = 'users';
@@ -236,6 +231,13 @@ class AdminController extends Controller
         $category->name = $request->input('name');//method requests value using the name of the input
         $category->save();//make changes to db
         return redirect()->route('categories.index');//redirect to the categories page
+    }
+
+    public function categoriesUpdateAvailability(Request $request, $id, $value){
+        $category = Category::findOrFail($id);
+        $category->is_disabled = intval($value);
+        $category->save();
+        return redirect()->route('categories.index');
     }
 
     public function categoriesStore(Request $request){

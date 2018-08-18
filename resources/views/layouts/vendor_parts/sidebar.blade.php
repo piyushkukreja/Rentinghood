@@ -24,40 +24,37 @@
                 </li>
 
                 <li class="nav-item {{ $data['section'] == 'products-bulk' ? ' active open' : '' }}">
-                    <a href="{{ route('vendor.products.bulk') }}" class="nav-link nav-toggle">
+                    <a href="{{ route('vendor.products.bulk', ['vendor']) }}" class="nav-link nav-toggle">
                         <i class="fa fa-upload"></i>
                         <span class="title"> Bulk Upload </span>
-                        <span class="arrow"></span>
                     </a>
                 </li>
                 <li class="nav-item {{ $data['section'] == 'new-orders' ? ' active open' : '' }}">
                     <a href="{{ route('vendor.new.orders') }}" class="nav-link nav-toggle">
-                        <span id='message_count' class='fa fa-circle'></span>
                         <i class='fa fa-check-square-o '></i>
                         <span class='title'> New Orders </span>
-                        <span class='arrow'></span>
+                        <?php $count = \Illuminate\Support\Facades\Auth::user()->newOrdersCount(); ?>
+                        @if($count > 0)
+                            <span class="badge badge-danger">{{ $count }}</span>
+                        @endif
                     </a>
                 </li>
                 <li class="nav-item {{ $data['section'] == 'inventory' ? ' active open' : '' }}">
                     <a href="{{ route('account') }}" class="nav-link nav-toggle">
                         <i class="fa fa-cart-arrow-down "></i>
                         <span class="title"> Inventory </span>
-                        <span class="arrow"></span>
                     </a>
                 </li>
                 <li class="nav-item {{ $data['section'] == 'calendar' ? ' active open' : '' }}">
                     <a href="{{ route('vendor.calendar') }}" class="nav-link nav-toggle">
                         <i class="fa fa-calendar "></i>
                         <span class="title"> Calendar </span>
-                        <span class="arrow"></span>
                     </a>
                 </li>
                 <li class="nav-item ">
                     <a href="{{ route('logout') }}" class="nav-link nav-toggle">
                         <i class="fa fa-sign-out"></i>
                         <span class="title"> Logout </span>
-                        <span class="selected"></span>
-                        <span class="arrow open"></span>
                     </a>
                 </li>
             </ul>

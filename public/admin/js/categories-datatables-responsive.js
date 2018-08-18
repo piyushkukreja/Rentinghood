@@ -28,6 +28,7 @@ var TableDatatablesResponsive = function () {
                     for(var i = 0; i < json.length; i++){
                         return_data.push([
                             json[i].name,
+                            '<label class="mt-checkbox"><input class="enable" type="checkbox"' + (json[i].is_disabled === 0 ? ' checked' : '') + '><span></span></label>',
                             '<a href="javascript:;" class="edit blue btn btn-outline" style="padding: 3px 6px 3px 6px;">' +
                             '<i class="fa fa-pencil"></i></a> ',
                             json[i].id
@@ -60,11 +61,6 @@ var TableDatatablesResponsive = function () {
             "pageLength": 10,
 
             "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-            // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
-            // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
-            // So when dropdowns used the scrollable div should be removed.
-            //"dom": "<'row' <'col-md-12'T>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
         });
 
         table.on('click', '.edit', function () {
@@ -73,7 +69,18 @@ var TableDatatablesResponsive = function () {
             $('#edit-category-modal').find('input[name="name"]').val(aData[0]);//this finds the name with the associated id and sets the value of input in modal
             $('#edit-form').attr('action', base_url + '/a/categories/' + aData[2]);//to use post method for updating data in db and page
             $('#edit-category-modal-trigger').trigger('click');//triggers modal on click with the specified id
-        })
+        });
+
+        table.on('change', '.enable', function () {
+            var aData = oTable.fnGetData($(this).parents('tr')[0]);
+            var disable = 1;
+            if($(this).is(':checked'))
+                disable = 0;
+            $.ajax({
+                url: base_url + '/a/categories/' + aData[3] + '/change-availability/' + disable,
+                type: 'GET'
+            });
+        });
 
         $('#add-form,#edit-form').on('submit', function (e) {
             e.preventDefault();

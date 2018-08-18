@@ -9,24 +9,6 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'first_name', 'last_name', 'email', 'password', 'address', 'lat', 'lng', 'contact', 'verified',
-    ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-
     public function isAdmin() {
         if($this->privileges === 2) {
             return true;
@@ -34,9 +16,8 @@ class User extends Authenticatable
         return false;
     }
 
-
     public function isVendor() {
-        if($this->privileges === 1) {
+        if($this->privileges >= 1) {
             return true;
         }
         return false;
@@ -52,8 +33,18 @@ class User extends Authenticatable
 
     public function transactions() {
         return Transaction::whereHas('product', function ($query) {
-            $query->where('lender_id', \Auth::user()->id)
-            ->where('status', '=', "1");
-        })->get();
+                $query->where('lender_id', \Auth::user()->id);
+            })
+            ->where('status', '=', "1")
+            ->get();
+    }
+
+    public function newOrdersCount() {
+        $new_orders = Transaction::whereHas('product', function ($query) {
+                $query->where('lender_id', \Auth::user()->id);
+            })
+            ->where('status', '=', "1")
+            ->get();
+        return count($new_orders);
     }
 }
