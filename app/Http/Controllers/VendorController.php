@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: PIYUSH
- * Date: 25-Jun-18
- * Time: 10:11 PM
- */
 
 namespace app\Http\Controllers;
 
@@ -45,5 +39,13 @@ class VendorController
         $data = [];
         $data['section'] = 'inventory';
         return view('vendor.inventory',['data' => $data]);
+    }
+
+    public function loadInventory() {
+        $user = Auth::user();
+        $response = [];
+        $response['data'] = $user->inventory;
+        $response['status'] = 'success';
+        return $response;
     }
 }

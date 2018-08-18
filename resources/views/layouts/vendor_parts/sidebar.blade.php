@@ -23,14 +23,8 @@
                     <h3 class="uppercase">Work</h3>
                 </li>
 
-                <li class="nav-item {{ $data['section'] == 'products-bulk' ? ' active open' : '' }}">
-                    <a href="{{ route('vendor.products.bulk', ['vendor']) }}" class="nav-link nav-toggle">
-                        <i class="fa fa-upload"></i>
-                        <span class="title"> Bulk Upload </span>
-                    </a>
-                </li>
                 <li class="nav-item {{ $data['section'] == 'new-orders' ? ' active open' : '' }}">
-                    <a href="{{ route('vendor.new.orders') }}" class="nav-link nav-toggle">
+                    <a href="{{ route('vendor.new-orders') }}" class="nav-link nav-toggle">
                         <i class='fa fa-check-square-o '></i>
                         <span class='title'> New Orders </span>
                         <?php $count = \Illuminate\Support\Facades\Auth::user()->newOrdersCount(); ?>
@@ -39,18 +33,28 @@
                         @endif
                     </a>
                 </li>
-                <li class="nav-item {{ $data['section'] == 'inventory' ? ' active open' : '' }}">
-                    <a href="{{ route('account') }}" class="nav-link nav-toggle">
-                        <i class="fa fa-cart-arrow-down "></i>
-                        <span class="title"> Inventory </span>
-                    </a>
-                </li>
+
                 <li class="nav-item {{ $data['section'] == 'calendar' ? ' active open' : '' }}">
                     <a href="{{ route('vendor.calendar') }}" class="nav-link nav-toggle">
                         <i class="fa fa-calendar "></i>
                         <span class="title"> Calendar </span>
                     </a>
                 </li>
+
+                <li class="nav-item {{ $data['section'] == 'inventory' ? ' active open' : '' }}">
+                    <a href="{{ route('vendor.inventory') }}" class="nav-link nav-toggle">
+                        <i class="fa fa-cart-arrow-down "></i>
+                        <span class="title"> Inventory </span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ $data['section'] == 'products-bulk' ? ' active open' : '' }}">
+                    <a href="{{ route('vendor.products.bulk', ['vendor']) }}" class="nav-link nav-toggle">
+                        <i class="fa fa-upload"></i>
+                        <span class="title"> Bulk Upload </span>
+                    </a>
+                </li>
+
                 <li class="nav-item ">
                     <a href="{{ route('logout') }}" class="nav-link nav-toggle">
                         <i class="fa fa-sign-out"></i>

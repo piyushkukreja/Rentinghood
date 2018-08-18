@@ -177,26 +177,6 @@
 
 @section('content')
     <div class="page-content">
-        <!-- BEGIN PAGE HEAD-->
-        <div class="page-head">
-            <!-- BEGIN PAGE TITLE -->
-            <div class="page-title">
-                <h1>User - {{ $data['user']->first_name . ' ' . $data['user']->last_name }}</h1>
-            </div>
-            <!-- END PAGE TITLE -->
-        </div>
-        <!-- END PAGE HEAD-->
-        <!-- BEGIN PAGE BREADCRUMB -->
-        <ul class="page-breadcrumb breadcrumb">
-            <li>
-                <a href="{{ route('users.index') }}">Users</a>
-                <i class="fa fa-circle"></i>
-            </li>
-            <li>
-                <a href="{{ route('users.show', [$data['user']->id]) }}">View</a>
-            </li>
-        </ul>
-        <!-- END PAGE BREADCRUMB -->
         <!-- SHOW FLASH CONTENT -->
         @if(Session::has('success'))
             <p class="alert alert-success">{{ session('success') }}</p>
@@ -211,7 +191,7 @@
                         <div class="caption font-dark">
                             <h4 style="margin: 0;">
                                 <i class="icon-user font-dark"></i>
-                                <span class="caption-subject bold uppercase"> User Information</span>
+                                <span class="caption-subject bold uppercase"> User - {{ $data['user']->first_name . ' ' . $data['user']->last_name }}</span>
                             </h4>
                         </div>
                     </div>
@@ -348,11 +328,6 @@
                                                                                             <i class="fa fa-edit"></i>
                                                                                         </a>
                                                                                     </li>
-                                                                                    {{--<li>
-                                                                                        <a class="btn default btn-outline" href="javascript:;">
-                                                                                            <i class="icon-link"></i>
-                                                                                        </a>
-                                                                                    </li>--}}
                                                                                 </ul>
                                                                             </div>
                                                                         </div>

@@ -6,11 +6,9 @@
         <div class="page-header-inner ">
             <!-- BEGIN LOGO -->
             <div class="page-logo">
-                <a href="{{ route('admin') }}">
+                <a href="{{ route('users.index') }}">
                     <h2 class="logo-default">RentingHood </h2></a>
-                <div class="menu-toggler sidebar-toggler">
-                    <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
-                </div>
+                <div class="menu-toggler sidebar-toggler" style="opacity: 1;"></div>
             </div>
             <!-- END LOGO -->
         </div>

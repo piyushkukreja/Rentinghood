@@ -1,4 +1,6 @@
 /* here you can put your own css to customize and override the theme */
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+
 .swal2-container .swal2-popup {
     font-size: 1em;
 }
@@ -46,4 +48,14 @@ input.no-arrows::-webkit-clear-button { /* Removes blue cross */
 }
 input.no-arrows.form-control::-ms-expand {
     display: none;
+}
+
+body * {
+    font-family: Raleway, sans-serif;
+}
+
+.logo-default {
+    color: #fff;
+    font-weight: 600;
+    font-size: 2em;
 }

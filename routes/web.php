@@ -116,7 +116,9 @@ Route::get('/test/transactions', function() {
 
 //Admin Routes
 Route::group(['middleware' => ['auth', 'admin']], function() {
-    Route::get('/a', 'AdminController@index')->name('admin');
+    Route::get('/a', function () {
+        return redirect()->route('users.index');
+    });
     Route::get('/a/users/get-all', 'AdminController@getAllUsers')->name('users.get-all');
     Route::get('/a/users', 'AdminController@usersIndex')->name('users.index');
     Route::get('/a/users/{user}', 'AdminController@usersShow')->name('users.show');
@@ -150,12 +152,15 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
 
 //Vendor Routes
 Route::group(['middleware' => ['auth', 'vendor']], function() {
-    Route::get('/vendor', 'VendorController@index')->name('vendor');
+    Route::get('/vendor', function () {
+        return redirect()->route('vendor.new-orders');
+    });
     Route::get('/vendor/products/bulk/{type}', 'ProductsController@productsBulk')->name('vendor.products.bulk');
     Route::post('/vendor/products/bulk/{type}', 'ProductsController@productsUpload')->name('vendor.products.upload');
-    Route::get('/vendor/products/new-orders', 'VendorController@newOrders')->name('vendor.new.orders');
-    Route::get('/vendor/products/get-new-orders', 'VendorController@getNewOrders')->name('vendor.get.new.orders');
-    Route::get('/vendor/products/inventory', 'Dashboard\HomeController@getInventory')->name('vendor.get.inventory');
+    Route::get('/vendor/products/new-orders', 'VendorController@newOrders')->name('vendor.new-orders');
+    Route::get('/vendor/products/get-new-orders', 'VendorController@getNewOrders')->name('vendor.get-new-orders');
+    Route::get('/vendor/inventory', 'VendorController@inventory')->name('vendor.inventory');
+    Route::get('/vendor/inventory/show-all', 'VendorController@loadInventory')->name('vendor.load-inventory');
     Route::get('/vendor/events', 'EventController@events')->name('vendor.calendar');
     Route::post('/vendor/events/insert', 'EventController@insertIntoCalendar')->name('vendor.calendar.insert');
     /*Route::get('/account/{tab?}', 'Dashboard\HomeController@vendorIndex')->name('vendor.inventory');*/

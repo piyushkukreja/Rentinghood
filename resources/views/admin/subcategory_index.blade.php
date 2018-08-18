@@ -24,22 +24,6 @@
 @section('content')
 
     <div class="page-content">
-        <!-- BEGIN PAGE HEAD-->
-        <div class="page-head">
-            <!-- BEGIN PAGE TITLE -->
-            <div class="page-title">
-                <h1>Subcategories</h1>
-            </div>
-            <!-- END PAGE TITLE -->
-        </div>
-        <!-- END PAGE HEAD-->
-        <!-- BEGIN PAGE BREADCRUMB -->
-        <ul class="page-breadcrumb breadcrumb">
-            <li>
-                <a href="{{ route('subcategories.index') }}">Subcategories</a>
-            </li>
-        </ul>
-        <!-- END PAGE BREADCRUMB -->
         <!-- SHOW FLASH CONTENT -->
         @if(Session::has('success'))
             <p class="alert alert-success">{{ session('success') }}</p>

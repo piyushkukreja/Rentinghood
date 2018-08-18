@@ -30,7 +30,7 @@ var TableDatatablesResponsive = function () {
                             json[i].renter.first_name + " " + json[i].renter.last_name,
                             json[i].renter.address,
                             json[i].product.name + ' (' + json[i].product.id + ')',
-                            '<img src="../../img/uploads/products/small/'+json[i].product.image+'" alt="product image"></img>',
+                            '<img style="height: 80px;" src="../../img/uploads/products/small/'+json[i].product.image+'" alt="product image" />',
                             json[i].from_date,
                             json[i].to_date,
                             //'<a href="' + base_url + '/a/products/' + json[i].id + '/edit" class="btn blue" style="padding: 3px 6px 3px 6px;">' +
@@ -46,30 +46,9 @@ var TableDatatablesResponsive = function () {
                 }
             },
 
-            // Or you can use remote translation file
-            //"language": {
-            //   url: '//cdn.datatables.net/plug-ins/3cfcc339e89/i18n/Portuguese.json'
-            //},
+            buttons: [],
 
-            // setup buttons extentension: http://datatables.net/extensions/buttons/
-            buttons: [
-                /*{extend: 'print', className: 'btn dark btn-outline', exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4 ]
-                    }},
-                {extend: 'pdf', className: 'btn green btn-outline' , exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4 ]
-                    }},
-                {extend: 'csv', className: 'btn purple btn-outline ', exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4 ]
-                    }}*/
-            ],
-
-            // setup responsive extension: http://datatables.net/extensions/responsive/
-            responsive: {
-                details: {
-
-                }
-            },
+            responsive: { details: { } },
 
             "order": [
                 [0, 'asc']
@@ -83,11 +62,6 @@ var TableDatatablesResponsive = function () {
             "pageLength": 10,
 
             "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-            // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
-            // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
-            // So when dropdowns used the scrollable div should be removed.
-            //"dom": "<'row' <'col-md-12'T>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
         });
         var tableWrapper = jQuery('#sample_1_wrapper');
 
@@ -95,7 +69,7 @@ var TableDatatablesResponsive = function () {
             e.preventDefault();
             swal({
                 title: 'Are you sure, You want to accept the transaction?',
-                text: 'You Cannot Revert This Action!.',
+                text: 'You cannot revert this action!!',
                 type: 'success',
                 showCancelButton: true,
                 confirmButtonColor: '#4684EF',
@@ -103,22 +77,19 @@ var TableDatatablesResponsive = function () {
                 cancelButtonText: 'No.'
             }).then((result) => {
                 if (result.value) {
-                // handle Confirm button click
-                var currentRow = $(this).parents('tr')[0];
-                $.ajax({
-                    url: base_url + '/account/messages/answer_request',
-                    type : 'POST',
-                    data: { _token: csrf, reply : 1, tid : oTable.fnGetData(currentRow)[7] },
-                    success: function (response) {
-                        oTable.fnDeleteRow(currentRow);
-                    }
-                })
-            } else {
-                // result.dismiss can be 'cancel', 'overlay', 'esc' or 'timer'
-            }
+                    // handle Confirm button click
+                    var currentRow = $(this).parents('tr')[0];
+                    $.ajax({
+                        url: base_url + '/account/messages/answer_request',
+                        type : 'POST',
+                        data: { _token: csrf, reply : 1, tid : oTable.fnGetData(currentRow)[7] },
+                        success: function (response) {
+                            oTable.fnDeleteRow(currentRow);
+                        }
+                    });
+                }
+            });
         });
-
-        })
 
         table.on('click', '.reject', function (e) {
             e.preventDefault();
@@ -132,37 +103,29 @@ var TableDatatablesResponsive = function () {
                 cancelButtonText: 'No.'
             }).then((result) => {
                 if (result.value) {
-                // handle Confirm button click
-                var currentRow = $(this).parents('tr')[0];
-                $.ajax({
-                    url: base_url + '/account/messages/answer_request',
-                    type : 'POST',
-                    data: { _token: csrf, reply : 0, tid : oTable.fnGetData(currentRow)[7] },
-                    success: function (response) {
-                        oTable.fnDeleteRow(currentRow);
-                    }
-                })
-            } else {
-                // result.dismiss can be 'cancel', 'overlay', 'esc' or 'timer'
-            }
+                    // handle Confirm button click
+                    var currentRow = $(this).parents('tr')[0];
+                    $.ajax({
+                        url: base_url + '/account/messages/answer_request',
+                        type : 'POST',
+                        data: { _token: csrf, reply : 0, tid : oTable.fnGetData(currentRow)[7] },
+                        success: function (response) {
+                            oTable.fnDeleteRow(currentRow);
+                        }
+                    })
+                }
+            });
         });
-        })
-
-
-    }
+    };
 
     return {
-
         //main function to initiate the module
         init: function (base_url, csrf) {
-
             if (!jQuery().dataTable) {
                 return;
             }
-
             initTable1(base_url, csrf);
         }
-
     };
 
 }();

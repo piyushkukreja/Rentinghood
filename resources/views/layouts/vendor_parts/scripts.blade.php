@@ -20,9 +20,5 @@
 <script src="{{ asset('admin/js/layout.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('admin/js/demo.min.js') }}" type="text/javascript"></script>
 <!-- END THEME LAYOUT SCRIPTS -->
-<!--FULL CALENDAR AND MOMENT JS-->
-<script src="{{ asset('admin/js/moment.js')  }}"></script>
-<script src="{{ asset('admin/js/fullcalendar.js') }}"></script>
-<!--END FULL CALENDAR AND MOMENT JS-->
 
 @endsection

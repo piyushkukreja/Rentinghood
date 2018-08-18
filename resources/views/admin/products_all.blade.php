@@ -42,27 +42,11 @@
 @section('content')
 
     <div class="page-content">
-        <!-- BEGIN PAGE HEAD-->
-        <div class="page-head">
-            <!-- BEGIN PAGE TITLE -->
-            <div class="page-title">
-                <h1>Products</h1>
-            </div>
-            <!-- END PAGE TITLE -->
-        </div>
-        <!-- END PAGE HEAD-->
-        <!-- BEGIN PAGE BREADCRUMB -->
-        <ul class="page-breadcrumb breadcrumb">
-            <li>
-                <a href="{{ route('products.all') }}">All Products</a>
-            </li>
-        </ul>
-        <!-- END PAGE BREADCRUMB -->
         <!-- SHOW FLASH CONTENT -->
         @if(Session::has('success'))
             <p class="alert alert-success">{{ session('success') }}</p>
-    @endif
-    <!-- END FLASH CONTENT -->
+        @endif
+        <!-- END FLASH CONTENT -->
         <!-- BEGIN PAGE BASE CONTENT -->
         <div class="row">
             <div class="col-md-12">

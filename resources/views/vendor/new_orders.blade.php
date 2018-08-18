@@ -58,22 +58,6 @@
 @section('content')
 
     <div class="page-content">
-        <!-- BEGIN PAGE HEAD-->
-        <div class="page-head">
-            <!-- BEGIN PAGE TITLE -->
-            <div class="page-title">
-                <h1>Products</h1>
-            </div>
-            <!-- END PAGE TITLE -->
-        </div>
-        <!-- END PAGE HEAD-->
-        <!-- BEGIN PAGE BREADCRUMB -->
-        <ul class="page-breadcrumb breadcrumb">
-            <li>
-                <a href="{{ route('vendor.get.new.orders') }}">New Orders</a>
-            </li>
-        </ul>
-        <!-- END PAGE BREADCRUMB -->
         <!-- SHOW FLASH CONTENT -->
         @if(Session::has('rejected'))
             <p class="alert alert-warning">{{ session('rejected') }}</p>

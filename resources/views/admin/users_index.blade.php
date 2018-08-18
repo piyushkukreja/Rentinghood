@@ -42,22 +42,6 @@
 @section('content')
 
     <div class="page-content">
-        <!-- BEGIN PAGE HEAD-->
-        <div class="page-head">
-            <!-- BEGIN PAGE TITLE -->
-            <div class="page-title">
-                <h1>Users</h1>
-            </div>
-            <!-- END PAGE TITLE -->
-        </div>
-        <!-- END PAGE HEAD-->
-        <!-- BEGIN PAGE BREADCRUMB -->
-        <ul class="page-breadcrumb breadcrumb">
-            <li>
-                <a href="{{ route('users.index') }}">Users</a>
-            </li>
-        </ul>
-        <!-- END PAGE BREADCRUMB -->
         <!-- SHOW FLASH CONTENT -->
         @if(Session::has('success'))
             <p class="alert alert-success">{{ session('success') }}</p>
@@ -77,26 +61,9 @@
                         </div>
                     </div>
                     <div class="portlet-body">
-                        {{--<div class="table-toolbar">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="btn-group">
-                                        <a class="btn sbold green" href="{{ route('users.create') }}"> {{ __('words.add') }}
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>--}}
                         <table id="users-table" class="table table-striped table-bordered table-hover dt-responsive">
                             <thead>
                             <tr>
-                                {{--<th class="all">
-                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        <input type="checkbox" class="group-checkable" data-set="#users-table .checkboxes" />
-                                        <span></span>
-                                    </label>
-                                </th>--}}
                                 <th class="all">Name</th>
                                 <th class="min-tablet">Email</th>
                                 <th class="min-tablet">Contact</th>

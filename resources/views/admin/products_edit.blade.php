@@ -159,17 +159,6 @@
             <!-- END PAGE TITLE -->
         </div>
         <!-- END PAGE HEAD-->
-        <!-- BEGIN PAGE BREADCRUMB -->
-        <ul class="page-breadcrumb breadcrumb">
-            <li>
-                <a href="index.html">Products</a>
-                <i class="fa fa-circle"></i>
-            </li>
-            <li>
-                <span class="active">Edit</span>
-            </li>
-        </ul>
-        <!-- END PAGE BREADCRUMB -->
         <!-- SHOW FLASH CONTENT -->
         @if(Session::has('success'))
             <p class="alert alert-success">{{ session('success') }}</p>

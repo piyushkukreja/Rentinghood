@@ -24,10 +24,6 @@
         <link href="{{ asset('admin/css/components.css') }}" rel="stylesheet" id="style_components" type="text/css" />
         <link href="{{ asset('admin/css/plugins.css') }}" rel="stylesheet" type="text/css" />
         <!-- END THEME GLOBAL STYLES -->
-        <!--Full calendar-->
-        <link rel="stylesheet" href="{{asset('admin/css/fullcalendar.css')}} ">
-        {{--<link rel="stylesheet" href="{{asset('admin/css/fullcalendar.min.css')}}">--}}
-        <link rel="stylesheet" href="{{asset('admin/css/fullcalendar.print.css')}}" media="print">
         <!-- BEGIN THEME LAYOUT STYLES -->
         <link href="{{ asset('admin/css/layout.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('admin/css/default.css') }}" rel="stylesheet" type="text/css" id="style_color" />

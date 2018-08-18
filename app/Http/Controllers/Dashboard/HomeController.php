@@ -26,7 +26,6 @@ class HomeController extends Controller
      */
     public function index($tab = 'undefined')
     {
-
         $data = [];
         if ($tab == 'undefined')
         {
@@ -41,7 +40,6 @@ class HomeController extends Controller
         $data['categories'] = DB::table('categories')->get();
 
         return view('dashboard.account', $data);
-
     }
 
 
