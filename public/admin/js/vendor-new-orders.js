@@ -68,7 +68,7 @@ var TableDatatablesResponsive = function () {
         table.on('click', '.accept', function (e) {
             e.preventDefault();
             swal({
-                title: 'Are you sure, You want to accept the transaction?',
+                title: 'Are you sure you want to accept the transaction?',
                 text: 'You cannot revert this action!!',
                 type: 'success',
                 showCancelButton: true,
@@ -94,8 +94,8 @@ var TableDatatablesResponsive = function () {
         table.on('click', '.reject', function (e) {
             e.preventDefault();
             swal({
-                title: 'Are you sure, You want to reject this transaction?',
-                text: 'You Cannot Revert This Action! .',
+                title: 'Are you sure you want to reject this transaction?',
+                text: 'You cannot revert this action! .',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#DD6B55',

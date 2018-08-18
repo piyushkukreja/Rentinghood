@@ -7,7 +7,7 @@
     <script src="{{ asset('admin/js/datatable.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/datatables.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/datatables.bootstrap.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('admin/js/new-orders-datatables.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('admin/js/vendor-new-orders.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/full_calendar.js') }}" type="text/javascript"></script>
     {{--<script src="{{ asset('admin/js/fcalendar.js') }}" type="text"></script>--}}
     <script type="text/javascript">

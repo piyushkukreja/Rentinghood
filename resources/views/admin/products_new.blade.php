@@ -7,7 +7,7 @@
     <script src="{{ asset('admin/js/datatable.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/datatables.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/datatables.bootstrap.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('admin/js/new-products-datatables.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('admin/js/admin-new-products.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         var base_url = '{{ \Illuminate\Support\Facades\URL::to('/') }}';
         jQuery(document).ready(function() {
@@ -64,12 +64,6 @@
                         <table id="products-table" class="table table-striped table-bordered table-hover dt-responsive">
                             <thead>
                             <tr>
-                                {{--<th class="all">
-                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        <input type="checkbox" class="group-checkable" data-set="#users-table .checkboxes" />
-                                        <span></span>
-                                    </label>
-                                </th>--}}
                                 <th class="all">Name</th>
                                 <th class="all">Thumbnail</th>
                                 <th class="min-tablet">Lender</th>

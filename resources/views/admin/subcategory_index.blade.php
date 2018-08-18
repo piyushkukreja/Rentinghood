@@ -13,7 +13,7 @@
     <script src="{{ asset('admin/js/datatable.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/datatables.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/datatables.bootstrap.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('admin/js/subcategories-datatables-responsive.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('admin/js/admin-subcategories.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         var base_url = '{{ \Illuminate\Support\Facades\URL::to('/') }}';
         jQuery(document).ready(function() {
