@@ -44,14 +44,14 @@
                     </a>
                 </li>
                 <li class="nav-item {{ $data['section'] == 'products' ? ' active open' : '' }}">
-                    <a href="{{ route('products.all') }}" class="nav-link nav-toggle">
+                    <a href="{{ route('admin.products.all') }}" class="nav-link nav-toggle">
                         <i class="fa fa-archive"></i>
                         <span class="title"> Products </span>
                         <span class="arrow"></span>
                     </a>
                 </li>
                 <li class="nav-item {{ $data['section'] == 'products-new' ? ' active open' : '' }}">
-                    <a href="{{ route('products.new') }}" class="nav-link nav-toggle">
+                    <a href="{{ route('admin.products.new') }}" class="nav-link nav-toggle">
                         <i class="fa fa-plus-square"></i>
                         <span class="title"> New Posts </span>
                         <span class="arrow"></span>

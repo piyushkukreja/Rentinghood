@@ -14,12 +14,6 @@ use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
-    public function index() {
-        $data = [];
-        $data['section'] = 'users';
-        return view('layouts.admin_dashboard', ['data' => $data]);
-    }
-
     public function getAllUsers() {
         $response = [];
         $response['data'] = User::all();
@@ -46,12 +40,11 @@ class AdminController extends Controller
         $user->lng = $request->input('lng');
         $user->save();
         Session::flash('success', 'User has been updated successfully');
-        return redirect('/a/users');
+        return redirect()->route('users.index');
     }
 
     public function usersShow($id) {
         $user = User::findOrFail($id);
-
         $data = [];
         $data['section'] = 'users';
         $data['user'] = $user;
@@ -66,12 +59,11 @@ class AdminController extends Controller
         }
         $user->delete();
         Session::flash('success', 'User has been successfully deleted.');
-        return redirect('/a/users');
+        return redirect()->route('users.index');
     }
 
     public function notes($id) {
         $user = User::findOrFail($id);
-
         $response = [];
         $response['data'] = $user->notes;
         $response['status'] = 'success';
@@ -81,7 +73,6 @@ class AdminController extends Controller
     public function notesStore(Request $request, $id) {
         $user = User::findOrFail($id);
         $admin = Auth::user();
-
         $note = new Note;
         $note->admin_id = $admin->id;
         $note->user_id = $user->id;
@@ -121,17 +112,26 @@ class AdminController extends Controller
 
     public function productsEdit($id) {
         $product = Product::findOrFail($id);
+        $user = Auth::user();
+        if(!$user->isAdmin() && $user->id != $product->lender_id)
+            return redirect()->route('vendor.index');
         $data = [];
         $data['section'] = 'products';
         $data['product'] = $product;
         $data['categories'] = Category::pluck('name', 'id')->all();
         $data['subcategories'] = Category::findOrFail($product->category_id)->subcategories->pluck('name', 'id');
         $data['product_pictures'] = $product->pictures;
-        return view('admin.products_edit', ['data' => $data]);
+        if($user->isAdmin())
+            return view('admin.products_edit', ['data' => $data]);
+        else
+            return view('vendor.products_edit', ['data' => $data]);
     }
 
     public function productsUpdate(Request $request, $id) {
         $product = Product::findOrFail($id);
+        $user = Auth::user();
+        if(!$user->isAdmin() && $user->id != $product->lender_id)
+            return redirect()->route('vendor.index');
         $rules = [
             'category_id' => 'required|integer',
             'subcategory_id' => 'required|integer',
@@ -166,11 +166,17 @@ class AdminController extends Controller
         $product->lng = $request->input('lng');
         $product->save();
         Session::flash('success', 'Product details have been updated successfully');
-        return redirect()->route('products.edit', [$product->id]);
+        if($user->isAdmin())
+            return redirect()->route('admin.products.edit', [$product->id]);
+        else
+            return redirect()->route('vendor.products.edit', [$product->id]);
     }
 
     public function productsDestroy($id) {
         $product = Product::findOrFail($id);
+        $user = Auth::user();
+        if(!$user->isAdmin() && $user->id != $product->lender_id)
+            return redirect()->route('vendor.index');
         $pictures = $product->pictures;
         foreach ($pictures as $picture) {
             $picture->delete();
@@ -182,6 +188,9 @@ class AdminController extends Controller
 
     public function updateDefaultImage(Request $request, $id) {
         $product = Product::findOrFail($id);
+        $user = Auth::user();
+        if(!$user->isAdmin() && $user->id != $product->lender_id)
+            return ['status' => 'failed'];
         $productPicture = ProductPicture::findorFail((int)$request->input('file_id'));
         $product->image = $productPicture->file_name;
         $product->save();
@@ -190,6 +199,9 @@ class AdminController extends Controller
 
     public function removeProductImage(Request $request, $id) {
         $product = Product::findOrFail($id);
+        $user = Auth::user();
+        if(!$user->isAdmin() && $user->id != $product->lender_id)
+            return ['status' => 'failed'];
         $productPicture = ProductPicture::findorFail((int)$request->input('picture_id'));
         $response = [];
         if($product->image == $productPicture->file_name) {

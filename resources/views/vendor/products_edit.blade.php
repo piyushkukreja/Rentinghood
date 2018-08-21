@@ -1,4 +1,4 @@
-@extends('layouts.admin_dashboard')
+@extends('layouts.vendor_dashboard')
 
 @section('scripts')
     @parent
@@ -17,20 +17,6 @@
                         return $1.toUpperCase()
                     });
             }
-
-            //js FOR ACCEPTING PRODUCT
-            var acceptanceCheckbox = $('#accepted-checkbox');
-            @if($data['product']->verified == 1)
-                acceptanceCheckbox.prop('checked', true);
-            @endif
-            acceptanceCheckbox.on('change', function () {
-                $.ajax({
-                    url: '{{ route('admin.products.update-state', [$data['product']->id]) }}',
-                    type: 'POST',
-                    data: { _token: csrf_token, accepted: acceptanceCheckbox.is(':checked') },
-                    dataType: 'JSON'
-                });
-            });
 
             //js for SUBCATERGORIES
             var categorySelector = productForm.find($('#category_id'));
@@ -114,7 +100,7 @@
             $('input[type="radio"][name="product_thumbnail"]').change(function() {
                 var radioInput = this;
                 $.ajax({
-                    url: '{{ route('admin.products.update-image', [$data['product']->id]) }}',
+                    url: '{{ route('vendor.products.update-image', [$data['product']->id]) }}',
                     type: 'POST',
                     dataType: 'JSON',
                     data: { _token: '{{ csrf_token() }}', file_id: radioInput.value}
@@ -124,7 +110,7 @@
             $('a.remove').on('click', function () {
                 var link = $(this);
                 $.ajax({
-                    url: '{{ route('admin.products.remove-image', [$data['product']->id]) }}',
+                    url: '{{ route('vendor.products.remove-image', [$data['product']->id]) }}',
                     type: 'POST',
                     dataType: 'JSON',
                     data: { _token: '{{ csrf_token() }}', picture_id: parseInt(link.parents('tr').find('td.product-picture-id').html()) },
@@ -150,11 +136,7 @@
         <div class="page-head">
             <!-- BEGIN PAGE TITLE -->
             <div class="page-title">
-                <h1>{{ $data['product']->name }}</h1>
-                <label style="margin-top: 1em;" class="mt-checkbox"> Accepted
-                    <input id="accepted-checkbox" type="checkbox" name="verified">
-                    <span></span>
-                </label>
+                <h1>{{ $data['product']->name }} @if($data['product']->verified == 0) <span class="small">review pending</span>@endif</h1>
             </div>
             <!-- END PAGE TITLE -->
         </div>
@@ -162,8 +144,8 @@
         <!-- SHOW FLASH CONTENT -->
         @if(Session::has('success'))
             <p class="alert alert-success">{{ session('success') }}</p>
-        @endif
-        <!-- END FLASH CONTENT -->
+    @endif
+    <!-- END FLASH CONTENT -->
         <!-- BEGIN PAGE BASE CONTENT -->
         <div class="row">
             <div class="col-md-12">
@@ -293,28 +275,28 @@
                                         </thead>
                                         <tbody>
                                         @foreach($data['product_pictures'] as $picture)
-                                        <tr>
-                                            <td class="product-picture-id">
-                                                {{ $picture->id }}
-                                            </td>
-                                            <td>
-                                                <img class="img-responsive" src="{{ asset('img/uploads/products/large') . '/' . $picture->file_name }}">
-                                            </td>
-                                            <td>
-                                                <div class="md-radio">
-                                                    <input type="radio" id="radio{{ $picture->id }}" name="product_thumbnail" class="md-radiobtn"
-                                                           value="{{ $picture->id }}" {{ $data['product']->image == $picture->file_name ? 'checked' : '' }}>
-                                                    <label for="radio{{ $picture->id }}">
-                                                        <span class="inc"></span>
-                                                        <span class="check"></span>
-                                                        <span class="box"></span></label>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <a href="javascript:;" class="remove btn btn-default btn-sm">
-                                                    <i class="fa fa-times"></i> Remove </a>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td class="product-picture-id">
+                                                    {{ $picture->id }}
+                                                </td>
+                                                <td>
+                                                    <img class="img-responsive" src="{{ asset('img/uploads/products/large') . '/' . $picture->file_name }}">
+                                                </td>
+                                                <td>
+                                                    <div class="md-radio">
+                                                        <input type="radio" id="radio{{ $picture->id }}" name="product_thumbnail" class="md-radiobtn"
+                                                               value="{{ $picture->id }}" {{ $data['product']->image == $picture->file_name ? 'checked' : '' }}>
+                                                        <label for="radio{{ $picture->id }}">
+                                                            <span class="inc"></span>
+                                                            <span class="check"></span>
+                                                            <span class="box"></span></label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:;" class="remove btn btn-default btn-sm">
+                                                        <i class="fa fa-times"></i> Remove </a>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                         </tbody>
                                     </table>
@@ -434,7 +416,7 @@
                             </div>
                         </div>
                     </div>
-            </div>
+                </div>
             </div>
         </div>
         <!-- END PAGE BASE CONTENT -->

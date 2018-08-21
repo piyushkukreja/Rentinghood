@@ -116,9 +116,13 @@ Route::get('/test/transactions', function() {
 
 //Admin Routes
 Route::group(['middleware' => ['auth', 'admin']], function() {
+
+    //Admin Index Page
     Route::get('/a', function () {
         return redirect()->route('users.index');
-    });
+    })->name('admin.index');
+
+    //Users Routes
     Route::get('/a/users/get-all', 'AdminController@getAllUsers')->name('users.get-all');
     Route::get('/a/users', 'AdminController@usersIndex')->name('users.index');
     Route::get('/a/users/{user}', 'AdminController@usersShow')->name('users.show');
@@ -127,40 +131,64 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/a/users/{user}/notes', 'AdminController@notes')->name('notes.index');
     Route::post('/a/users/{user}/notes', 'AdminController@notesStore')->name('notes.store');
     Route::get('/a/users/{user}/inventory', 'AdminController@loadInventory')->name('users.get-inventory');
-    Route::get('/a/products/all', 'AdminController@productsAll')->name('products.all');
-    Route::get('/a/products/show-all', 'AdminController@productsGetAll')->name('products.show-all');
-    Route::get('/a/products/new', 'AdminController@productsNew')->name('products.new');
-    Route::get('/a/products/get-new', 'AdminController@productsGetNew')->name('products.get-new');
-    Route::get('/a/products/{user}/edit', 'AdminController@productsEdit')->name('products.edit');
-    Route::put('/a/products/{product}', 'AdminController@productsUpdate')->name('products.update');
-    Route::delete('/a/products/{product}', 'AdminController@productsDestroy')->name('products.destroy');
-    Route::post('/a/products/{product}/update-image', 'AdminController@updateDefaultImage')->name('products.update-image');
-    Route::post('/a/products/{product}/remove-image', 'AdminController@removeProductImage')->name('products.remove-image');
-    Route::post('/a/products/{product}/update-state', 'AdminController@changeProductState')->name('products.update-state');
+
+    //Products, New Posts Routes
+    Route::get('/a/products/all', 'AdminController@productsAll')->name('admin.products.all');
+    Route::get('/a/products/show-all', 'AdminController@productsGetAll')->name('admin.products.show-all');
+    Route::get('/a/products/new', 'AdminController@productsNew')->name('admin.products.new');
+    Route::get('/a/products/get-new', 'AdminController@productsGetNew')->name('admin.products.get-new');
+    Route::get('/a/products/{user}/edit', 'AdminController@productsEdit')->name('admin.products.edit');
+    Route::put('/a/products/{product}', 'AdminController@productsUpdate')->name('admin.products.update');
+    Route::delete('/a/products/{product}', 'AdminController@productsDestroy')->name('admin.products.destroy');
+    Route::post('/a/products/{product}/update-image', 'AdminController@updateDefaultImage')->name('admin.products.update-image');
+    Route::post('/a/products/{product}/remove-image', 'AdminController@removeProductImage')->name('admin.products.remove-image');
+    Route::post('/a/products/{product}/update-state', 'AdminController@changeProductState')->name('admin.products.update-state');
+
+    //Category Routes
     Route::get('/a/categories','AdminController@categoriesIndex')->name('categories.index');
     Route::get('/a/categories/show-all','AdminController@getAllCategories')->name('categories.show-all');
     Route::post('/a/categories/{id}','AdminController@categoriesUpdate')->name('categories.update');
     Route::get('/a/categories/{id}/change-availability/{value}','AdminController@categoriesUpdateAvailability')->name('categories.update-availability');
     Route::post('/a/categories','AdminController@categoriesStore')->name('categories.store');
+
+    //Subcategory Routes
     Route::get('/a/subcategories','AdminController@subcategoriesIndex')->name('subcategories.index');
     Route::get('/a/subcategories/show-all','AdminController@getAllsubcategories')->name('subcategories.show-all');
     Route::post('/a/subcategories/{id}','AdminController@subcategoriesUpdate')->name('subcategories.update');
     Route::post('/a/subcategories','AdminController@subcategoriesStore')->name('subcategories.store');
+
+    //Bulk Upload Routes
     Route::get('/a/products/bulk/{type}', 'ProductsController@productsBulk')->name('admin.products.bulk');
     Route::post('/a/products/bulk/{type}', 'ProductsController@productsUpload')->name('admin.products.upload');
 });
 
 //Vendor Routes
 Route::group(['middleware' => ['auth', 'vendor']], function() {
+
+    //Vendor Index Page
     Route::get('/vendor', function () {
         return redirect()->route('vendor.new-orders');
-    });
+    })->name('vendor.index');
+
+    //Bulk Upload Routes
     Route::get('/vendor/products/bulk/{type}', 'ProductsController@productsBulk')->name('vendor.products.bulk');
     Route::post('/vendor/products/bulk/{type}', 'ProductsController@productsUpload')->name('vendor.products.upload');
+
+    //New Orders Routes
     Route::get('/vendor/products/new-orders', 'VendorController@newOrders')->name('vendor.new-orders');
     Route::get('/vendor/products/get-new-orders', 'VendorController@getNewOrders')->name('vendor.get-new-orders');
+
+    //Product/Inventory Routes
+    Route::get('/vendor/products/{user}/edit', 'AdminController@productsEdit')->name('vendor.products.edit');
+    Route::put('/vendor/products/{product}', 'AdminController@productsUpdate')->name('vendor.products.update');
+    Route::delete('/vendor/products/{product}', 'AdminController@productsDestroy')->name('vendor.products.destroy');
+    Route::post('/vendor/products/{product}/update-image', 'AdminController@updateDefaultImage')->name('vendor.products.update-image');
+    Route::post('/vendor/products/{product}/remove-image', 'AdminController@removeProductImage')->name('vendor.products.remove-image');
+    Route::post('/vendor/products/{product}/update-state', 'AdminController@changeProductState')->name('vendor.products.update-state');
     Route::get('/vendor/inventory', 'VendorController@inventory')->name('vendor.inventory');
     Route::get('/vendor/inventory/show-all', 'VendorController@loadInventory')->name('vendor.load-inventory');
+
+    //Calendar Routes
     Route::get('/vendor/events', 'EventController@events')->name('vendor.calendar');
     Route::post('/vendor/events/insert', 'EventController@insertIntoCalendar')->name('vendor.calendar.insert');
     /*Route::get('/account/{tab?}', 'Dashboard\HomeController@vendorIndex')->name('vendor.inventory');*/

@@ -85,6 +85,7 @@ var TableDatatablesResponsive = function () {
                         data: { _token: csrf, reply : 1, tid : oTable.fnGetData(currentRow)[7] },
                         success: function (response) {
                             oTable.fnDeleteRow(currentRow);
+                            decreaseCount();
                         }
                     });
                 }
@@ -111,11 +112,21 @@ var TableDatatablesResponsive = function () {
                         data: { _token: csrf, reply : 0, tid : oTable.fnGetData(currentRow)[7] },
                         success: function (response) {
                             oTable.fnDeleteRow(currentRow);
+                            decreaseCount();
                         }
                     })
                 }
             });
         });
+
+        function decreaseCount() {
+            var countSpan = $('#new-orders-count');
+            count = countSpan.html() - 1;
+            if(count === 0)
+                countSpan.remove();
+            else
+                countSpan.html(count);
+        }
     };
 
     return {

@@ -66,9 +66,9 @@
                             <tr>
                                 <th class="all">Name</th>
                                 <th class="all">Thumbnail</th>
-                                <th class="min-tablet">Lender</th>
                                 <th class="all">Category</th>
                                 <th class="all">Subcategory</th>
+                                <th class="min-tablet">Lender</th>
                                 <th class="min-tablet">Address</th>
                                 <th class="all">Actions</th>
                             </tr>

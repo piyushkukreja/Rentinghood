@@ -27,14 +27,13 @@ var TableDatatablesResponsive = function () {
                     var return_data = [];
                     for(var i = 0; i < json.length; i++){
                         return_data.push([
-                            json[i].name,
+                            '<a href="' + base_url + '/a/products/' + json[i].id + '/edit">' + json[i].name + '</a>',
                             json[i].category,
                             json[i].subcategory.name,
-                            json[i].lender.first_name + ' ' + json[i].lender.last_name,
+                            '<a href="' + base_url + '/a/users/' + json[i].lender.id + '">' + json[i].lender.first_name + ' ' + json[i].lender.last_name + '</a>',
+                            json[i].address,
                             json[i].address,
                             json[i].duration,
-                            '<a href="' + base_url + '/a/products/' + json[i].id + '/edit" class="btn yellow btn-outline" style="padding: 3px 6px 3px 6px;">' +
-                            '<i class="fa fa-eye"></i></a> ' +
                             '<a href="javascript:;" onclick="deleteProduct(' + json[i].id + ')" class="btn red btn-outline" style="padding: 3px 6px 3px 6px;">' +
                             '<i class="fa fa-remove"></i></a>'
                         ]);

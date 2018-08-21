@@ -29,7 +29,7 @@
                         <span class='title'> New Orders </span>
                         <?php $count = \Illuminate\Support\Facades\Auth::user()->newOrdersCount(); ?>
                         @if($count > 0)
-                            <span class="badge badge-danger">{{ $count }}</span>
+                            <span id="new-orders-count" class="badge badge-danger">{{ $count }}</span>
                         @endif
                     </a>
                 </li>

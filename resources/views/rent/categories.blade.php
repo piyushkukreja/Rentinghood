@@ -17,6 +17,10 @@
             padding-right: 1em;
             padding-left: 1em;
             width: 100%;
+            max-width: 400px;
+        }
+        .categories-row:not(.disabled-categories) .masonry__item {
+            margin-bottom: 0 !important;
         }
         .swal2-container {
             z-index: 999 !important;
@@ -159,16 +163,20 @@
             </div>
             <!--end of container-->
         </section>
-        <section class="space--sm categories_section">
+        <section class="space--sm categories_section" style="padding-bottom: 2em;">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="masonry">
                             <div class="masonry__container row categories-row">
+                                <?php
+                                if(count($categories) == 2)
+                                    $class = 'col-6';
+                                else
+                                    $class = 'col-6 col-lg-3';
+                                ?>
                                 @foreach($categories as $category)
-                                    <div class="masonry__item
-                                                @if(count($categories) == 2) col-6 col-lg-3 offset-lg-2
-                                                @else col-6 col-lg-3 @endif">
+                                    <div class="masonry__item {{ $class }} text-center">
                                         <div class="category">
                                             <span class="category_id_info hidden">{{ $category->id }}</span>
                                             <span class="category_name_info hidden">{{ $category->name }}</span>
@@ -194,21 +202,24 @@
             </div>
             <!--end of container-->
         </section>
-        <section class="title_section text-center bg--secondary">
-            <div class="row">
+        {{--<section class="title_section text-center bg--secondary">
+        <div class="row">
                 <div class="col-md-12">
                     <h2>Coming Soon...</h2>
                 </div>
             </div>
-        </section>
-        <section class="space--sm categories_section">
+        </section>--}}
+        <section class="space--sm categories_section title_section text-center bg--secondary">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
+                        <h2>Coming Soon...</h2>
+                    </div>
+                    <div class="col-md-12">
                         <div class="masonry">
-                            <div class="masonry__container row">
+                            <div class="masonry__container row disabled-categories">
                                 @foreach($disabled_categories as $category)
-                                    <div class="masonry__item col-6 col-lg-2">
+                                    <div class="masonry__item col-4 col-md-3">
                                         <div class="category disabled">
                                             <a class="category_link disabled" href="#">
                                                 <img alt="{{ $category->name }}" class="img-fluid category_image"
