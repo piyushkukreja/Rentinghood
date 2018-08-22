@@ -31,6 +31,18 @@
                                     rentinghood
                                 </h3>
                             </a>
+                            @auth
+                                @if(Auth::user()->isAdmin())
+                                    <a href="{{ route('admin.index') }}">
+                                        <i style="font-size: 1.5em; color: #fff;" class="icon icon-Business-ManWoman"></i>
+                                    </a>
+                                @endif
+                                @if(Auth::user()->isVendor())
+                                    <a href="{{ route('vendor.index') }}">
+                                        <i style="font-size: 1.5em; color: #fff;" class="icon icon-Business-ManWoman"></i>
+                                    </a>
+                                @endif
+                            @endauth
                         </div>
                         <!--end module-->
                     </div>

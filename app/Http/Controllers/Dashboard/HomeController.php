@@ -1,7 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Dashboard;
+use App\Event;
+use App\Transaction;
+use App\User;
+use App\Product;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -149,27 +154,25 @@ class HomeController extends Controller
 
     public function answerRequest(Request $request)
     {
-
-        if($request->input('reply') == '0')
+        $transaction = Transaction::find($request->input('tid'));
+        if($request->input('reply') == 0)
             $status = 2;
-        else
+        else {
             $status = 3;
-        $transaction = DB::table('transactions')->where('id', $request->input('tid'))->first();
-        $product = DB::table('products')->where('id', $transaction->product_id)->first();
+            $this->createEvents($transaction);
+        }
+        $product = Product::find($transaction->product_id);
         $response = [];
-        if($product->lender_id == Auth::user()->id)
-        {
-            DB::table('transactions')->where('id', $request->input('tid'))->update(['status' => $status] );
-            $renter = DB::table('users')->where('id', $transaction->renter_id)->first();
-            if($status == 3)
-            {
+        if($product->lender_id == Auth::user()->id) {
+            $transaction->status = $status;
+            $transaction->save();
+            $renter = User::find($transaction->renter_id);
+            if($status == 3) {
                 $response['contact'] = $renter->contact;
                 $message = 'Hey Neighbour, your request for ' . $product->name . ' is approved. Please visit your dashboard to get contact details of owner';
             }
             else
-            {
                 $message = 'Hey Neighbour, the owner couldn\'t fulfill your request for ' . $product->name . '. We apologize for the same.';
-            }
             $response['message'] = 'success';
 
             $mobile = $renter->contact;
@@ -187,15 +190,49 @@ class HomeController extends Controller
                 CURLOPT_SSL_VERIFYPEER => 0,
             ));
 
-            $result = curl_exec($curl);
-            $err = curl_error($curl);
+            //$result = curl_exec($curl);
+            //$err = curl_error($curl);
 
-            curl_close($curl);
+            //curl_close($curl);
         }
         else
             $response['message'] = 'failed';
         return $response;
 
+    }
+
+    private function createEvents($transaction) {
+        $prep_event = new Event;
+        $start_event = new Event;
+        $end_event = new Event;
+
+        $prep_event->title = 'Preparation for delivery for ' . $transaction->product->name;
+        $start_event->title = 'Delivery for ' . $transaction->product->name;
+        $end_event->title = 'Collection date for ' . $transaction->product->name;
+
+        $format = 'd/m/Y';
+
+        $start_date = Carbon::createFromFormat($format, $transaction->from_date);
+        $end_date = Carbon::createFromFormat($format, $transaction->from_date);
+        $prep_date = $start_date->copy()->subDays(2);
+
+        $start_event->date = $start_date->toDateString();
+        $prep_event->date = $prep_date->toDateString();
+        $end_event->date = $end_date->toDateString();
+
+        $prep_event->type = 1;
+        $start_event->type = 2;
+        $end_event->type = 3;
+
+        $prep_event->color = '111111';
+        $start_event->color = '111111';
+        $end_event->color = '111111';
+
+        $prep_event->transaction_id = $start_event->transaction_id = $end_event->transaction_id = $transaction->id;
+
+        $prep_event->save();
+        $start_event->save();
+        $end_event->save();
     }
 
     public function replySeen(Request $request)
