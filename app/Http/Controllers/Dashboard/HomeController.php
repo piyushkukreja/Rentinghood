@@ -206,9 +206,9 @@ class HomeController extends Controller
         $start_event = new Event;
         $end_event = new Event;
 
-        $prep_event->title = 'Preparation for delivery for ' . $transaction->product->name;
-        $start_event->title = 'Delivery for ' . $transaction->product->name;
-        $end_event->title = 'Collection date for ' . $transaction->product->name;
+        $prep_event->title = $transaction->product->name . ' - Preparation';
+        $start_event->title = $transaction->product->name . ' - Delivery';
+        $end_event->title = $transaction->product->name . ' - Collection';
 
         $format = 'd/m/Y';
 
@@ -224,9 +224,9 @@ class HomeController extends Controller
         $start_event->type = 2;
         $end_event->type = 3;
 
-        $prep_event->color = '111111';
-        $start_event->color = '111111';
-        $end_event->color = '111111';
+        $prep_event->color = 'fe8a71';
+        $start_event->color = '3da4ab';
+        $end_event->color = 'f6cd61';
 
         $prep_event->transaction_id = $start_event->transaction_id = $end_event->transaction_id = $transaction->id;
         $prep_event->vendor_id = $start_event->vendor_id = $end_event->vendor_id = $transaction->product->lender_id;
