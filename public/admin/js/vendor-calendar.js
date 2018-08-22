@@ -40,6 +40,7 @@ var AppCalendar = function() {
                     _token: csrf,
                     date: eventDate.format('YYYY-MM-DD'),
 
+
                 };
 
                 return data;
@@ -104,7 +105,7 @@ var AppCalendar = function() {
                     list:     'day'
                 },
                 events: {
-                    url: base_url + '/vendor/events',
+                    url: base_url + '/vendor/calendar/show-all',
                     type: 'GET'
                 },
                 dayClick: function(date, jsEvent, view) {
@@ -123,11 +124,12 @@ var AppCalendar = function() {
                 eventDataTransform: function (eventData) {
                     var returnData = [];
                     returnData.id = eventData.id;
-                    returnData.transactionid = eventData.id;
+                    returnData.transaction_id = eventData.transaction_id;
+                    returnData.date = eventData.date;
                     returnData.title = eventData.title;//required
-                    returnData.start = moment(eventData.start);//required
-                    returnData.end = returnData.start.clone().add(eventData.duration, 'm');
+                    returnData.start = moment(eventData.date);//required
                     returnData.color = '#' + eventData.color;
+                    returnData.allDay = true;
                     return returnData;
                 },
                 //Show event details in a Modal for editing
@@ -137,25 +139,6 @@ var AppCalendar = function() {
                     editModal.find('[name="event_start_time"]').val(event.start.format('HH:mm'));
                     editModal.find('[name="event_end_time"]').val(event.end.format('HH:mm'));
                     editModal.find('[name="event_notes"]').val(event.notes);
-
-                    //If patient or user(doctor) is deleted, fill the fields and disable everything in the modal
-                    //If thats not the case enable everything.
-                    if(patientsIdArray.indexOf(event.patient_id) === -1 || editModal.find('[name="event_user"]').find('option[value="' + event.user_id + '"]').length === 0) {
-                        editModal.find('[name="event_user"]').hide();
-                        editModal.find('#deleted_user').show().html(event.user_name);
-                        editModal.find('[name="event_vendor"]').val(event.title.substring(0, event.title.indexOf(' - ')));
-                        editModal.find('input,select,textarea').prop('readonly', true).prop('disabled', true);
-                        editModal.find('#appointments-edit').prop('disabled', true);
-                        editModal.find('.cannot-edit-alert').show();
-                    } else {
-                        editModal.find('input,select,textarea').prop('readonly', false).prop('disabled', false);
-                        editModal.find('[name="event_user"]').show();
-                        editModal.find('#deleted_user').html('').hide();
-                        editModal.find('#appointments-edit').prop('disabled', false);
-                        editModal.find('.cannot-edit-alert').hide();
-                        editModal.find('[name="event_user"]').val(event.user_id);
-                        editModal.find('[name="event_vendor"]').val(patientsNameArray[patientsIdArray.indexOf(event.patient_id)]);
-                    }
 
                     editing = event;
                     editModalTrigger.trigger('click');

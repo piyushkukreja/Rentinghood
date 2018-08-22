@@ -213,7 +213,7 @@ class HomeController extends Controller
         $format = 'd/m/Y';
 
         $start_date = Carbon::createFromFormat($format, $transaction->from_date);
-        $end_date = Carbon::createFromFormat($format, $transaction->from_date);
+        $end_date = Carbon::createFromFormat($format, $transaction->to_date);
         $prep_date = $start_date->copy()->subDays(2);
 
         $start_event->date = $start_date->toDateString();
@@ -229,6 +229,7 @@ class HomeController extends Controller
         $end_event->color = '111111';
 
         $prep_event->transaction_id = $start_event->transaction_id = $end_event->transaction_id = $transaction->id;
+        $prep_event->vendor_id = $start_event->vendor_id = $end_event->vendor_id = $transaction->product->lender_id;
 
         $prep_event->save();
         $start_event->save();

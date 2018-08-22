@@ -189,7 +189,8 @@ Route::group(['middleware' => ['auth', 'vendor']], function() {
     Route::get('/vendor/inventory/show-all', 'VendorController@loadInventory')->name('vendor.load-inventory');
 
     //Calendar Routes
-    Route::get('/vendor/events', 'EventController@events')->name('vendor.calendar');
+    Route::get('/vendor/calendar', 'EventController@index')->name('vendor.calendar');
+    Route::get('/vendor/calendar/show-all', 'EventController@events')->name('vendor.calendar.get-all');
     Route::post('/vendor/events/insert', 'EventController@insertIntoCalendar')->name('vendor.calendar.insert');
     /*Route::get('/account/{tab?}', 'Dashboard\HomeController@vendorIndex')->name('vendor.inventory');*/
 });

@@ -57,13 +57,10 @@
                 <h4 class="modal-title">Edit Event</h4>
             </div>
             <div class="modal-body">
-                <p class="alert alert-success new-patient-alert" style="display: none;"></p>
-                <p class="alert alert-success unavailable-user-alert" style="display: none;"></p>
-                <p class="alert alert-success cannot-edit-alert" style="display: none;"></p>
                 <div class="row">
                     <div class="col-md-12">
                         <h4></h4>
-                        <input name="event_vendor" class="form-control" type="text">
+                        <input name="event_title" class="form-control" type="text">
                     </div>
                     <div class="col-md-12">
                         <h4>Date</h4>

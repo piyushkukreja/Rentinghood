@@ -31,6 +31,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Product', 'lender_id');
     }
 
+    public function events() {
+        return $this->hasMany('App\Event', 'vendor_id');
+    }
+
     public function transactions() {
         return Transaction::whereHas('product', function ($query) {
                 $query->where('lender_id', \Auth::user()->id);
