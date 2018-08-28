@@ -5,6 +5,7 @@
     @parent
     <script src="{{ asset('admin/js/bootstrap-modalmanager.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/bootstrap-modal.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('admin/plugins/jquery-minicolors/jquery.minicolors.js') }}"></script>
     <script src="{{ asset('admin/js/sweetalert2.all.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/moment.js')}}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/fullcalendar.js')}}" type="text/javascript"></script>
@@ -21,7 +22,18 @@
 
 @section('head')
     @parent
-    <link rel="stylesheet" href="{{asset('admin/css/fullcalendar.css')}}">
+    <link rel="stylesheet" href="{{ asset('admin/css/bootstrap-modal-bs3patch.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/bootstrap-modal.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/plugins/jquery-minicolors/jquery.minicolors.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/fullcalendar.css') }}">
+    <style type="text/css">
+        .minicolors-theme-default .minicolors-swatch {
+            top: 8px;
+        }
+        .minicolors-theme-default .minicolors-input {
+            height: 34px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -56,15 +68,19 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                 <h4 class="modal-title">Edit Event</h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="margin-bottom: 100px;">
                 <div class="row">
                     <div class="col-md-12">
-                        <h4></h4>
-                        <input name="event_title" class="form-control" type="text">
+                        <h4>Title</h4>
+                        <input name="event-title" class="form-control" type="text">
                     </div>
                     <div class="col-md-12">
                         <h4>Date</h4>
-                        <input name="event_date" class="form-control no-arrows" type="date">
+                        <input name="event-date" class="form-control no-arrows" type="date">
+                    </div>
+                    <div class="col-md-12">
+                        <h4>Color</h4>
+                        <input name="event-color" class="form-control" type="text">
                     </div>
                 </div>
             </div>

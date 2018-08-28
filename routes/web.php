@@ -190,7 +190,8 @@ Route::group(['middleware' => ['auth', 'vendor']], function() {
 
     //Calendar Routes
     Route::get('/vendor/calendar', 'EventController@index')->name('vendor.calendar');
-    Route::get('/vendor/calendar/show-all', 'EventController@events')->name('vendor.calendar.get-all');
+    Route::get('/vendor/calendar/show-all', 'EventController@eventsShowAll')->name('vendor.calendar.get-all');
     Route::post('/vendor/events/insert', 'EventController@insertIntoCalendar')->name('vendor.calendar.insert');
+    Route::put('/vendor/events/{event}', 'EventController@update')->name('vendor.calendar.update');
     /*Route::get('/account/{tab?}', 'Dashboard\HomeController@vendorIndex')->name('vendor.inventory');*/
 });

@@ -12,20 +12,19 @@ var AppCalendar = function() {
                 return;
             }
 
-
             var editModal = $('#edit-event-modal');
+            editModal.find('[name="event-color"]').minicolors();
             var editModalTrigger = $('#edit-event-modal-trigger');
             var editing = null;
 
-            var h = {};
             var calendar = $('#events-calendar');
 
             function getDataFromModal(modal) {
                 var data = {};
-
                 //Creating moment object for date
-                var eventDate = moment(modal.find('[name="event_date"]').val());
-
+                var eventDate = moment(modal.find('[name="event-date"]').val());
+                var eventTitle = modal.find('[name="event-title"]').val();
+                var eventColor = modal.find('[name="event-color"]').val();
                 //Return null if invalid data and show error swal
                 if(!eventDate.isValid()) {
                     swal({
@@ -34,19 +33,17 @@ var AppCalendar = function() {
                     });
                     return null;
                 }
-
                 //Preparing data to be sent through AJAX
                 data.dataForAjax = {
                     _token: csrf,
+                    title: eventTitle,
                     date: eventDate.format('YYYY-MM-DD'),
-
-
+                    color: eventColor
                 };
-
                 return data;
             }
 
-            //Get data from modal and send it to update an appointment
+            //Get data from modal and send it to update an event
             $('#event-edit').on('click', function () {
                 var modalData = getDataFromModal(editModal);
                 if(!modalData) {
@@ -59,23 +56,15 @@ var AppCalendar = function() {
                     dataType: 'JSON',
                     success: function (response) {
                         if(response.status === 'success') {
-                            //If a new patient was created
-                            if(response.new_patient)
-                                addPatient(response.patient);
-
                             //Update the event
-                            editing.title = response.patient.name + ' - ' + modalData.procedure;
-                            editing.procedure = modalData.procedure;
-                            editing.user_id = modalData.userId;
-                            editing.patient_id = response.patient.id;
-                            editing.start = modalData.start;
-                            editing.end = modalData.end;
-                            editing.notes = modalData.notes;
-                            editing.color =  '#' + response.user.color;
+                            editing.title = response.event.title;
+                            editing.date = response.event.date;
+                            editing.start = moment(response.event.date);
+                            editing.color = response.event.color;
                             calendar.fullCalendar('updateEvent', editing);
                         } else {
                             swal({
-                                title: 'Appointment could not be updated!',
+                                title: 'Event could not be updated!',
                                 type: 'warning'
                             });
                         }
@@ -85,8 +74,7 @@ var AppCalendar = function() {
                 });
             });
 
-
-            h = {
+            var h = {
                 left: 'title',
                 center: '',
                 right: 'prev, next, month, agendaWeek, listDay'
@@ -108,7 +96,7 @@ var AppCalendar = function() {
                     url: base_url + '/vendor/calendar/show-all',
                     type: 'GET'
                 },
-                dayClick: function(date, jsEvent, view) {
+                /*dayClick: function(date, jsEvent, view) {
 
                     alert('Clicked on: ' + date.format());
 
@@ -119,7 +107,8 @@ var AppCalendar = function() {
                     // change the day's background color just for fun
                     $(this).css('background-color', 'red');
 
-                },
+                },*/
+
                 //Creating Event Object from JSON
                 eventDataTransform: function (eventData) {
                     var returnData = [];
@@ -128,17 +117,15 @@ var AppCalendar = function() {
                     returnData.date = eventData.date;
                     returnData.title = eventData.title;//required
                     returnData.start = moment(eventData.date);//required
-                    returnData.color = '#' + eventData.color;
+                    returnData.color = eventData.color;
                     returnData.allDay = true;
                     return returnData;
                 },
                 //Show event details in a Modal for editing
                 eventClick: function (event, jsEvent, view) {
-                    editModal.find('[name="event_procedure"]').val(event.procedure);
-                    editModal.find('[name="event_date"]').val(event.start.format('YYYY-MM-DD'));
-                    editModal.find('[name="event_start_time"]').val(event.start.format('HH:mm'));
-                    editModal.find('[name="event_end_time"]').val(event.end.format('HH:mm'));
-                    editModal.find('[name="event_notes"]').val(event.notes);
+                    editModal.find('[name="event-title"]').val(event.title);
+                    editModal.find('[name="event-date"]').val(event.start.format('YYYY-MM-DD'));
+                    editModal.find('[name="event-color"]').minicolors('value', event.color);
 
                     editing = event;
                     editModalTrigger.trigger('click');

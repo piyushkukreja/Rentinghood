@@ -8,7 +8,6 @@ use MaddHatter\LaravelFullcalendar\Calendar;
 use App\Event;
 class EventController extends Controller
 {
-    //
     public function index()
     {
         $data = [];
@@ -16,27 +15,21 @@ class EventController extends Controller
         return view('vendor.calendar',['data' => $data]);
     }
 
-    public function events()
+    public function eventsShowAll()
     {
         return \Auth::user()->events;
     }
 
-    public function insertIntoCalendar(Request $request)
+    public function update(Request $request, $id)
     {
-        $event = new Event;
-        if($request->has('title')){
-            /*$event->id = $request->json('id');*/
-            //I tried putting id but still the same query prob persists
-            $event->title = $request->input('title');
-            $event->start_date = $request->input('start');
-            $event->end_date = $request->input('end');
-            $event->save();
-        }
-        else{
-            echo "Insert failed";
-        }
-        /*$insert->title = $request->input('title');
-        $insert->start_event = $request->input('start');
-        $insert->end_event = $request->input('end');*/
+        $response = [];
+        $event = Event::findOrFail($id);
+        $event->title = $request->input('title');
+        $event->date = $request->input('date');
+        $event->color = $request->input('color');
+        $event->save();
+        $response['event'] = $event;
+        $response['status'] = 'success';
+        return $response;
     }
 }
