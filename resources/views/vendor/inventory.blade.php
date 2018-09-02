@@ -6,10 +6,13 @@
     <script src="{{ asset('admin/js/sweetalert2.all.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/vendor-inventory.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
-        var base_url = '{{ \Illuminate\Support\Facades\URL::to('/') }}';
-        var csrf = '{{ csrf_token() }}';
+        @if(\Illuminate\Support\Facades\App::environment('local'))
+            var base_url = '{{ route('home') }}/vendor';
+        @else
+            var base_url = '{{ route('vendor.index') }}';
+        @endif
         jQuery(document).ready(function() {
-            InventoryLoader.init(base_url, csrf);
+            InventoryLoader.init(base_url, '{{ csrf_token() }}');
         });
     </script>
 

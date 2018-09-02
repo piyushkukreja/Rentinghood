@@ -10,7 +10,11 @@
     <script src="{{ asset('admin/js/dropzone/form-dropzone.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            var base_url = '{{ \Illuminate\Support\Facades\URL::to('/') }}';
+            @if(\Illuminate\Support\Facades\App::environment('local'))
+                var base_url = '{{ route('home') }}/a';
+            @else
+                var base_url = '{{ route('admin.index') }}';
+            @endif
             var csrf = '{{ csrf_token() }}';
             FormDropzone.init(base_url, csrf);
             $.ajax({

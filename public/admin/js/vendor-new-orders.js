@@ -19,7 +19,7 @@ var TableDatatablesResponsive = function () {
             },
 
             "ajax": {
-                "url" : base_url + "/vendor/products/get-new-orders",
+                "url" : base_url + "/products/get-new-orders",
                 "type" : "GET",
                 "dataType" : "JSON",
                 "dataSrc": function (response) {
@@ -30,14 +30,12 @@ var TableDatatablesResponsive = function () {
                             json[i].renter.first_name + " " + json[i].renter.last_name,
                             json[i].renter.address,
                             json[i].product.name + ' (' + json[i].product.id + ')',
-                            '<img style="height: 80px;" src="../../img/uploads/products/small/'+json[i].product.image+'" alt="product image" />',
+                            '<img style="height: 80px;" src="../../img/uploads/products/small/' + json[i].product.image + '" alt="product image" />',
                             json[i].from_date,
                             json[i].to_date,
-                            //'<a href="' + base_url + '/a/products/' + json[i].id + '/edit" class="btn blue" style="padding: 3px 6px 3px 6px;">' +
-                            //'<i class="fa fa-check-square"></i></a> ' +
-                            '<a href="'+base_url+'/vendor/products/new-orders/accept'+json[i].id+'" class="accept btn blue" style="padding: 3px 6px 3px 6px;">' +
+                            '<a href="' + base_url + '/products/new-orders/accept' + json[i].id + '" class="accept btn blue" style="padding: 3px 6px 3px 6px;">' +
                             '<i class="fa fa-check-square"></i></button> ' +
-                            '<a href="'+base_url+'/vendor/products/new-orders/reject'+json[i].id+'" class="reject btn red" style="padding: 3px 6px 3px 6px;">' +
+                            '<a href="' + base_url + '/products/new-orders/reject' + json[i].id + '" class="reject btn red" style="padding: 3px 6px 3px 6px;">' +
                             '<i class="fa fa-remove"></i></a>',
                             json[i].id,
                         ]);
@@ -80,7 +78,7 @@ var TableDatatablesResponsive = function () {
                     // handle Confirm button click
                     var currentRow = $(this).parents('tr')[0];
                     $.ajax({
-                        url: base_url + '/account/messages/answer_request',
+                        url: base_url + '/products/answer-request',
                         type : 'POST',
                         data: { _token: csrf, reply : 1, tid : oTable.fnGetData(currentRow)[7] },
                         success: function (response) {
@@ -107,7 +105,7 @@ var TableDatatablesResponsive = function () {
                     // handle Confirm button click
                     var currentRow = $(this).parents('tr')[0];
                     $.ajax({
-                        url: base_url + '/account/messages/answer_request',
+                        url: base_url + '/products/answer-request',
                         type : 'POST',
                         data: { _token: csrf, reply : 0, tid : oTable.fnGetData(currentRow)[7] },
                         success: function (response) {

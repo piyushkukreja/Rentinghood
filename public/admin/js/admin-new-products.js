@@ -19,7 +19,7 @@ var TableDatatablesResponsive = function () {
             },
 
             "ajax": {
-                "url" : base_url + "/a/products/get-new",
+                "url" : base_url + "/products/get-new",
                 "type" : "GET",
                 "dataType" : "JSON",
                 "dataSrc": function (response) {
@@ -27,11 +27,11 @@ var TableDatatablesResponsive = function () {
                     var return_data = [];
                     for(var i = 0; i < json.length; i++){
                         return_data.push([
-                            '<a href="' + base_url + '/a/products/' + json[i].id + '/edit">' + json[i].name + ' (' + json[i].id + ')</a>',
+                            '<a href="' + base_url + '/products/' + json[i].id + '/edit">' + json[i].name + ' (' + json[i].id + ')</a>',
                             '<img style="height: 80px;" src="../../img/uploads/products/small/' + json[i].image + '" alt="product image" />',
                             json[i].category,
                             json[i].subcategory.name,
-                            '<a href="' + base_url + '/a/users/' + json[i].lender.id + '">' + json[i].lender.first_name + ' ' + json[i].lender.last_name + '</a>',
+                            '<a href="' + base_url + '/users/' + json[i].lender.id + '">' + json[i].lender.first_name + ' ' + json[i].lender.last_name + '</a>',
                             json[i].address,
                             '<a href="javascript:;" onclick="deleteProduct(' + json[i].id + ')" class="btn red btn-outline" style="padding: 3px 6px 3px 6px;">' +
                             '<i class="fa fa-remove"></i></a>'

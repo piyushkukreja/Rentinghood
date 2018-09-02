@@ -26,7 +26,11 @@
 
             //Initialisations
             var id = {{ $data['user']->id }};
-            var base_url = '{{ \Illuminate\Support\Facades\URL::to('/') }}';
+            @if(\Illuminate\Support\Facades\App::environment('local'))
+                var base_url = '{{ route('home') }}/a';
+            @else
+                var base_url = '{{ route('admin.index') }}';
+            @endif
             var noteTemplate = $('#timeline-item-format').html();
             $('#timeline-item-format').remove();
             var productTemplate = $('#product-template').html();
@@ -51,7 +55,7 @@
                 var notesContainer = $('#notes-container');
                 notesContainer.html('');
                 $.ajax({
-                    url: base_url + '/a/users/' + id + '/notes',
+                    url: base_url + '/users/' + id + '/notes',
                     type: 'GET',
                     dataType: 'JSON',
                     success: function (response) {
@@ -77,7 +81,7 @@
                 }).then(function (noteInput) {
                     $.ajax({
                         type: "POST",
-                        url: base_url + '/a/users/' + id + '/notes',
+                        url: base_url + '/users/' + id + '/notes',
                         data: { _token: '{{ csrf_token() }}', note: noteInput },
                         cache: false,
                         success: function(response) {
@@ -113,7 +117,7 @@
                 var productsContainer = $('.mt-element-card.mt-element-overlay').children('.row');
                 productsContainer.html('');
                 $.ajax({
-                    url: base_url + '/a/users/' + id + '/inventory',
+                    url: base_url + '/users/' + id + '/inventory',
                     type: 'GET',
                     dataType: 'JSON',
                     success: function (response) {
@@ -128,10 +132,10 @@
                             $.each(response.data, function (i, product) {
                                 var productDiv = $(productTemplate);
                                 productDiv.find('.mt-card-item').css('overflow', 'hidden');
-                                productDiv.find('img').attr('src', base_url + '/img/uploads/products/small/' + product.image);
+                                productDiv.find('img').attr('src', '/img/uploads/products/small/' + product.image);
                                 productDiv.find('h3.mt-card-name').html('<span style="white-space: nowrap;">' + product.name + '</span>');
                                 productDiv.find('p.mt-card-desc').html(product.subcategory_id);
-                                productDiv.find('a.edit').attr('href', base_url + '/a/products/' + product.id + '/edit');
+                                productDiv.find('a.edit').attr('href', base_url + '/products/' + product.id + '/edit');
                                 productDiv.find('.md-checkbox').find('input').attr('id', 'checkbox' + product.id).attr('checked', product.availability === 1).on('change',  function () {
                                     if($(this).is(":checked"))
                                         updateAvailability(product.id, 1);

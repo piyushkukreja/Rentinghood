@@ -19,7 +19,7 @@ var TableDatatablesResponsive = function () {
             },
 
             "ajax": {
-                "url" : base_url + "/a/users/get-all",
+                "url" : base_url + "/users/get-all",
                 "type" : "GET",
                 "dataType" : "JSON",
                 "dataSrc": function (response) {
@@ -34,7 +34,7 @@ var TableDatatablesResponsive = function () {
                             json[i].lat,
                             json[i].lng,
                             json[i].verified,
-                            '<a href="' + base_url + '/a/users/' + json[i].id + '" class="btn yellow btn-outline" style="padding: 3px 6px 3px 6px;">' +
+                            '<a href="' + base_url + '/users/' + json[i].id + '" class="btn yellow btn-outline" style="padding: 3px 6px 3px 6px;">' +
                             '<i class="fa fa-eye"></i></a> ' +
                             '<a href="javascript:;" onclick="deleteUser(' + json[i].id + ')" class="btn red btn-outline" style="padding: 3px 6px 3px 6px;">' +
                             '<i class="fa fa-remove"></i></a>'

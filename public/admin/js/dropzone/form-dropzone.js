@@ -6,7 +6,7 @@ var FormDropzone = function () {
         init: function (base_url, csrf) {
 
             Dropzone.options.myDropzone = {
-                url: base_url + '/a/products/bulk',
+                url: base_url + '/products/bulk',
                 dictDefaultMessage: "",
                 uploadMultiple: true,
                 acceptedFiles: "image/*",

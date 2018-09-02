@@ -15,7 +15,7 @@ class VendorAuthenticate
     public function handle($request, Closure $next)
     {
         if (!Auth::user()->isVendor()) {
-            return redirect('/');
+            return redirect()->route('home');
         }
 
         return $next($request);

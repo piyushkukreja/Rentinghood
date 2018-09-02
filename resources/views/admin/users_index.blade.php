@@ -9,7 +9,11 @@
     <script src="{{ asset('admin/js/datatables.bootstrap.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/admin-users.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
-        var base_url = '{{ \Illuminate\Support\Facades\URL::to('/') }}';
+        @if(\Illuminate\Support\Facades\App::environment('local'))
+            var base_url = '{{ route('home') }}/a';
+        @else
+            var base_url = '{{ route('admin.index') }}';
+        @endif
         jQuery(document).ready(function() {
             TableDatatablesResponsive.init(base_url);
         });
@@ -26,7 +30,7 @@
             }).then((result) => {
                 if (result.value) {
                 var csrf = '{{ csrf_token() }}';
-                var deleteForm = $('<form action="' + base_url + '/a/users/' + id + '" method="POST">' +
+                var deleteForm = $('<form action="' + base_url + '/users/' + id + '" method="POST">' +
                     '<input type="hidden" name="_method" value="DELETE">' +
                     '<input type="hidden" name="_token" value=' + csrf + '>' +
                     '</form>');

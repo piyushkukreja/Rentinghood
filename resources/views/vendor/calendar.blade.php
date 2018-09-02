@@ -13,7 +13,11 @@
     <script src="{{ asset('admin/js/vendor-calendar.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var base_url = '{{ \Illuminate\Support\Facades\URL::to('/') }}';
+            @if(\Illuminate\Support\Facades\App::environment('local'))
+                var base_url = '{{ route('home') }}/vendor';
+            @else
+                var base_url = '{{ route('vendor.index') }}';
+            @endif
             AppCalendar.init(base_url, '{{ csrf_token() }}');
         });
     </script>

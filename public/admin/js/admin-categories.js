@@ -19,7 +19,7 @@ var TableDatatablesResponsive = function () {
             },
 
             "ajax": {
-                "url" : base_url + "/a/categories/show-all",
+                "url" : base_url + "/categories/show-all",
                 "type" : "GET",
                 "dataType" : "JSON",
                 "dataSrc": function (response) {
@@ -67,7 +67,7 @@ var TableDatatablesResponsive = function () {
             var aData = oTable.fnGetData($(this).parents('tr')[0]);
             //below line gets the name from the same page instead of fetching from db
             $('#edit-category-modal').find('input[name="name"]').val(aData[0]);//this finds the name with the associated id and sets the value of input in modal
-            $('#edit-form').attr('action', base_url + '/a/categories/' + aData[2]);//to use post method for updating data in db and page
+            $('#edit-form').attr('action', base_url + '/categories/' + aData[2]);//to use post method for updating data in db and page
             $('#edit-category-modal-trigger').trigger('click');//triggers modal on click with the specified id
         });
 
@@ -77,7 +77,7 @@ var TableDatatablesResponsive = function () {
             if($(this).is(':checked'))
                 disable = 0;
             $.ajax({
-                url: base_url + '/a/categories/' + aData[3] + '/change-availability/' + disable,
+                url: base_url + '/categories/' + aData[3] + '/change-availability/' + disable,
                 type: 'GET'
             });
         });

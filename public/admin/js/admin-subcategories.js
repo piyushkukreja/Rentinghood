@@ -19,7 +19,7 @@ var TableDatatablesResponsive = function () {
             },
 
             "ajax": {
-                "url" : base_url + "/a/subcategories/show-all",
+                "url" : base_url + "/subcategories/show-all",
                 "type" : "GET",
                 "dataType" : "JSON",
                 "dataSrc": function (response) {
@@ -74,7 +74,7 @@ var TableDatatablesResponsive = function () {
             var editModal = $('#edit-subcategory-modal');
             editModal.find('[name="category_id"]').val(aData[4]);
             editModal.find('[name="name"]').val(aData[0]);
-            $('#edit-form').attr('action', base_url + '/a/subcategories/' + aData[3]);
+            $('#edit-form').attr('action', base_url + '/subcategories/' + aData[3]);
             $('#edit-subcategory-modal-trigger').trigger('click');
         });
 

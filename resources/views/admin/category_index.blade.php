@@ -15,7 +15,11 @@
 	<script src="{{ asset('admin/js/datatables.bootstrap.js') }}" type="text/javascript"></script>
 	<script src="{{ asset('admin/js/admin-categories.js') }}" type="text/javascript"></script>
 	<script type="text/javascript">
-        var base_url = '{{ \Illuminate\Support\Facades\URL::to('/') }}';
+		@if(\Illuminate\Support\Facades\App::environment('local'))
+        	var base_url = '{{ route('home') }}/a';
+		@else
+        	var base_url = '{{ route('admin.index') }}';
+		@endif
         jQuery(document).ready(function() {
             TableDatatablesResponsive.init(base_url);
         });

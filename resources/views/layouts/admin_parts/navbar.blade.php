@@ -11,6 +11,10 @@
                 <div class="menu-toggler sidebar-toggler" style="opacity: 1;"></div>
             </div>
             <!-- END LOGO -->
+            <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+            <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"
+               style="opacity: 1;"></a>
+            <!-- END RESPONSIVE MENU TOGGLER -->
         </div>
     </div>
     <!-- END HEADER -->

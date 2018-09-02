@@ -32,4 +32,12 @@ class EventController extends Controller
         $response['status'] = 'success';
         return $response;
     }
+
+    public function destroy($id) {
+        $response = [];
+        $event = Event::findOrFail($id);
+        $event->delete();
+        $response['status'] = 'success';
+        return $response;
+    }
 }

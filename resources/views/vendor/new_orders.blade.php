@@ -9,10 +9,13 @@
     <script src="{{ asset('admin/js/datatables.bootstrap.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin/js/vendor-new-orders.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
-        var base_url = '{{ \Illuminate\Support\Facades\URL::to('/') }}';
-        var csrf = '{{ csrf_token() }}';
+        @if(\Illuminate\Support\Facades\App::environment('local'))
+            var base_url = '{{ route('home') }}/vendor';
+        @else
+            var base_url = '{{ route('vendor.index') }}';
+        @endif
         jQuery(document).ready(function() {
-            TableDatatablesResponsive.init(base_url, csrf);
+            TableDatatablesResponsive.init(base_url, '{{ csrf_token() }}');
         });
     </script>
 @endsection

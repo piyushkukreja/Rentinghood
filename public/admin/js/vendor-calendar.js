@@ -50,7 +50,7 @@ var AppCalendar = function() {
                     return;
                 }
                 $.ajax({
-                    url: base_url + '/vendor/events/' + editing.id,
+                    url: base_url + '/events/' + editing.id,
                     type: 'PUT',
                     data: modalData.dataForAjax,
                     dataType: 'JSON',
@@ -77,23 +77,22 @@ var AppCalendar = function() {
             var h = {
                 left: 'title',
                 center: '',
-                right: 'prev, next, month, agendaWeek, listDay'
+                right: 'prev, next, month, listWeek, listDay'
             };
 
-            calendar.fullCalendar({ //re-initialize the calendar
+            calendar.fullCalendar({
                 header: h,
-                defaultView: 'month', // change default view with available options from http://arshaw.com/fullcalendar/docs/views/Available_Views/
+                defaultView: 'month',
                 selectable: true,
                 eventLimit: 2,
                 buttonText: {
                     today:    'today',
                     month:    'month',
-                    week:     'week',
-                    day:      'day',
-                    list:     'day'
+                    listWeek: 'week',
+                    listDay:  'day'
                 },
                 events: {
-                    url: base_url + '/vendor/calendar/show-all',
+                    url: base_url + '/calendar/show-all',
                     type: 'GET'
                 },
                 /*dayClick: function(date, jsEvent, view) {

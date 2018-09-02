@@ -10,7 +10,7 @@ class User extends Authenticatable
     use Notifiable;
 
     public function isAdmin() {
-        if($this->privileges === 2) {
+        if($this->privileges >= 2) {
             return true;
         }
         return false;
