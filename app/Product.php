@@ -32,4 +32,8 @@ class Product extends Model
     public function lender() {
         return $this->belongsTo('App\User', 'lender_id');
     }
+
+    public function transactions() {
+        return $this->hasMany('App\Transaction');
+    }
 }

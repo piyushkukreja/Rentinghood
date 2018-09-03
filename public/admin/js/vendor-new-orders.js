@@ -119,7 +119,7 @@ var TableDatatablesResponsive = function () {
 
         function decreaseCount() {
             var countSpan = $('#new-orders-count');
-            count = countSpan.html() - 1;
+            var count = countSpan.html() - 1;
             if(count === 0)
                 countSpan.remove();
             else

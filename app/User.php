@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
+    protected $appends = ['full_name'];
 
     public function isAdmin() {
         if($this->privileges >= 2) {
@@ -44,11 +45,21 @@ class User extends Authenticatable
     }
 
     public function newOrdersCount() {
-        $new_orders = Transaction::whereHas('product', function ($query) {
+        $new_orders_count = Transaction::whereHas('product', function ($query) {
                 $query->where('lender_id', \Auth::user()->id);
-            })
-            ->where('status', '=', "1")
-            ->get();
-        return count($new_orders);
+            })->where('status', 1)->count();
+        return $new_orders_count;
+    }
+
+    public function newPostsCount() {
+        if($this->isAdmin()) {
+            $new_posts_count = Product::where('verified', 0)->count();
+            return $new_posts_count;
+        }
+        return 0;
+    }
+
+    public function getFullNameAttribute() {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

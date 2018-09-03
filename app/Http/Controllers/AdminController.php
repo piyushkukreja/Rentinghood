@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
+
+    public function __construct()
+    {
+
+    }
+
     public function getAllUsers() {
         $response = [];
         $response['data'] = User::all();
@@ -110,7 +116,7 @@ class AdminController extends Controller
         return ['products' => Product::where('verified', 0)->get()];
     }
 
-    public function productsEdit($id) {
+    public function productsEdit($id, $type) {
         $product = Product::findOrFail($id);
         $user = Auth::user();
         if(!$user->isAdmin() && $user->id != $product->lender_id)
@@ -118,10 +124,11 @@ class AdminController extends Controller
         $data = [];
         $data['section'] = 'products';
         $data['product'] = $product;
+        $data['transactions'] = $product->transactions;
         $data['categories'] = Category::pluck('name', 'id')->all();
         $data['subcategories'] = Category::findOrFail($product->category_id)->subcategories->pluck('name', 'id');
         $data['product_pictures'] = $product->pictures;
-        if($user->isAdmin())
+        if($user->isAdmin() && $type == 'admin')
             return view('admin.products_edit', ['data' => $data]);
         else
             return view('vendor.products_edit', ['data' => $data]);
@@ -166,24 +173,25 @@ class AdminController extends Controller
         $product->lng = $request->input('lng');
         $product->save();
         Session::flash('success', 'Product details have been updated successfully');
-        if($user->isAdmin())
-            return redirect()->route('admin.products.edit', [$product->id]);
-        else
-            return redirect()->route('vendor.products.edit', [$product->id]);
+        return redirect()->back();
     }
 
     public function productsDestroy($id) {
+        $response = [];
         $product = Product::findOrFail($id);
         $user = Auth::user();
-        if(!$user->isAdmin() && $user->id != $product->lender_id)
-            return redirect()->route('vendor.index');
-        $pictures = $product->pictures;
-        foreach ($pictures as $picture) {
-            $picture->delete();
+        if(!$user->isAdmin() && $user->id != $product->lender_id) {
+            $response['status'] = 'failed';
+            $response['status'] = 'Not authorized to perform this action';
+        } else {
+            $pictures = $product->pictures;
+            foreach ($pictures as $picture) {
+                $picture->delete();
+            }
+            $product->delete();
+            $response['status'] = 'success';
         }
-        $product->delete();
-        Session::flash('success', 'Product has been successfully deleted');
-        return redirect()->back();
+        return $response;
     }
 
     public function updateDefaultImage(Request $request, $id) {
@@ -273,22 +281,26 @@ class AdminController extends Controller
         return $response;
     }
 
+    public function getSubcategories($category_id)
+    {
+        $category = Category::find($category_id);
+        return $category->subcategories;
+    }
+
     public function subcategoriesUpdate(Request $request, $id){
-        //this method should give the name that the usr enters in the modal
-        $subcategory = Subcategory::findOrFail($id);//checks whether Category with that id exists, if fails then die(s) the script
-        $subcategory->name = $request->input('name');//method requests value using the name of the input
+        $subcategory = Subcategory::findOrFail($id);
+        $subcategory->name = $request->input('name');
         $subcategory->category_id = $request->input('category_id');
-        $subcategory->save();//make changes to db
-        return redirect()->route('subcategories.index');//redirect to the categories page
+        $subcategory->save();
+        return redirect()->route('subcategories.index');
     }
 
     public function subcategoriesStore(Request $request){
-        //this method should give the name that the usr enters in the modal
         $subcategory = new Subcategory();
-        $subcategory->name = $request->input('name');//method requests value using the name of the input
+        $subcategory->name = $request->input('name');
         $subcategory->category_id = $request->input('category_id');
-        $subcategory->save();//make changes to db
-        return redirect()->route('subcategories.index');//redirect to the categories page
+        $subcategory->save();
+        return redirect()->route('subcategories.index');
     }
 
 }

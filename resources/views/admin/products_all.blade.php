@@ -14,31 +14,10 @@
         @else
             var base_url = '{{ route('admin.index') }}';
         @endif
+        var csrf = '{{ csrf_token() }}';
         jQuery(document).ready(function() {
-            TableDatatablesResponsive.init(base_url);
+            TableDatatablesResponsive.init(base_url, csrf);
         });
-
-        function deleteProduct(id) {
-            swal({
-                title: 'Are you sure you want to delete this product?',
-                type: 'warning',
-                showCancelButton: true,
-                buttonsStyling: false,
-                allowEnterKey: false,
-                confirmButtonClass: 'btn btn-warning',
-                cancelButtonClass: 'btn btn-info',
-            }).then((result) => {
-                if (result.value) {
-                var csrf = '{{ csrf_token() }}';
-                var deleteForm = $('<form action="' + base_url + '/products/' + id + '" method="POST">' +
-                    '<input type="hidden" name="_method" value="DELETE">' +
-                    '<input type="hidden" name="_token" value=' + csrf + '>' +
-                    '</form>');
-                $('body').append(deleteForm);
-                deleteForm.submit();
-            }
-        });
-        }
     </script>
 
 @endsection

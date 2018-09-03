@@ -27,15 +27,13 @@ var TableDatatablesResponsive = function () {
                     var return_data = [];
                     for(var i = 0; i < json.length; i++){
                         return_data.push([
-                            json[i].first_name + ' ' + json[i].last_name,
+                            '<a href="' + base_url + '/users/' + json[i].id + '">' + json[i].first_name + ' ' + json[i].last_name + '</a>',
                             json[i].email,
                             json[i].contact,
                             json[i].address,
                             json[i].lat,
                             json[i].lng,
                             json[i].verified,
-                            '<a href="' + base_url + '/users/' + json[i].id + '" class="btn yellow btn-outline" style="padding: 3px 6px 3px 6px;">' +
-                            '<i class="fa fa-eye"></i></a> ' +
                             '<a href="javascript:;" onclick="deleteUser(' + json[i].id + ')" class="btn red btn-outline" style="padding: 3px 6px 3px 6px;">' +
                             '<i class="fa fa-remove"></i></a>'
                         ]);
@@ -44,30 +42,9 @@ var TableDatatablesResponsive = function () {
                 }
             },
 
-            // Or you can use remote translation file
-            //"language": {
-            //   url: '//cdn.datatables.net/plug-ins/3cfcc339e89/i18n/Portuguese.json'
-            //},
+            buttons: [],
 
-            // setup buttons extentension: http://datatables.net/extensions/buttons/
-            buttons: [
-                /*{extend: 'print', className: 'btn dark btn-outline', exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4 ]
-                    }},
-                {extend: 'pdf', className: 'btn green btn-outline' , exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4 ]
-                    }},
-                {extend: 'csv', className: 'btn purple btn-outline ', exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4 ]
-                    }}*/
-            ],
-
-            // setup responsive extension: http://datatables.net/extensions/responsive/
-            responsive: {
-                details: {
-                   
-                }
-            },
+            responsive: { details: {} },
 
             "order": [
                 [0, 'asc']

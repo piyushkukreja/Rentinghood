@@ -1,7 +1,7 @@
 var TableDatatablesResponsive = function () {
 
-    var initTable1 = function (base_url) {
-        var table = $('#products-table');
+    var initTable1 = function (base_url, csrf) {
+        var table = $('#new-products-table');
         var oTable = table.dataTable({
             // Internationalisation. For more info refer to http://datatables.net/manual/i18n
             "language": {
@@ -27,44 +27,26 @@ var TableDatatablesResponsive = function () {
                     var return_data = [];
                     for(var i = 0; i < json.length; i++){
                         return_data.push([
-                            '<a href="' + base_url + '/products/' + json[i].id + '/edit">' + json[i].name + ' (' + json[i].id + ')</a>',
+                            '<a href="' + base_url + '/products/' + json[i].id + '/edit/admin">' + json[i].name + ' (' + json[i].id + ')</a>',
                             '<img style="height: 80px;" src="../../img/uploads/products/small/' + json[i].image + '" alt="product image" />',
                             json[i].category,
                             json[i].subcategory.name,
                             '<a href="' + base_url + '/users/' + json[i].lender.id + '">' + json[i].lender.first_name + ' ' + json[i].lender.last_name + '</a>',
                             json[i].address,
-                            '<a href="javascript:;" onclick="deleteProduct(' + json[i].id + ')" class="btn red btn-outline" style="padding: 3px 6px 3px 6px;">' +
-                            '<i class="fa fa-remove"></i></a>'
+                            '<a href="javascript:;" class="accept btn blue btn-outline" style="padding: 3px 6px 3px 6px;">' +
+                            '<i class="fa fa-check"></i></a>' +
+                            '<a href="javascript:;" class="delete btn red btn-outline" style="padding: 3px 6px 3px 6px;">' +
+                            '<i class="fa fa-remove"></i></a>',
+                            json[i].id
                         ]);
                     }
                     return return_data;
                 }
             },
 
-            // Or you can use remote translation file
-            //"language": {
-            //   url: '//cdn.datatables.net/plug-ins/3cfcc339e89/i18n/Portuguese.json'
-            //},
+            buttons: [],
 
-            // setup buttons extentension: http://datatables.net/extensions/buttons/
-            buttons: [
-                /*{extend: 'print', className: 'btn dark btn-outline', exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4 ]
-                    }},
-                {extend: 'pdf', className: 'btn green btn-outline' , exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4 ]
-                    }},
-                {extend: 'csv', className: 'btn purple btn-outline ', exportOptions: {
-                        columns: [ 0, 1, 2, 3, 4 ]
-                    }}*/
-            ],
-
-            // setup responsive extension: http://datatables.net/extensions/responsive/
-            responsive: {
-                details: {
-
-                }
-            },
+            responsive: { details: {} },
 
             "order": [
                 [0, 'asc']
@@ -78,25 +60,85 @@ var TableDatatablesResponsive = function () {
             "pageLength": 10,
 
             "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
-
-            // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
-            // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
-            // So when dropdowns used the scrollable div should be removed.
-            //"dom": "<'row' <'col-md-12'T>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
         });
-        var tableWrapper = jQuery('#sample_1_wrapper');
-    }
+
+        table.on('click', '.delete', function () {
+            var row = $(this).parents('tr')[0];
+            var id = oTable.fnGetData(row)[7];
+            swal({
+                title: 'Are you sure you want to delete this post?',
+                type: 'warning',
+                showCancelButton: true,
+                buttonsStyling: false,
+                allowEnterKey: false,
+                confirmButtonClass: 'btn btn-warning',
+                cancelButtonClass: 'btn btn-info',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: base_url + '/products/' + id,
+                        type: 'DELETE',
+                        data: { _token: csrf },
+                        success: function (response) {
+                            if(response.status === 'success') {
+                                oTable.fnDeleteRow(row);
+                                decrementCount();
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        table.on('click', '.accept', function () {
+            var row = $(this).parents('tr')[0];
+            var id = oTable.fnGetData(row)[7];
+            swal({
+                title: 'Are you sure you want to approve this post?',
+                type: 'warning',
+                showCancelButton: true,
+                buttonsStyling: false,
+                allowEnterKey: false,
+                confirmButtonClass: 'btn btn-warning',
+                cancelButtonClass: 'btn btn-info',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: base_url + '/products/' + id + '/update-state',
+                        type: 'POST',
+                        data: { _token: csrf, accepted: true },
+                        dataType: 'JSON',
+                        success: function (response) {
+                            if(response.status === 'success') {
+                                oTable.fnDeleteRow(row);
+                                decrementCount();
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        function decrementCount() {
+            var countSpan = $('#new-posts-count');
+            var count = countSpan.html() - 1;
+            if(count === 0)
+                countSpan.remove();
+            else
+                countSpan.html(count);
+        }
+    };
 
     return {
 
         //main function to initiate the module
-        init: function (base_url) {
+        init: function (base_url, csrf) {
 
             if (!jQuery().dataTable) {
                 return;
             }
 
-            initTable1(base_url);
+            initTable1(base_url, csrf);
         }
 
     };

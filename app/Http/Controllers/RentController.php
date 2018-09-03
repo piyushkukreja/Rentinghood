@@ -97,6 +97,7 @@ class RentController extends Controller
         return view('rent.subcategories', $data);
 
     }
+
     public function subcategory_products(Request $request)
     {
         if(!(Session::has('location') && Session::has('lat') && Session::has('lng')))

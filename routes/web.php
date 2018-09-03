@@ -157,7 +157,7 @@ Route::group($group_parameters, function () {
     Route::get('/products/show-all', 'AdminController@productsGetAll')->name('admin.products.show-all');
     Route::get('/products/new', 'AdminController@productsNew')->name('admin.products.new');
     Route::get('/products/get-new', 'AdminController@productsGetNew')->name('admin.products.get-new');
-    Route::get('/products/{user}/edit', 'AdminController@productsEdit')->name('admin.products.edit');
+    Route::get('/products/{product}/edit/{type}', 'AdminController@productsEdit')->name('admin.products.edit');
     Route::put('/products/{product}', 'AdminController@productsUpdate')->name('admin.products.update');
     Route::delete('/products/{product}', 'AdminController@productsDestroy')->name('admin.products.destroy');
     Route::post('/products/{product}/update-image', 'AdminController@updateDefaultImage')->name('admin.products.update-image');
@@ -168,6 +168,7 @@ Route::group($group_parameters, function () {
     Route::get('/categories', 'AdminController@categoriesIndex')->name('categories.index');
     Route::get('/categories/show-all', 'AdminController@getAllCategories')->name('categories.show-all');
     Route::post('/categories/{id}', 'AdminController@categoriesUpdate')->name('categories.update');
+    Route::get('/categories/{id}/get-subcategories', 'AdminController@getSubcategories')->name('categories.subcategories');
     Route::get('/categories/{id}/change-availability/{value}', 'AdminController@categoriesUpdateAvailability')->name('categories.update-availability');
     Route::post('/categories', 'AdminController@categoriesStore')->name('categories.store');
 
@@ -216,7 +217,7 @@ Route::group($group_parameters, function () {
     Route::post('/products/update-availability', 'Dashboard\HomeController@updateAvailability')->name('vendor.update-availability');
 
     //Product/Inventory Routes
-    Route::get('/products/{user}/edit', 'AdminController@productsEdit')->name('vendor.products.edit');
+    Route::get('/products/{product}/edit/{type}', 'AdminController@productsEdit')->name('vendor.products.edit');
     Route::put('/products/{product}', 'AdminController@productsUpdate')->name('vendor.products.update');
     Route::delete('/products/{product}', 'AdminController@productsDestroy')->name('vendor.products.destroy');
     Route::post('/products/{product}/update-image', 'AdminController@updateDefaultImage')->name('vendor.products.update-image');
@@ -224,6 +225,7 @@ Route::group($group_parameters, function () {
     Route::post('/products/{product}/update-state', 'AdminController@changeProductState')->name('vendor.products.update-state');
     Route::get('/inventory', 'VendorController@inventory')->name('vendor.inventory');
     Route::get('/inventory/show-all', 'VendorController@loadInventory')->name('vendor.load-inventory');
+    Route::get('/categories/{id}/get-subcategories', 'AdminController@getSubcategories')->name('vendor.subcategories');
 
     //Calendar Routes
     Route::get('/calendar', 'EventController@index')->name('vendor.calendar');

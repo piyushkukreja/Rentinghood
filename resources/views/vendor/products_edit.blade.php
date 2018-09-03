@@ -5,153 +5,47 @@
     <script src="{{ asset('admin/js/sweetalert2.all.js') }}" type="text/javascript"></script>
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDtfAuKKrycjdbscKGGfbCg0R5udw3N73g&amp;libraries=places"></script>
     <script src="{{ asset('js/jquery.geocomplete.min.js') }}"></script>
+    <script src="{{ asset('admin/js/admin-edit-product.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var productForm = $('#product-form');
-            var csrf_token = '{{ csrf_token() }}';
-
-            function ucwords (str) {
-                str = str.replace('_', ' ');
-                return (str + '')
-                    .replace(/^(.)|\s+(.)/g, function ($1) {
-                        return $1.toUpperCase()
-                    });
-            }
-
-            //js for SUBCATERGORIES
-            var categorySelector = productForm.find($('#category_id'));
-
-            function changeSubcategories() {
-
-                var subcategorySelector = productForm.find($('#subcategory_id'));
-                subcategorySelector.empty();
-                var category_id = categorySelector.val();
-
-                subcategorySelector.empty();
-                subcategorySelector.append('<option value="" selected disabled>Select a subcategory</option>');
-
-                if (category_id != '') {
-                    $.ajax(
-                        {
-                            type: 'POST',
-                            url: '{{ route('get_subcategories') }}',
-                            data: {_token: csrf_token, category_id: category_id},
-                            dataType: 'JSON',
-                            success: function (returned_data) {
-
-                                $.each(returned_data, function (i, d) {
-                                    subcategorySelector.append('<option value="' + d.id + '">' + ucwords(d.name) + '</option>');
-                                });
-
-                            }
-                        }
-                    );
-                }
-            }
-
-            categorySelector.on('change', function () {
-                changeSubcategories();
+            @if(\Illuminate\Support\Facades\App::environment('local'))
+                var base_url = '{{ route('home') }}/vendor';
+            @else
+                var base_url = '{{ route('vendor.index') }}';
+            @endif
+            var product = '@php echo json_encode($data['product']); @endphp';
+            jQuery(document).ready(function() {
+                ProductEditor.init(base_url, '{{ csrf_token() }}', JSON.parse(product), 'vendor');
             });
-
-            //js for ADDRESS
-            var defaultBounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng(19.296441, 72.9864994),
-                new google.maps.LatLng(18.8465126, 72.9042434)
-            );
-
-            $("#address").geocomplete({
-                location: '{{ Auth::user()->address }}',
-                details: "#product_latlng",
-                bounds: defaultBounds
-            }).bind("geocode:result", function (event, result) {
-                console.log('Product :' + result);
-            });
-
-            //js for DURATION AND RATES
-            function changeRequiredStates(form_container) {
-                var rate1 = form_container.find('input[name="rate_1"]');
-                var rate2 = form_container.find('input[name="rate_2"]');
-                var rate3 = form_container.find('input[name="rate_3"]');
-                switch (form_container.find('select[name="duration"]').val()) {
-                    case '0' :
-                        rate1.prop('required', true).parent().slideDown();
-                        rate2.prop('required', false).parent().slideUp();
-                        rate3.prop('required', false).parent().slideUp();
-                        break;
-                    case '1' :
-                        rate1.prop('required', true).parent().slideDown();
-                        rate2.prop('required', true).parent().slideDown();
-                        rate3.prop('required', false).parent().slideUp();
-                        break;
-                    case '2' :
-                        rate1.prop('required', true).parent().slideDown();
-                        rate2.prop('required', true).parent().slideDown();
-                        rate3.prop('required', true).parent().slideDown();
-                        break;
-                }
-            }
-
-            changeRequiredStates(productForm);
-            $(productForm).find('select[name="duration"]').on('change', function () {
-                changeRequiredStates(productForm);
-            });
-
-            //js for IMAGES
-            $('input[type="radio"][name="product_thumbnail"]').change(function() {
-                var radioInput = this;
-                $.ajax({
-                    url: '{{ route('vendor.products.update-image', [$data['product']->id]) }}',
-                    type: 'POST',
-                    dataType: 'JSON',
-                    data: { _token: '{{ csrf_token() }}', file_id: radioInput.value}
-                });
-            });
-
-            $('a.remove').on('click', function () {
-                var link = $(this);
-                $.ajax({
-                    url: '{{ route('vendor.products.remove-image', [$data['product']->id]) }}',
-                    type: 'POST',
-                    dataType: 'JSON',
-                    data: { _token: '{{ csrf_token() }}', picture_id: parseInt(link.parents('tr').find('td.product-picture-id').html()) },
-                    success: function (response) {
-                        if(response.status === 'failed') {
-                            swal(
-                                "Error",
-                                response.message, // had a missing comma
-                                "error"
-                            )
-                        } else {
-                            link.parents('tr').hide();
-                        }
-                    }
-                });
-            })
         })
     </script>
 @endsection
 @section('content')
     <div class="page-content">
-        <!-- BEGIN PAGE HEAD-->
-        <div class="page-head">
-            <!-- BEGIN PAGE TITLE -->
-            <div class="page-title">
-                <h1>{{ $data['product']->name }} @if($data['product']->verified == 0) <span class="small">review pending</span>@endif</h1>
-            </div>
-            <!-- END PAGE TITLE -->
-        </div>
-        <!-- END PAGE HEAD-->
         <!-- SHOW FLASH CONTENT -->
         @if(Session::has('success'))
             <p class="alert alert-success">{{ session('success') }}</p>
-    @endif
-    <!-- END FLASH CONTENT -->
+        @endif
+        <!-- END FLASH CONTENT -->
         <!-- BEGIN PAGE BASE CONTENT -->
         <div class="row">
             <div class="col-md-12">
-                <div class="portlet" style="margin-top: -20px;">
+                <!-- BEGIN TABLE PORTLET-->
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-dark">
+                            <h4 style="margin: 0; display: inline-block; margin-right: 10px;">
+                                <i class="icon-user font-dark"></i>
+                                <span class="caption-subject bold uppercase"> {{ $data['product']->name }} </span>
+                            </h4>
+                            <label style="margin: 0;" class="mt-checkbox"> Accepted
+                                <input id="accepted-checkbox" type="checkbox" name="verified">
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
                     <div class="portlet-body">
-                        <div class="tabbable-bordered">
+                        <div class="tabbable-line">
                             <ul class="nav nav-tabs">
                                 <li class="active">
                                     <a href="#tab_general" data-toggle="tab"> General </a>
