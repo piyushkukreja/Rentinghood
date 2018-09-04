@@ -17,6 +17,12 @@ var AppCalendar = function() {
             var editModalTrigger = $('#edit-event-modal-trigger');
             var editing = null;
 
+
+            var storeModal = $('#store-event-modal');
+            storeModal.find('[name="event-color"]').minicolors();
+            var storeModalTrigger = $('#store-event-modal-trigger');
+            var storing = null;
+
             var calendar = $('#events-calendar');
 
             function getDataFromModal(modal) {
@@ -42,6 +48,40 @@ var AppCalendar = function() {
                 };
                 return data;
             }
+
+
+            //Get data from modal and send it to create/add an event
+            $('#event-store').on('click', function () {
+                var modalData = getDataFromModal(storeModal);
+                if(!modalData) {
+                    return;
+                }
+                $.ajax({
+                    url: base_url + '/events/store',
+                    type: 'POST',
+                    data: modalData.dataForAjax,
+                    dataType: 'JSON',
+                    success: function (response) {
+                        if(response.status === 'success') {
+                            //Store the event
+                            storing.title = response.event.title;
+                            storing.date = response.event.date;
+                            storing.start = moment(response.event.date);
+                            storing.color = response.event.color;
+                            calendar.fullCalendar('storeEvent', storing);
+                            calendar.fullCalendar('refetchEvents');
+                        } else {
+                            swal({
+                                title: 'Event could not be stored!',
+                                type: 'warning'
+                            });
+                        }
+                        storeModal.find('#store-event-modal-close').trigger('click');
+                        storing = null;
+                    }
+                });
+            });
+
 
             //Get data from modal and send it to update an event
             $('#event-edit').on('click', function () {
@@ -129,6 +169,15 @@ var AppCalendar = function() {
                     editing = event;
                     editModalTrigger.trigger('click');
                 },
+                dayClick: function (date, event) {
+                    storeModal.find('[name="event-title"]').val("");
+                    storeModal.find('[name="event-date"]').val(date.format());
+                    storeModal.find('[name="event-color"]').minicolors('value', '#111');
+
+                    storing = event;
+                    storeModalTrigger.trigger('click');
+                },
+
                 timeFormat: 'h(:mm) A'
             });
 

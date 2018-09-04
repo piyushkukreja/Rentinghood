@@ -231,6 +231,7 @@ Route::group($group_parameters, function () {
     Route::get('/calendar', 'EventController@index')->name('vendor.calendar');
     Route::get('/calendar/show-all', 'EventController@eventsShowAll')->name('vendor.calendar.get-all');
     Route::post('/events/insert', 'EventController@insertIntoCalendar')->name('vendor.calendar.insert');
+    Route::post('/events/store', 'EventController@store')->name('vendor.calendar.store');
     Route::put('/events/{event}', 'EventController@update')->name('vendor.calendar.update');
     Route::delete('/events/{event}', 'EventController@destroy')->name('vendor.calendar.delete');
 

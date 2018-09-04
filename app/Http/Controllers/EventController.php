@@ -20,6 +20,25 @@ class EventController extends Controller
         return \Auth::user()->events;
     }
 
+
+    public function store(Request $request)
+    {
+            $user = \Auth::user();
+            $post = $request->all();
+            $event = new Event;
+            $response = [];
+            $event->title = $post['title'];
+            $event->date = $post['date'];
+            $event->color = $post['color'];
+            $event->transaction_id = null;
+            $event->vendor_id = $user->id;
+            /*$event->type= null;*/
+            $event->save();
+            $response['event'] = $event;
+            $response['status'] = 'success';
+            return $response;
+    }
+
     public function update(Request $request, $id)
     {
         $response = [];

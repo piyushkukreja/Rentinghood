@@ -66,6 +66,36 @@
             </div>
         </div>
         <!-- END PAGE BASE CONTENT -->
+        {{--store event modal--}}
+        <a id="store-event-modal-trigger" class="hidden" data-toggle="modal" href="#store-event-modal"></a>
+        <div id="store-event-modal" class="modal fade" tabindex="-1" data-width="760">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Add Event</h4>
+            </div>
+            <div class="modal-body" style="margin-bottom: 100px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Title</h4>
+                        <input name="event-title" class="form-control" type="text">
+                    </div>
+                    <div class="col-md-12">
+                        <h4>Date</h4>
+                        <input name="event-date" class="form-control no-arrows" type="date">
+                    </div>
+                    <div class="col-md-12">
+                        <h4>Color</h4>
+                        <input name="event-color" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="store-event-modal-close" type="button" data-dismiss="modal" class="btn btn-outline dark">Cancel</button>
+                <button id="event-store" type="button" class="btn blue">Add</button>
+            </div>
+        </div>
+        {{--End Of store event modal--}}
+
         <a id="edit-event-modal-trigger" class="hidden" data-toggle="modal" href="#edit-event-modal"></a>
         <div id="edit-event-modal" class="modal fade" tabindex="-1" data-width="760">
             <div class="modal-header">
