@@ -72,8 +72,7 @@
                                 </span>
                                 </a>
 
-                                <form id="logout-form"   action="{{ route('logout') }}" method="GET"
-                                      style="display: none;">
+                                <form id="logout-form" action="{{ route('logout') }}" method="GET" class="hidden">
                                     {{ csrf_field() }}
                                 </form>
                             @endguest

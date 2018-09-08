@@ -33,12 +33,12 @@
                             </a>
                             @auth
                                 @if(Auth::user()->isAdmin())
-                                    <a href="{{ route('admin.index') }}">
+                                    <a href="{{ route('admin.index') }}" style="margin-left: 5px;">
                                         <i style="font-size: 1.5em; color: #fff;" class="icon icon-Business-ManWoman"></i>
                                     </a>
                                 @endif
                                 @if(Auth::user()->isVendor())
-                                    <a href="{{ route('vendor.index') }}">
+                                    <a href="{{ route('vendor.index') }}" style="margin-left: 5px;">
                                         <i style="font-size: 1.5em; color: #fff;" class="icon icon-Business-ManWoman"></i>
                                     </a>
                                 @endif
@@ -80,7 +80,7 @@
                                     Logout
                                 </span>
                                 </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                <form id="logout-form" action="{{ route('logout') }}" method="GET" class="hidden">
                                     {{ csrf_field() }}
                                 </form>
                             @endguest

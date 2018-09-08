@@ -23,10 +23,15 @@ class MobileVerificationController extends Controller
         return view('auth.otp');
     }
 
-    public function sendOTP()
+    public function sendOTP(Request $request)
     {
         $curl = curl_init();
+        if($request->has('contact')) {
+            Auth::user()->contact = $request->input('contact');
+            Auth::user()->save();
+        }
         $contact = Auth::user()->contact;
+
         $otp = rand(1000, 9999);
         Session::put('otp', $otp);
 
@@ -42,6 +47,7 @@ class MobileVerificationController extends Controller
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_SSL_VERIFYPEER => 0,
         ));
+
         $response = curl_exec($curl);
         return $response;
     }

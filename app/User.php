@@ -24,6 +24,13 @@ class User extends Authenticatable
         return false;
     }
 
+    public function hasContact() {
+        if(strlen((string)$this->contact) == 10)
+            return true;
+        else
+            return false;
+    }
+
     public function notes() {
         return $this->hasMany('App\Note')->orderBy('created_at', 'DESC');
     }

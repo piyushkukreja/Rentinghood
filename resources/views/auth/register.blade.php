@@ -29,7 +29,19 @@
                     </div>
                     <div class="col-md-6 col-12">
                         <h2 style="font-weight: 500;">Become a RentingHood neighbour</h2>
-
+                        <a class="btn block btn--icon bg--facebook type--uppercase" href="{{ route('social-login', ['facebook']) }}">
+                                <span class="btn__text">
+                                    <i class="socicon-facebook"></i>
+                                    Sign-up with Facebook
+                                </span>
+                        </a>
+                        <a class="btn block btn--icon bg--googleplus type--uppercase" href="{{ route('social-login', ['google']) }}">
+                                <span class="btn__text">
+                                    <i class="socicon-google"></i>
+                                    Sign-up with Google+
+                                </span>
+                        </a>
+                        <hr>
                         <form method="POST" action="{{ route('register') }}">
                             {{ csrf_field() }}
                             <div class="row">

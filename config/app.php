@@ -181,7 +181,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         RobinCSamuel\LaravelMsg91\LaravelMsg91ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-
+        Laravel\Socialite\SocialiteServiceProvider::class
     ],
 
     /*
@@ -234,8 +234,7 @@ return [
         'LaravelMsg91' => RobinCSamuel\LaravelMsg91\Facades\LaravelMsg91::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-        'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
-
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class
     ],
 
 ];

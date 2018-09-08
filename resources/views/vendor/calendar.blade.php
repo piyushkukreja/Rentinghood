@@ -66,7 +66,7 @@
             </div>
         </div>
         <!-- END PAGE BASE CONTENT -->
-        {{--store event modal--}}
+        {{--Store Event Modal--}}
         <a id="store-event-modal-trigger" class="hidden" data-toggle="modal" href="#store-event-modal"></a>
         <div id="store-event-modal" class="modal fade" tabindex="-1" data-width="760">
             <div class="modal-header">
@@ -94,7 +94,7 @@
                 <button id="event-store" type="button" class="btn blue">Add</button>
             </div>
         </div>
-        {{--End Of store event modal--}}
+        {{--End Of Store Event Modal--}}
 
         <a id="edit-event-modal-trigger" class="hidden" data-toggle="modal" href="#edit-event-modal"></a>
         <div id="edit-event-modal" class="modal fade" tabindex="-1" data-width="760">

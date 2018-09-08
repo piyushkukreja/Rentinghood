@@ -49,7 +49,6 @@ var AppCalendar = function() {
                 return data;
             }
 
-
             //Get data from modal and send it to create/add an event
             $('#event-store').on('click', function () {
                 var modalData = getDataFromModal(storeModal);
@@ -68,11 +67,11 @@ var AppCalendar = function() {
                             storing.date = response.event.date;
                             storing.start = moment(response.event.date);
                             storing.color = response.event.color;
-                            calendar.fullCalendar('storeEvent', storing);
-                            calendar.fullCalendar('refetchEvents');
+                            storing.allDay = true;
+                            calendar.fullCalendar('renderEvent', storing);
                         } else {
                             swal({
-                                title: 'Event could not be stored!',
+                                title: 'Event could not be added!',
                                 type: 'warning'
                             });
                         }

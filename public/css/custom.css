@@ -281,3 +281,6 @@ h1.about-heading, h2.about-heading {
 #blue-nav-container #register_nav_button .btn__text {
     color: #ffffff;
 }
+.nav-container a:hover {
+    text-decoration: none;
+}

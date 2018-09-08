@@ -107,6 +107,19 @@
                 <div class="row">
                     <div class="col-md-7 col-lg-5">
                         <h2>Login to continue</h2>
+                        <a class="btn block btn--icon bg--facebook type--uppercase" href="{{ route('social-login', ['facebook']) }}">
+                                <span class="btn__text">
+                                    <i class="socicon-facebook"></i>
+                                    Login with Facebook
+                                </span>
+                        </a>
+                        <a class="btn block btn--icon bg--googleplus type--uppercase" href="{{ route('social-login', ['google']) }}">
+                                <span class="btn__text">
+                                    <i class="socicon-google"></i>
+                                    Login with Google +
+                                </span>
+                        </a>
+                        <hr>
                         <p class="lead">
                             Welcome back, sign in with your existing RentingHood account credentials
                         </p>

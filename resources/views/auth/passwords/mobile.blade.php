@@ -124,13 +124,12 @@
                         data: $('form').serialize(),
                         dataType: 'json',
                         success: function(data){
-                            if(data.status == 'failed') {
+                            if(data.status === 'failed') {
                                 $('#otp').after('<span id="otp_message" class="color--dark"><strong>Invalid OTP</strong></span>');
                                 verify_button.html('Verify');
                                 verify_button.removeClass('disabled');
                             }
                             else {
-                                alert(data.reset_code);
                                 $('#reset_code').val(data.reset_code);
                                 $('#otp_div').slideUp(function () {
                                     $('#password_div').slideDown();
