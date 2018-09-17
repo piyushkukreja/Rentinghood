@@ -32,6 +32,9 @@
             margin-top: 0.5em;
             margin-bottom: 5em;
         }
+        #register-modal .modal-content {
+            max-width: 600px;
+        }
     </style>
 @endsection
 @section('scripts')
@@ -326,8 +329,8 @@
                         type: 'POST',
                         url: '{{ route('check_request_placed') }}',
                         data: contactOwnerForm.serialize(),
-                        success: function (returned_data) {
-                            if (returned_data.placed) {
+                        success: function (response) {
+                            if (response.placed) {
                                 contactOwnerButton.html('Request placed');
                                 placed = true;
                             } else {
@@ -472,12 +475,15 @@
         <div class="modal-instance">
             <a id="login-modal-trigger" href="#" class="modal-trigger hidden">Login</a>
             <div id="login-modal" class="modal-container">
-                <div class="modal-content section-modal">
+                <div class="modal-content section-modal imagebg" data-overlay="7">
+                    <div class="background-image-holder">
+                        <img alt="background" src="{{ asset('img/login-bg.jpg') }}" />
+                    </div>
                     <section class="unpad ">
                         <div class="container">
                             <div class="row justify-content-center">
                                 <div class="col-12">
-                                    <div class="boxed boxed--lg text-center feature">
+                                    <div class="boxed bg--none boxed--lg text-center feature">
                                         <div class="modal-close modal-close-cross"></div>
                                         <div class="text-block">
                                             <h3>Login to Your Account</h3>
@@ -534,30 +540,30 @@
         <div class="modal-instance">
             <a id="register-modal-trigger" class="btn modal-trigger hidden" href="#"></a>
             <div id="register-modal" class="modal-container">
-                <div class="modal-content">
-                    <section class="imageblock feature-large border--round ">
-                        <div class="imageblock__content col-lg-5 col-md-3 pos-left">
-                            <div class="background-image-holder">
-                                <img alt="image" src="{{ asset('img/cowork-8.jpg') }}">
-                            </div>
-                        </div>
+                <div class="modal-content section-modal imagebg" data-overlay="7">
+                    <div class="background-image-holder">
+                        <img alt="background" src="{{ asset('img/register-bg.jpg') }}" />
+                    </div>
+                    <section class="unpad ">
                         <div class="container">
-                            <div class="row justify-content-end">
-                                <div class="col-lg-6 col-md-7">
-                                    <div class="row">
-                                        <div class="col-md-11 col-lg-10">
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <div class="boxed bg--none boxed--lg text-center feature">
+                                        <div class="modal-close modal-close-cross"></div>
+                                        <div class="text-block">
                                             <h1>Become a RentingHood neighbour</h1>
-                                            <hr class="short">
+                                        </div>
+                                        <div class="feature__body">
                                             <form id="register-form" method="POST" action="{{ route('register') }}">
                                                 {{ csrf_field() }}
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <a class="btn block btn--icon bg--googleplus type--uppercase social-login"
                                                            href="{{ route('social-login', ['google']) }}">
-                                                            <span class="btn__text">
-                                                                <i class="socicon-google"></i>
-                                                                Signup with Google +
-                                                            </span>
+                                                    <span class="btn__text">
+                                                        <i class="socicon-google"></i>
+                                                        Signup with Google +
+                                                    </span>
                                                         </a>
                                                     </div>
                                                     <div class="col-md-12">
@@ -613,7 +619,6 @@
                             </div>
                         </div>
                     </section>
-                    <div class="modal-close modal-close-cross"></div>
                 </div>
             </div>
         </div>
