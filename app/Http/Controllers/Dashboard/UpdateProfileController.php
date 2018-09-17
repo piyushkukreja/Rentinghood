@@ -20,6 +20,7 @@ class UpdateProfileController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('mobile_auth');
+        $this->middleware('verified');
     }
 
     /**

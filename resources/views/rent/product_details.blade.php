@@ -15,18 +15,12 @@
         .pricing__head.boxed {
             padding: 1em;
         }
-        #verify_otp {
-            margin-top: 1em;
-        }
-        #otp_modal .boxed {
-            margin-bottom: 0;
-        }
-        @media (min-width: 576px)  {
-        }
         @media (min-width: 768px) {
             .picker__weekday { padding: 0.6em; }
         }
-        @media (min-width: 992px) {  .picker__weekday { padding: 0.9em; } }
+        @media (min-width: 992px) {
+            .picker__weekday { padding: 0.9em; }
+        }
         @media (max-width: 990px) {
             #product_hr {
                 margin-top: 0;
@@ -44,453 +38,311 @@
     @parent
     {{-- DATEPICKER --}}
     <script src="{{ asset('js/datepicker.js') }}" type="text/javascript"></script>
-
     {{-- SWEETALERT2 --}}
     <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js" type="text/javascript"></script>
 
     <script type="text/javascript">
-
         $(document).ready(function () {
 
-            //js for OTP Modal
-            $('#send_otp').on('click', function (e) {
+            //Buttons
+            var contactOwnerButton = $('#contact_owner');
 
-                var send_button = $('#send_otp');
-                send_button.addClass('disabled').html('Sending...');
-                e.preventDefault();
-                e.stopPropagation();
-                $.ajax({
-                    type: 'GET',
-                    url: '{{ route('send_OTP') }}',
-                    success: function (data) {
+            //Forms
+            var loginForm = $('#login_form');
+            var registerForm = $('#register_form');
+            var contactOwnerForm = $('#contact_owner_form');
 
-                        send_button.removeClass('disabled').html('Sent');
-                        $('#send_otp_div').slideUp(function () {
-                            $('#otp_div').slideDown();
-                        });
+            //Modals and Triggers
+            var loginModal = $('#login_modal');
+            var loginModalTrigger = $('#login_modal_trigger');
+            var registerModal = $('#register_modal');
+            var registerModalTrigger = $('#register_modal_trigger');
 
-                    }
-                });
-            });
-
-            $('#otp_form').on('submit', function (e) {
-
-                e.preventDefault();
-                e.stopPropagation();
-                var verify_button = $('#verify_otp');
-                $('#otp_message').remove();
-                verify_button.html('Verifying...').addClass('disabled');
-                $.ajax(
-                    {
-                        type: 'POST',
-                        url: '{{ route('verify_OTP') }}',
-                        data: $('form').serialize(),
-                        dataType: "json",
-                        success: function(data){
-                            if(data.status == 'failed') {
-                                $('#otp').after('<span id="otp_message" class="color--error"><strong>Invalid OTP</strong></span>');
-                                verify_button.html('Verify');
-                                verify_button.removeClass('disabled');
-                            }
-                            else {
-                                verify_button.html('Verify');
-                                verify_button.removeClass('disabled');
-                                $('#otp_modal').find('.modal-close').trigger('click');
-                                $('#contact_owner').trigger('click');
-                            }
-                        }
-                    }
-                );
-            });
+            //Inputs
+            var fromInput = $('#from');
+            var toInput = $('#to');
 
             //js for Login Modal
-                    @guest
-            var logged_in = false;
-            var login_form = $('#login_form');
-            login_form.submit(function (e) {
+            @guest
+                var loggedIn = false;
 
-                e.preventDefault();
-                e.stopPropagation();
-                $('#login_error').remove();
-                var formData = login_form.serialize();
+                function makePostLoginUIChanges() {
+                    window.location.href = encodeURI(window.location.href.replace(/[\?#].*|$/, '?from_date=' + $('[name="from_date"]').val() + '&to_date=' + $('[name="to_date"]').val()));
+                }
 
-                $.ajax({
-                    type: 'POST',
-                    url: login_form.attr('action'),
-                    data: formData,
-                    success: function (returned_data) {
-
-                        $('.modal-close-cross').trigger('click');
-                        $('#menu1').find("a[href='{{ route('login') }}']").html('' +
-                            '<span class="btn__text">Logout</span>' +
-                            '</a><form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>');
-                        $('#menu1').find("a[href='{{ route('login') }}']").attr('onclick', 'event.preventDefault();document.getElementById(\'logout-form\').submit();');
-                        $('#menu1').find('ul.menu-horizontal').append('<li><a href="{{ route('account') }}">Account</a></li>');
-                        $('#menu1').find('#register_nav_button').remove();
-                        logged_in = true;
-                        $('.otp_contact').html(returned_data.contact.substr(6));
-                        setTimeout(function () {
-                            $('#contact_owner').trigger('click');
-                        }, 1000);
-                    },
-                    error: function (xhr, status, error) {
-
-                        var errors = JSON.parse(xhr.responseText);
-                        var email_error = errors["errors"]["email"][0];
-                        $('#login_form').find('#email').after('<span id="login_error" class="color--error">' + email_error + '</span>');
-
-                    }
-                });
-
-            });
-
-            //js for Register Modal
-            var register_form = $('#register_form');
-            register_form.submit(function (e) {
-
-                e.preventDefault();
-                e.stopPropagation();
-                $('.register_error').slideUp(function () {
-
-                    $('.register_error').remove();
-
-                });
-                var formData = register_form.serialize();
-
-                $.ajax({
-                    type: 'POST',
-                    url: register_form.attr('action'),
-                    data: formData,
-                    success: function (returned_data) {
-
-                        $('.modal-close-cross').trigger('click');
-                        $('#menu1').find("a[href='{{ route('login') }}']").html('' +
-                            '<span class="btn__text">Logout</span>' +
-                            '</a><form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>');
-                        $('#menu1').find("a[href='{{ route('login') }}']").attr('onclick', 'event.preventDefault();document.getElementById(\'logout-form\').submit();');
-                        $('#menu1').find('ul.menu-horizontal').append('<li><a href="{{ route('account') }}">Account</a></li>');
-                        logged_in = true;
-                        $('#otp_modal_trigger').trigger('click');
-                    },
-                    error: function (xhr, status, error) {
-
-                        var errors = JSON.parse(xhr.responseText);
-                        errors = errors["errors"];
-                        for (var key in errors) {
-
-                            if(errors.hasOwnProperty(key))
-                                $('#register_form').find('[name="' + key + '"]').after('<span class="register_error color--error">' + errors[key][0] + '</span>');
-
+                loginForm.on('submit', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $('#login_error').remove();
+                    $.ajax({
+                        type: 'POST',
+                        url: loginForm.attr('action'),
+                        data: loginForm.serialize(),
+                        success: function (returned_data) {
+                            loginModal.find('.modal-close-cross').trigger('click');
+                            makePostLoginUIChanges();
+                            setTimeout(function () {
+                                contactOwnerButton.trigger('click');
+                            }, 1000);
+                        },
+                        error: function (xhr, status, error) {
+                            var errors = JSON.parse(xhr.responseText);
+                            var emailError = errors["errors"]["email"][0];
+                            loginForm.find('#email').after('<span id="login_error" class="color--error">' + emailError + '</span>');
                         }
-
-                    }
+                    });
                 });
 
-            });
+                //js for Register Modal
+                $('#register_link').on('click', function (event) {
+                    event.preventDefault();
+                    loginModal.find('.modal-close').trigger('click');
+                    registerModalTrigger.trigger('click');
+                });
 
-            //js for Pin Codes
-            var defaultBounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng(19.296441, 72.9864994),
-                new google.maps.LatLng(18.8465126, 72.9042434)
-            );
-            $("#address").geocomplete({
-                location: 'Mumbai',
-                details: "#latlng",
-                bounds: defaultBounds
-            }).bind("geocode:result", function (event, result) {
-                console.log(result);
-            });
+                registerForm.submit(function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $('.register_error').slideUp(function () {
+                        $(this).remove();
+                    });
+                    $.ajax({
+                        type: 'POST',
+                        url: registerForm.attr('action'),
+                        data: registerForm.serialize(),
+                        success: function (returned_data) {
+                            registerModal.find('.modal-close-cross').trigger('click');
+                            makePostLoginUIChanges();
+                        },
+                        error: function (xhr, status, error) {
+                            var errors = JSON.parse(xhr.responseText);
+                            errors = errors["errors"];
+                            for (var key in errors) {
+                                if(errors.hasOwnProperty(key))
+                                    registerForm.find('[name="' + key + '"]').after('<span class="register_error color--error">' + errors[key][0] + '</span>');
+                            }
+                        }
+                    });
+                });
 
+                //js for Pin Codes
+                var defaultBounds = new google.maps.LatLngBounds(
+                    new google.maps.LatLng(19.296441, 72.9864994),
+                    new google.maps.LatLng(18.8465126, 72.9042434)
+                );
+                $("#address").geocomplete({
+                    location: 'Mumbai',
+                    details: "#latlng",
+                    bounds: defaultBounds
+                }).bind("geocode:result", function (event, result) {
+                    console.log(result);
+                });
 
-                    @else
-            var logged_in = true;
+            @else
+                var loggedIn = true;
             @endguest
 
             //js for Placing a request
             var placed = false;
-            $('#contact_owner_form').submit(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
+            contactOwnerForm.submit(function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 if (!placed) {
-                    var contact_button = $('#contact_owner');
-                    var from_input = $('#from');
-                    var to_input = $('#to');
                     $('#from_error').remove();
                     $('#to_error').remove();
                     var errors = false;
-
-                    if (from_input.val() == '') {
-                        from_input.after('<span id="from_error" style="display: none;" class="color--error">Please select a from date</span>');
+                    if (fromInput.val() == '') {
+                        fromInput.after('<span id="from_error" style="display: none;" class="color--error">Please select a from date</span>');
                         $('#from_error').fadeIn();
                         errors = true;
-
                     }
-                    if (to_input.val() == '') {
-                        to_input.after('<span id="to_error" style="display: none;" class="color--error">Please select a to date</span>');
+                    if (toInput.val() == '') {
+                        toInput.after('<span id="to_error" style="display: none;" class="color--error">Please select a to date</span>');
                         $('#to_error').fadeIn();
                         errors = true;
                     }
                     if (!errors) {
-                        if (!logged_in) {
-
-                            $('#register_link').on('click', function (e) {
-
-                                e.preventDefault();
-                                $('#login_modal').find('.modal-close').trigger('click');
-                                $('#register_modal_trigger').trigger('click');
-
-                            });
-                            $('#login_modal_trigger').trigger('click');
+                        if (!loggedIn) {
+                            loginModalTrigger.trigger('click');
                             return;
                         }
-                        contact_button.addClass('disabled');
-                        contact_button.html('Placing your request');
-                        var contact_owner_form = $('#contact_owner_form');
-                        contact_owner_form.append('<input name="product_id" type="hidden" value="{{ $product->id }}">');
-                        var formData = contact_owner_form.serialize();
+                        contactOwnerButton.html('Placing your request').addClass('disabled');
 
                         $.ajax({
                             type: 'POST',
-                            url: contact_owner_form.attr('action'),
-                            data: formData,
+                            url: contactOwnerForm.attr('action'),
+                            data: contactOwnerForm.serialize(),
                             success: function (returned_data) {
-
-                                if(returned_data.verified) {
-
-                                    contact_button.html('Request placed');
-                                    /*$('#lender_name').html(returned_data.name);
-                                    $('#contact_modal_trigger').trigger('click');*/
+                                if(returned_data.status === 'success') {
+                                    contactOwnerButton.html('Request placed');
                                     swal({
                                         title: 'Your request has been placed!',
                                         text: returned_data.name + ', has received your request. If he approves the request he will get back to you shortly.',
                                         type: 'success'
                                     });
-
                                     placed = true;
-
-                                } else {
-
-                                    contact_button.html('Place a request');
-                                    contact_button.removeClass('disabled');
-                                    $('#otp_modal_trigger').trigger('click');
-
                                 }
-
+                            },
+                            error: function (response) {
+                                contactOwnerButton.html('Place a request').removeClass('disabled');
+                                var responseJSON = JSON.parse(response.responseText);
+                                var redirectTo = encodeURIComponent(window.location.href.replace(/[\?#].*|$/, '?from_date=' + $('[name="from_date"]').val() + '&to_date=' + $('[name="to_date"]').val()));
+                                if(responseJSON.message === 'mobile_auth')
+                                    window.location.href = '{{ route('otp.form') }}?redirect_to=' + redirectTo;
+                                else
+                                    window.location.href = '{{ route('verification.notice') }}?redirect_to=' + redirectTo;
                             }
                         });
                     }
                 }
             });
 
-
             //js for Datepicker
-            $('#from').on('click', function () {
+            fromInput.on('click', function () {
                 scrollToItem($(this));
             });
-            $('#to').on('click', function () {
+            toInput.on('click', function () {
                 scrollToItem($(this));
             });
 
             function scrollToItem(item) {
-
                 $('html, body').animate({
                     scrollTop: item.offset().top
                 }, 1000);
-
             }
 
-            var from_$input = $('#from').pickadate({
-
+            var fromPicker = fromInput.pickadate({
                     formatSubmit: 'dd-mm-yyyy',
                     hiddenSuffix: '_date'
+                }).pickadate('picker');
 
-                }),
-                from_picker = from_$input.pickadate('picker');
-
-            var to_$input = $('#to').pickadate({
-
+            var toPicker = toInput.pickadate({
                     formatSubmit: 'dd-mm-yyyy',
                     hiddenSuffix: '_date'
-
-                }),
-                to_picker = to_$input.pickadate('picker');
-
+                }).pickadate('picker');
 
             function checkAvailability() {
-
-                if (from_picker.get('select') && to_picker.get('select')) {
-
+                if (fromPicker.get('select') && toPicker.get('select')) {
                     checkRequestPlaced();
                     var product_id = '{{ $product->id }}';
                     var csrf = '{{ csrf_token() }}';
-                    var from_date = $('[name="from_date"]').val().split("-").reverse().join("-");
-                    var to_date = $('[name="to_date"]').val().split("-").reverse().join("-");
+                    var fromDate = $('[name="from_date"]').val().split("-").reverse().join("-");
+                    var toDate = $('[name="to_date"]').val().split("-").reverse().join("-");
                     $.ajax({
-
                         type: 'POST',
                         url: '{{ route('check_availability') }}',
-                        data: {_token: csrf, product_id: product_id, from_date: from_date, to_date: to_date},
+                        data: {_token: csrf, product_id: product_id, from_date: fromDate, to_date: toDate},
                         dataType: 'JSON',
                         success: function (response) {
-
-
-                            if (response.availability == '0') {
-
+                            if (response.availability === 0)
                                 $('#availability_message').slideDown();
-
-                            } else {
-
+                            else
                                 $('#availability_message').slideUp();
-
-                            }
-
                         }
-
                     });
-
                 }
-                else {
-
-
-                }
-
             }
 
             //js for disabling dates
-
             var yesterday = new Date((new Date()).valueOf() - 1000 * 60 * 60 * 24);
-            var unavailable_dates;
+            var unavailableDates;
 
             function setMinMax() {
-
-                var disable_from = unavailable_dates;
-                var disable_to = unavailable_dates;
-                disable_from.sort(function (a, b) {
+                var disableFrom = unavailableDates;
+                var disableTo = unavailableDates;
+                disableFrom.sort(function (a, b) {
                     return b.from - a.from;
                 });
-                disable_to.sort(function (a, b) {
+                disableTo.sort(function (a, b) {
                     return a.to - b.to;
                 });
 
-                from_picker.on('set', function (event) {
+                fromPicker.on('set', function (event) {
                     if (event.select) {
                         checkAvailability();
-                        $.each(disable_from, function (i, d) {
-                            if (d.from.getTime() > from_picker.get('select').pick) {
-
-                                to_picker.set('max', d.from);
+                        $.each(disableFrom, function (i, d) {
+                            if (d.from.getTime() > fromPicker.get('select').pick) {
+                                toPicker.set('max', d.from);
                                 return false;
-
                             }
-
                         });
-                        to_picker.set('min', from_picker.get('select'));
+                        toPicker.set('min', fromPicker.get('select'));
                     }
                     else if ('clear' in event) {
-                        to_picker.set('max', false);
-                        to_picker.set('min', false);
+                        toPicker.set('max', false);
+                        toPicker.set('min', false);
                     }
                 });
 
-                to_picker.on('set', function (event) {
+                toPicker.on('set', function (event) {
                     if (event.select) {
                         checkAvailability();
-                        $.each(disable_to, function (i, d) {
-
-                            if (d.to.getTime() < to_picker.get('select').pick) {
-
-                                from_picker.set('min', d.to);
+                        $.each(disableTo, function (i, d) {
+                            if (d.to.getTime() < toPicker.get('select').pick) {
+                                fromPicker.set('min', d.to);
                                 return false;
-
                             }
-
                         });
-                        from_picker.set('max', to_picker.get('select'));
+                        fromPicker.set('max', toPicker.get('select'));
                     }
                     else if ('clear' in event) {
-                        from_picker.set('max', false);
-                        from_picker.set('min', false);
+                        fromPicker.set('max', false);
+                        fromPicker.set('min', false);
                     }
                 });
-
             }
 
             function getUnavailableDates() {
-
                 var product_id = '{{ $product->id }}';
                 var csrf = '{{ csrf_token() }}';
                 $.ajax({
-
                     type: 'POST',
                     url: '{{ route('get_unavailable_dates') }}',
                     data: {_token: csrf, product_id: product_id},
                     dataType: 'JSON',
                     success: function (response) {
-
                         var disable = [];
-                        unavailable_dates = [];
-
+                        unavailableDates = [];
                         $.each(response, function (i, d) {
-
                             disable.push({from: new Date(d.from_date), to: new Date(d.to_date)});
-                            unavailable_dates.push({from: new Date(d.from_date), to: new Date(d.to_date)});
-
+                            unavailableDates.push({from: new Date(d.from_date), to: new Date(d.to_date)});
                         });
-
                         disable.push({from: [0, 0, 0], to: yesterday});
-                        from_picker.set('disable', disable);
-                        to_picker.set('disable', disable);
+                        fromPicker.set('disable', disable);
+                        toPicker.set('disable', disable);
                         setMinMax();
-
                     }
-
                 });
-
             }
 
             getUnavailableDates();
 
             //js for checking for request already placed
             function checkRequestPlaced() {
-
-                if (logged_in) {
-
-                    var contact_owner_form = $('#contact_owner_form');
-                    var contact_button = $('#contact_owner');
-                    contact_owner_form.append('<input name="product_id" type="hidden" value="{{ $product->id }}">');
-                    var formData = contact_owner_form.serialize();
-                    contact_button.addClass('disabled');
-                    contact_button.html('Checking');
-
+                if (loggedIn) {
+                    contactOwnerButton.html('Checking...').addClass('disabled');
                     $.ajax({
                         type: 'POST',
                         url: '{{ route('check_request_placed') }}',
-                        data: formData,
+                        data: contactOwnerForm.serialize(),
                         success: function (returned_data) {
-
                             if (returned_data.placed) {
-
-                                contact_button.html('Request placed');
+                                contactOwnerButton.html('Request placed');
                                 placed = true;
-
                             } else {
-
-                                contact_button.removeClass('disabled');
-                                contact_button.html('Place a request');
+                                contactOwnerButton.html('Place a request').removeClass('disabled');
                                 placed = false;
-
                             }
-
                         }
                     });
-
                 }
-
             }
 
-
+            @if(isset($_GET['from_date']) && isset($_GET['to_date']))
+                fromPicker.set('select', '{{ $_GET['from_date'] }}');
+                toPicker.set('select', '{{ $_GET['to_date'] }}');
+            @endif
         });
-
     </script>
 @endsection
 @section('content')
@@ -585,6 +437,7 @@
                         <hr id="product_hr">
                         <form id="contact_owner_form" method="post" action="{{ route('contact_owner') }}">
                             {{ csrf_field() }}
+                            <input name="product_id" type="hidden" value="{{ $product->id }}">
                             <div id="availability_message" class="col-12 h5 color--error boxed boxed--border"
                                  style="padding: 1em; display: none;">
                                 This product may not be available for the selected range.
@@ -608,7 +461,6 @@
     </div>
 
     @guest
-
         <!-- LOGIN MODAL   -->
         <div class="modal-instance">
             <a id="login_modal_trigger" href="#" class="modal-trigger hidden">Login</a>
@@ -738,43 +590,6 @@
         </div>
     @endguest
 
-    <!-- OTP VERIFICATION MODAL -->
-    <div class="modal-instance">
-        <a id="otp_modal_trigger" class="btn modal-trigger hidden" href="#"></a>
-        <div id="otp_modal" class="modal-container">
-            <div class="modal-content">
-                <section class="unpad ">
-                    <div class="container">
-                        <div class="row" id="send_otp_div">
-                            <div class="col-12 boxed boxed--border border--round box-shadow">
-                                <h2>Verify Your Contact</h2>
-                                <p class="lead">
-                                    We will send a OTP to your mobile ******<span class="otp_contact">@auth{{ substr(Auth::user()->contact, 6, 4) }}@endauth</span>
-                                </p>
-                                <form id="send_otp_form">
-                                    {{ csrf_field() }}
-                                    <button id="send_otp" class="btn btn--primary type--uppercase" style="margin-top: 0;" type="submit">Send</button>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row" id="otp_div" style="display: none;">
-                            <div class="col-md-12 boxed boxed--border border--round box-shadow">
-                                <h2>Verify Your Contact</h2>
-                                <p class="lead">
-                                    Enter OTP sent to ******<span class="otp_contact">@auth{{ substr(Auth::user()->contact, 6, 4) }}@endauth</span>
-                                </p>
-                                <form id="otp_form" class="text-center">
-                                    {{ csrf_field() }}
-                                    <input id="otp" placeholder="OTP" type="number" class="form-control" name="otp" required autofocus>
-                                    <button id="verify_otp" class="btn btn--primary type--uppercase" type="submit">Verify</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </div>
     <!-- CONTACT OWNER MODAL -->
     <a id="scroll_to_end" href="#end" class="hidden"></a>
 @endsection

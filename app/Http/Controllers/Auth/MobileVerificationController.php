@@ -9,28 +9,26 @@ use Illuminate\Support\Facades\Session;
 
 class MobileVerificationController extends Controller
 {
-    //
     public function __construct()
     {
-
         $this->middleware('auth');
         $this->middleware('mobile_guest');
-
     }
 
     public function showOTPForm()
     {
-        return view('auth.otp');
+        return view('auth.verify');
     }
 
     public function sendOTP(Request $request)
     {
         $curl = curl_init();
+        $user = Auth::user();
         if($request->has('contact')) {
-            Auth::user()->contact = $request->input('contact');
-            Auth::user()->save();
+            $user->contact = $request->input('contact');
+            $user->save();
         }
-        $contact = Auth::user()->contact;
+        $contact = $user->contact;
 
         $otp = rand(1000, 9999);
         Session::put('otp', $otp);
@@ -79,10 +77,8 @@ class MobileVerificationController extends Controller
                 CURLOPT_SSL_VERIFYHOST => 0,
                 CURLOPT_SSL_VERIFYPEER => 0,
             ));
-
-            $result = curl_exec($curl);
-            $err = curl_error($curl);
-
+            curl_exec($curl);
+            curl_error($curl);
             curl_close($curl);
         }
         else

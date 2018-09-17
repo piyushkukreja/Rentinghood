@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Middleware\RedirectIfMobileAuthenticated;
 use App\Http\Middleware\VendorAuthenticate;
+use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -58,11 +59,13 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'guest' => Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'mobile_auth' => \App\Http\Middleware\MobileAuth::class,
+        'mobile_auth' => Middleware\MobileAuth::class,
         'mobile_guest' => RedirectIfMobileAuthenticated::class,
         'admin' => AdminAuthenticate::class,
         'vendor' => VendorAuthenticate::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'verified' => EnsureEmailIsVerified::class
     ];
 }

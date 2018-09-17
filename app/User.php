@@ -2,10 +2,11 @@
 
 namespace App;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
     protected $appends = ['full_name'];
@@ -26,6 +27,13 @@ class User extends Authenticatable
 
     public function hasContact() {
         if(strlen((string)$this->contact) == 10)
+            return true;
+        else
+            return false;
+    }
+
+    public function hasContactVerified() {
+        if($this->verified == 1)
             return true;
         else
             return false;

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use function GuzzleHttp\Promise\all;
 use Illuminate\Http\Request;
-use MaddHatter\LaravelFullcalendar\Calendar;
 use App\Event;
+
 class EventController extends Controller
 {
     public function index()

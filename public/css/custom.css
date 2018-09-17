@@ -284,3 +284,42 @@ h1.about-heading, h2.about-heading {
 .nav-container a:hover {
     text-decoration: none;
 }
+
+.panel-buttons {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 40px;
+    left: 40px;
+    background-color: #03A9F4;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 5px #aaa;
+    z-index: 100;
+}
+#vendor-panel-button img {
+    position: relative;
+    top: 3px;
+}
+#admin-panel-button {
+    bottom: 120px;
+}
+#admin-panel-button img {
+    padding: 8px;
+}
+
+@media (max-width: 766px) {
+    .panel-buttons {
+        width: 45px;
+        height: 45px;
+        left: 20px;
+        bottom: 20px;
+    }
+    #admin-panel-button {
+        bottom: 75px;
+    }
+    #vendor-panel-button img {
+        padding: 4px;
+        top: -2px;
+    }
+}

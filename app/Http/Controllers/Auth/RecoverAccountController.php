@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -9,7 +10,6 @@ use Illuminate\Support\Facades\Session;
 
 class RecoverAccountController extends Controller
 {
-    //
     public function __construct()
     {
         $this->middleware('guest');
@@ -25,21 +25,15 @@ class RecoverAccountController extends Controller
         $request->validate([
             'contact' => 'required|digits:10'
         ]);
-
-        $user = DB::table('users')->where('contact', $request->input('contact'))->first();
+        $user = User::where('contact', $request->input('contact'))->first();
         $response = [];
-        if($user)
-        {
+        if($user) {
             $this->sendOTP($user->contact);
             Session::put('reset_contact', $user->contact);
             $response['exists'] = true;
-        }
-        else
-        {
+        } else
             $response['exists'] = false;
-        }
         return $response;
-
     }
 
     public function sendOTP($contact)
@@ -68,42 +62,33 @@ class RecoverAccountController extends Controller
         $submittedOTP = $request->input('otp');
         $storedOTP = $request->session()->get('otp');
         $response = [];
-        if($submittedOTP == $storedOTP)
-        {
+        if($submittedOTP == $storedOTP) {
             $contact = $request->session()->get('reset_contact');
-            $user = DB::table('users')->where('contact', $contact)->first();
+            $user = User::where('contact', $contact)->first();
             $reset_code = rand(10000000, 99999999) . $user->contact;
             DB::table('password_resets')->insert(['email' => $user->email, 'token' => $reset_code]);
             $response['status'] = 'success';
             $response['reset_code'] = $reset_code;
-        }
-        else
-        {
+        } else
             $response['status'] = 'failed';
-        }
         return $response;
     }
 
     public function resetPassword(Request $request)
     {
         $request->validate([
-
             'password' => 'required|string|min:6|confirmed',
-
         ]);
-
         $response = [];
         $reset_code = $request->input('reset_code');
         $password_reset = DB::table('password_resets')->where('token', $reset_code)->first();
-        if($password_reset)
-        {
-            DB::table('users')->where('email', $password_reset->email)->update(['password' => bcrypt($request->input('password'))]);
+        if($password_reset) {
+            $user = User::where('email', $password_reset->email)->first();
+            $user->password = bcrypt($request->input('password'));
+            $user->save();
             $response['status'] = 'success';
-        }
-        else
-        {
+        } else
             $response['status'] = 'failed';
-        }
         return $response;
     }
 }

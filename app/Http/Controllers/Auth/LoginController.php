@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -41,7 +42,7 @@ class LoginController extends Controller
         Session::put('location', $user->address);
         Session::put('lat', $user->lat);
         Session::put('lng', $user->lng);
-        if ($request->ajax()) {
+        if ($request->expectsJson()) {
             return response()->json([
                 'message' => 'success',
                 'contact' => Auth::user()->contact,
@@ -94,6 +95,20 @@ class LoginController extends Controller
         if ($authenticated_user)
             return $authenticated_user;
 
+        $existing_user = User::where('email', $user->email)->first();
+        if($existing_user) {
+            if(!$existing_user->hasVerifiedEmail()) {
+                $existing_user->password = null;
+                $existing_user->contact = null;
+                $existing_user->verified = 0;
+            }
+            $existing_user->provider = $provider;
+            $existing_user->provider_id = $user->id;
+            $existing_user->email_verified_at = new Carbon;
+            $existing_user->save();
+            return $existing_user;
+        }
+
         $new_user = new User;
         $names = explode(' ', $user->name);
         $new_user->first_name = $names[0];
@@ -105,6 +120,7 @@ class LoginController extends Controller
         $new_user->address = '';
         $new_user->lat = 0;
         $new_user->lng = 0;
+        $new_user->email_verified_at = new Carbon;
 
         $new_user->contact = null;
 

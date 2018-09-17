@@ -24,29 +24,17 @@
         <nav id="menu1" class="bar bar--sm bar-1 hidden-xs box-shadow" data-scroll-class='64px:pos-fixed'>
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-3 col-md-4 hidden-xs">
+                    <div class="col-lg-4 col-md-5 hidden-xs">
                         <div class="bar__module" style="margin-bottom: 0;">
                             <a href="{{ route('home') }}" >
                                 <h3 style="font-weight: 900; margin-bottom: 0; color: white; display: inline;">
                                     rentinghood
                                 </h3>
                             </a>
-                            @auth
-                                @if(Auth::user()->isAdmin())
-                                    <a href="{{ route('admin.index') }}" style="margin-left: 5px;">
-                                        <i style="font-size: 1.5em; color: #fff;" class="icon icon-Business-ManWoman"></i>
-                                    </a>
-                                @endif
-                                @if(Auth::user()->isVendor())
-                                    <a href="{{ route('vendor.index') }}" style="margin-left: 5px;">
-                                        <i style="font-size: 1.5em; color: #fff;" class="icon icon-Business-ManWoman"></i>
-                                    </a>
-                                @endif
-                            @endauth
                         </div>
                         <!--end module-->
                     </div>
-                    <div class="col-lg-9 col-md-12 text-right text-left-xs text-left-sm">
+                    <div class="col-lg-8 col-md-12 text-right text-left-xs text-left-sm">
                         <div class="bar__module" style="margin-bottom: 0;">
                             <ul class="menu-horizontal text-left">
                                 <li><a href="{{ route('home') }}">Home</a></li>

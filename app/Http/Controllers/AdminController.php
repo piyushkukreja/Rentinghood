@@ -14,12 +14,6 @@ use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
-
-    public function __construct()
-    {
-
-    }
-
     public function getAllUsers() {
         $response = [];
         $response['data'] = User::all();
@@ -100,16 +94,16 @@ class AdminController extends Controller
         return view('admin.products_all', ['data' => $data]);
     }
 
-    public function productsGetAll() {
-        $response = [];
-        $response['data'] = Product::all();
-        return $response;
-    }
-
     public function productsNew() {
         $data = [];
         $data['section'] = 'products-new';
         return view('admin.products_new', ['data' => $data]);
+    }
+
+    public function productsGetAll() {
+        $response = [];
+        $response['data'] = Product::all();
+        return $response;
     }
 
     public function productsGetNew() {

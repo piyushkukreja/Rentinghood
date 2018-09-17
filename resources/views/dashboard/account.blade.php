@@ -1,7 +1,8 @@
 @extends('layouts.public')
 @extends('layouts.public_parts.navbar_blue')
-@section('content')
-    <style>
+@section('head')
+    @parent
+    <style type="text/css">
         #alert .fa-close {
             position: absolute;
             right: 0;
@@ -70,7 +71,801 @@
             min-height: 100vh;
         }
     </style>
+@endsection
+@section('scripts')
+    @parent
+    <!--Drop-zone Plugin-->
+    <script src="{{ asset('js/dropzone.js') }}"></script>
+    <!-- Sweet Alert 2 Plugin-->
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
+    <script type="text/javascript">
 
+        $(document).ready(function () {
+
+            var token = '{{ csrf_token() }}';
+
+            //js functions
+            function ucfirst(string) {
+                if(string.length > 0)
+                    return string.charAt(0).toUpperCase() + string.slice(1);
+                else
+                    return string;
+            }
+
+            function ucwords (str) {
+
+                return (str + '')
+                    .replace(/^(.)|\s+(.)/g, function ($1) {
+                        return $1.toUpperCase()
+                    })
+            }
+
+            //js for URLS and TAB TRANSITION
+            function changeTab(tab) {
+
+                $('.account-tab').not('[style="display: none;"]').fadeOut( function () {
+                    $('#account-' + tab + '.account-tab').fadeIn();
+                });
+
+            }
+
+            $('.tab-link').on('click', function (e) {
+
+                e.preventDefault();
+                var tab = $(this).attr('id');
+                tab = tab.substring(0, tab.length - 5);
+                changeTab(tab);
+                history.pushState({tab: tab}, 'here', '{{ URL::to('account') }}/' + tab);
+
+            });
+
+            window.onpopstate = function (ev) {
+
+                if(ev.state) {
+                    changeTab(ev.state.tab);
+                }
+
+            };
+
+            @if( $fixhome )
+            history.replaceState({ tab: 'profile'}, 'test', '{{ URL::to('account') }}/profile');
+            @endif
+
+            //js for MESSAGE COUNT
+            function updateCount(count) {
+
+                $('#message_count').html(count);
+                if(parseInt(count) == 0)
+                    $('#message_count').hide();
+                else
+                    $('#message_count').show();
+
+            }
+
+            //js for MESSAGES
+            @if( $tab == 'messages' )
+            getMessages(false);
+                    @endif
+
+            var requestMessageTemplate = $('#request_message_template');
+            requestMessageTemplate.remove();
+            requestMessageTemplate = requestMessageTemplate.html();
+            var replyMessageTemplate = $('#reply_message_template');
+            replyMessageTemplate.remove();
+            replyMessageTemplate = replyMessageTemplate.html();
+
+            var date_options = {
+                weekday: "long", year: "numeric", month: "short",
+                day: "numeric"
+            };
+
+            function replySeen(tid) {
+
+                var message_count = $('#message_count').html();
+                updateCount(message_count - 1);
+                new_reply_count --;
+                if(new_reply_count == 0)
+                    $('#reply_dot').hide();
+                $.ajax({
+
+                    url: '{{ route('seen_message') }}',
+                    type: 'POST',
+                    data: { _token: token, tid: tid}
+
+                });
+
+            }
+
+            function getContact(tid, message) {
+
+                message.find('.contact_div').addClass('loading');
+                $.ajax({
+
+                    url: '{{ route('get_contact') }}',
+                    type: 'POST',
+                    data: { _token: token, tid: tid},
+                    success: function (response) {
+
+                        if(response.message === 'success') {
+                            message.find('.contact').html(response.contact);
+                            message.find('.contact_div').removeClass('loading');
+                            if(response.hasOwnProperty('first_name')) {
+
+                                message.find('.first_name').html(response.first_name);
+                                message.find('.last_name').html(response.last_name);
+
+                            }
+                        }
+                    }
+                });
+
+            }
+
+            var new_reply_count = 0;
+            var new_request_count = 0;
+            function getMessages() {
+
+                var messages_div = $('#account-messages');
+                messages_div.html('');
+                swal({ title: 'Getting your messages..'});
+                swal.showLoading();
+
+                $.ajax({
+
+                    url: '{{ route('get_messages') }}',
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (response) {
+
+                        var new_message_count = response.new_requests.length + response.new_replies.length;
+                        var total_count = response.old_requests.length + response.new_requests.length + response.old_replies.length + response.new_replies.length;
+                        new_request_count = response.new_requests.length;
+                        new_reply_count = response.new_replies.length;
+                        if (total_count === 0) {
+                            messages_div.html('<div class="row align-items-center" style="height: 400px;">' +
+                                '<div class="col-12 text-center h5">You don\'t have any messages :(</div>' +
+                                '</div>' +
+                                '</div>');
+                        }
+                        else {
+                            messages_div.append('<div class="row"><div class="tab-container col-md-12">' +
+                                '<ul class="tabs"></ul>' +
+                                '<ul class="tabs-content"></ul>' +
+                                '</div></div>');
+                            messages_div.find('ul.tabs').append('<li id="requests_title" class="active">' +
+                                '<div class="tab__title"><span class="h5">Requests <i id="request_dot" style="color: #03A9F4;" class="fa fa-circle"></i></span></div>' +
+                                '</li>');
+                            messages_div.find('ul.tabs-content').append('<li id="requests_content" class="active">' +
+                                '<div class="tab__content"></div>' +
+                                '</li>');
+                            messages_div.find('ul.tabs').append('<li id="replies_title">' +
+                                '<div class="tab__title"><span class="h5">Replies <i id="reply_dot" style="color: #03A9F4;" class="fa fa-circle"></i></span></div>' +
+                                '</li>');
+                            messages_div.find('ul.tabs-content').append('<li id="replies_content">' +
+                                '<div class="tab__content"></div>' +
+                                '</li>');
+                            $('ul.tabs').find('li').on('click', function (target) {
+
+                                $('ul.tabs').children('li.active').removeClass('active');
+                                $('ul.tabs-content').children('li.active').removeClass('active');
+                                $(this).addClass('active');
+                                var tab = $(this).attr('id').replace(/_title/, '');
+                                $('ul.tabs-content').children('#' + tab + '_content').addClass('active');
+
+                            });
+                            var requests_container = messages_div.find('#requests_content').find('.tab__content');
+                            var replies_container = messages_div.find('#replies_content').find('.tab__content');
+                            if(response.new_requests.length + response.old_requests.length === 0) {
+
+                                requests_container.html('<div class="row align-items-center" style="height: 400px;">' +
+                                    '<div class="col-12 text-center h5">You don\'t have any requests :(</div>' +
+                                    '</div>' +
+                                    '</div>');
+
+                            }
+                            if(response.new_replies.length + response.old_replies.length === 0) {
+
+                                replies_container.html('<div class="row align-items-center" style="height: 400px;">' +
+                                    '<div class="col-12 text-center h5">You don\'t have any replies :(</div>' +
+                                    '</div>' +
+                                    '</div>');
+
+                            }
+                            if(response.new_replies.length == 0)
+                                $('#reply_dot').hide();
+                            if(response.new_requests.length == 0)
+                                $('#request_dot').hide();
+                            $.each(response.new_requests, function (i, d) {
+
+                                var message = $(requestMessageTemplate);
+                                message.find('.product_name').html(d.name);
+                                message.find('.first_name').html(d.first_name);
+                                message.find('.last_name').html(d.last_name);
+                                message.find('.accepted_request').hide();
+                                message.find('.rejected_request').hide();
+                                message.find('.from_date').html(new Date(d.from_date).toLocaleDateString("en-us", date_options));
+                                message.find('.to_date').html(new Date(d.to_date).toLocaleDateString("en-us", date_options));
+                                message.find('.accept').on('click', function (e) {
+
+                                    e.preventDefault();
+                                    answerRequest(d.tid, 1, message);
+
+                                });
+                                message.find('.reject').on('click', function (e) {
+
+                                    e.preventDefault();
+                                    answerRequest(d.tid, 0, message);
+
+                                });
+                                requests_container.append(message);
+
+                            });
+                            $.each(response.old_requests, function (i, d) {
+
+                                var message = $(requestMessageTemplate);
+                                message.find('.response_buttons_div').remove();
+                                message.find('.new_request').remove();
+                                message.find('.product_name').html(d.name);
+                                message.find('.first_name').html(d.first_name);
+                                message.find('.last_name').html(d.last_name);
+                                message.find('.from_date').html(new Date(d.from_date).toLocaleDateString("en-us", date_options));
+                                message.find('.to_date').html(new Date(d.to_date).toLocaleDateString("en-us", date_options));
+                                switch (parseInt(d.status)) {
+                                    case 2:
+                                        message.find('h4.product_name').after('<i class="fa fa-times-circle"></i>');
+                                        message.find('.accepted_request').remove();
+                                        break;
+                                    case 4:
+                                        message.find('h4.product_name').after('<i class="fa fa-times-circle"></i>');
+                                        message.find('.rejected_request').remove();
+                                        getContact(d.tid, message);
+                                        message.find('.contact_div').show();
+                                        break;
+                                    case 3:
+                                    case 5:
+                                        message.find('h4.product_name').after('<i class="fa fa-check-circle"></i>');
+                                        message.find('.rejected_request').remove();
+                                        getContact(d.tid, message);
+                                        message.find('.contact_div').show();
+                                        break;
+                                }
+                                requests_container.append(message);
+
+                            });
+                            $.each(response.new_replies, function (i, d) {
+
+                                var message = $(replyMessageTemplate);
+                                message.find('.request_pending').remove();
+                                message.find('.product_name').html(d.name);
+                                message.find('.from_date').html(new Date(d.from_date).toLocaleDateString("en-us", date_options));
+                                message.find('.to_date').html(new Date(d.to_date).toLocaleDateString("en-us", date_options));
+                                if(d.status == 2) {
+
+                                    message.find('.contact_div').remove();
+                                    message.find('.request_accepted').remove();
+                                    message.find('.response_buttons_div').find('.show_contact').remove();
+                                    message.find('.response_buttons_div').find('.okay').on('click', function(e) {
+
+                                        e.preventDefault();
+                                        replySeen(d.tid);
+                                        message.find('.response_buttons_div').slideUp(function () {
+                                            $(this).remove();
+                                        });
+
+                                    });
+
+                                } else {
+
+                                    message.find('.request_rejected').remove();
+                                    message.find('.response_buttons_div').find('.okay').remove();
+                                    message.find('.response_buttons_div').find('.show_contact').on('click', function (e) {
+
+                                        e.preventDefault();
+                                        replySeen(d.tid);
+                                        message.find('.response_buttons_div').slideUp(function () {
+
+                                            getContact(d.tid, message);
+                                            $(this).remove();
+
+                                        });
+                                        message.find('.contact_div').slideDown();
+
+                                    });
+
+                                }
+                                replies_container.append(message);
+
+                            });
+                            $.each(response.old_replies, function (i, d) {
+
+                                var message = $(replyMessageTemplate);
+                                message.find('.response_buttons_div').remove();
+                                message.find('.request_rejected').remove();
+                                switch(parseInt(d.status)) {
+
+                                    case 1:
+                                        message.find('.request_accepted').remove();
+                                        message.find('.contact_div').remove();
+                                        break;
+                                    case 3:
+                                        message.find('.request_pending').remove();
+                                        getContact(d.tid, message);
+                                        message.find('.contact_div').show();
+                                        break;
+                                    case 4:
+                                        message.find('.request_pending').remove();
+                                        getContact(d.tid, message);
+                                        message.find('.contact_div').show();
+                                        break;
+                                    case 5:
+                                        message.find('.request_pending').remove();
+                                        getContact(d.tid, message);
+                                        message.find('.contact_div').show();
+                                        break;
+
+                                }
+                                message.find('.product_name').html(d.name);
+                                message.find('.from_date').html(new Date(d.from_date).toLocaleDateString("en-us", date_options));
+                                message.find('.to_date').html(new Date(d.to_date).toLocaleDateString("en-us", date_options));
+                                replies_container.append(message);
+
+                            });
+                        }
+
+                        updateCount(new_message_count);
+                        swal.close();
+                    }
+                });
+            }
+
+            $('#messages_link').on('click', function () {
+                getMessages();
+            });
+
+            function getMessageCount() {
+                $.ajax({
+                    url: '{{ route('get_message_count') }}',
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (response) {
+                        var count = parseInt(response.requests_count) + parseInt(response.replies_count);
+                        if (count != 0) {
+                            swal({
+                                title: 'You have new messages',
+                                imageUrl: '{{ asset('img/message.gif') }}',
+                                imageWidth: 300,
+                                imageHeight: 225,
+                                text: 'Visit the messages tab to view requests for your products and to answer them',
+                                confirmButtonText: 'View Messages'
+                            }).then((result) => {
+                                if(result.value) {
+                                $('.all-page-modals').find('.modal-container').fadeOut(200, 'swing', function () {
+
+                                    $('.all-page-modals').find('.modal-container').removeClass('modal-active').show();
+                                    $('#messages_link').trigger('click');
+
+                                });
+                            }
+                        });
+                            updateCount(count);
+                        }
+                    }
+                });
+            }
+
+            @if($tab != 'messages')
+            getMessageCount();
+            @endif
+
+            function answerRequest(tid, reply, message) {
+
+                var csrf_token = '{{ csrf_token() }}';
+                $.ajax({
+
+                    type: 'POST',
+                    url: '{{ route('answer_request') }}',
+                    data: {_token: csrf_token, tid: tid, reply: reply},
+                    success: function (response) {
+
+                        if(reply === 1) {
+
+                            message.find('h4.product_name').after('<i class="fa fa-check-circle"></i>');
+                            message.find('.accepted_request').slideDown();
+                            message.find('.new_request').slideUp(function () {
+
+                                message.find('.new_request').remove();
+                                message.find('.rejected_request').remove();
+
+                            });
+                            getContact(tid, message);
+                            message.find('.response_buttons_div').slideUp(function () {
+
+                                message.find('.response_buttons_div').remove();
+                                message.find('.contact_div').slideDown();
+
+                            });
+
+                        } else {
+
+                            message.find('h4.product_name').after('<i class="fa fa-times-circle"></i>');
+                            message.find('.new_request').slideUp(function () {
+
+                                message.find('.new_request').remove();
+                                message.find('.accepted_request').remove();
+
+                            });
+                            message.find('.rejected_request').slideDown();
+                            message.find('.response_buttons_div').remove();
+                            message.find('.response_buttons_div').slideUp(function () {
+
+                                message.find('.response_buttons_div').remove();
+
+                            });
+
+                        }
+                        var message_count = $('#message_count').html();
+                        updateCount(parseInt(message_count) - 1);
+                        new_request_count --;
+                        if(new_request_count == 0)
+                            $('#request_dot').hide();
+                    }
+
+                });
+
+            }
+
+            //js for  NOTIFICATIONS
+            var notificationTemplate = $('#notifications_template');
+            notificationTemplate.remove();
+            notificationTemplate = notificationTemplate.html();
+
+            function setCloseNotification(notification) {
+
+                notification.fadeOut(function () {
+
+                    notification.attr('style', '');
+                    notification.addClass('notification--dismissed');
+                    getNotifications();
+
+                })
+
+            }
+
+            function replyForNotification(id, reply) {
+
+                var csrf_token = '{{ csrf_token() }}';
+                $.ajax({
+
+                    type: 'POST',
+                    url: '{{ route('reply_notification') }}',
+                    data: {_token: csrf_token, id: id, reply: reply}
+
+                });
+
+            }
+
+            function getNotifications() {
+
+                $.ajax({
+
+                    type: 'GET',
+                    url: '{{ route('get_notification') }}',
+                    dataType: 'JSON',
+                    success: function (returned_data) {
+
+                        if(!(returned_data == null)) {
+                            $('.notification.notification--reveal').remove();
+                            var notification = $(notificationTemplate);
+                            notification.find('#product_name').html(returned_data.name);
+                            notification.find('#product_image').attr('src', '{{ asset('img/uploads/products/small') }}/' + returned_data.image);
+                            notification.find('#renter_name').html(ucfirst(returned_data.first_name) + ' ' + ucfirst(returned_data.last_name));
+                            $('body').append(notification);
+                            $('#notification_trigger').trigger('click');
+
+                            notification.find('#yes_close_notification').on('click', function () {
+
+                                setCloseNotification(notification);
+                                replyForNotification(returned_data.tid, 1);
+
+                            });
+
+                            notification.find('#no_close_notification').on('click', function () {
+
+                                setCloseNotification(notification);
+                                replyForNotification(returned_data.tid, 0);
+
+                            });
+                        }
+                    }
+                });
+
+            }
+
+            getNotifications();
+
+            //js for INVENTORY
+            function updateAvailability(id, availability) {
+
+                var csrf = '{{ csrf_token() }}';
+                $.ajax({
+
+                    type: 'POST',
+                    url: '{{ route('update_availability') }}',
+                    dataType: 'JSON',
+                    data: {_token: csrf, product_id: id, availability: availability},
+                    success: function () {
+                        console.log('success');
+                    }
+                });
+
+            }
+
+            function loadInventory() {
+
+                var inventory_div = $('#account-inventory');
+                var inventory_form = inventory_div.find('#inventory_form').html();
+                inventory_div.html('');
+                inventory_div.append('<div id="inventory_form" style="display: none;">' + inventory_form + '</div>');
+                swal({title: 'Preparing your inventory..'});
+                swal.showLoading();
+                $.ajax({
+
+                    type: 'GET',
+                    url: '{{ route('get_inventory') }}',
+                    dataType: 'JSON',
+                    success: function (returned_data) {
+
+                        if (returned_data.length == 0) {
+                            inventory_div.html('<div class="row align-items-center" style="height: 400px;">' +
+                                '<div class="col-12 text-center h5">You havent uploaded any products :(</div>' +
+                                '</div>' +
+                                '</div>');
+                        }
+                        else {
+                            inventory_div.append('<div id="inventory_row" class="row">' +
+                                '<div class="col-md-12">' +
+                                '<div class="masonry">' +
+                                '<div class="masonry__container masonry--active row"></div>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>');
+                            var masonry_container = inventory_div.find('.masonry__container');
+                            var loading_url = '{{ asset('img/loading.svg') }}';
+                            $.each(returned_data, function (i, d) {
+
+                                var image = '{{ asset('img/uploads/products/small') }}/' + d.image;
+                                var product_link = '{{ URL::to('account/inventory') }}' + '/' + d.id;
+                                var product = $('<div class="masonry__item col-6 col-lg-4">' +
+                                    '   <div class="product">' +
+                                    '       <span class="product_id_info hidden">' + d.name + '</span>' +
+                                    '       <a class="inventory_product_link" href="' + product_link + '">' +
+                                    '           <img class="img-fluid" style="border-radius: 5px;" alt="Image" id="" data-src="' + image + '" src="' + loading_url + '"/>' +
+                                    '       </a>' +
+                                    '       <a class="block inventory_product_link" href="' + product_link + '">' +
+                                    '           <div class="text-center"><h5>' + d.name + '</h5></div>' +
+                                    '       </a>' +
+                                    '       <form>' +
+                                    '       <div class="col-md-12">' +
+                                    '           <div class="input-checkbox input-checkbox--switch">' +
+                                    '               <input type="checkbox" ' + ((d.availability == '1')? 'checked ':'') + 'name="public-profile" id="checkbox-' + i + '">' +
+                                    '               <label for="checkbox-' + i + '"></label>' +
+                                    '           </div>' +
+                                    '           <span>Availability</span>' +
+                                    '       </div>' +
+                                    '       </form>' +
+                                    '   </div>' +
+                                    '</div>');
+                                masonry_container.append(product);
+                                product.find('input[type="checkbox"]').on('change', function () {
+
+                                    if(product.find('input[type="checkbox"]').is(":checked"))
+                                        updateAvailability(d.id, 1);
+                                    else
+                                        updateAvailability(d.id, 0);
+
+                                });
+                                product.find('a.inventory_product_link').on('click', function (e) {
+
+                                    swal({title: 'Getting post details'});
+                                    swal.showLoading();
+                                    var inventory_form = $('#inventory_form');
+                                    e.preventDefault();
+                                    $.ajax({
+                                        url: $(this).attr('href'),
+                                        type: 'GET',
+                                        dataType: 'JSON',
+                                        success: function (response) {
+                                            swal.close();
+                                            if(response.message == 'success') {
+                                                inventory_form.find('input[name="category_id"]').val(ucwords(response.category_name));
+                                                inventory_form.find('input[name="subcategory_id"]').val(ucwords(response.subcategory_name));
+                                                inventory_form.find('input[name="name"]').val(response.name);
+                                                inventory_form.find('textarea[name="description"]').html(response.description);
+                                                inventory_form.find('select[name="duration"]').find('option[value="' + response.duration + '"]').attr('selected', true);
+                                                inventory_form.find('input[name="rate1"]').val(response.rate_1);
+                                                inventory_form.find('input[name="rate2"]').val(response.rate_2);
+                                                inventory_form.find('input[name="rate3"]').val(response.rate_3);
+                                                inventory_form.find('form').append('<input type="hidden" name="id" value="' + response.id + '">');
+                                                changeRequiredStates(inventory_form);
+                                                $('#inventory_row').slideUp(function () {
+                                                    inventory_form.slideDown();
+                                                });
+                                                inventory_form.find('input[name="address"]').geocomplete({
+                                                    location: response.address,
+                                                    details: $('#inventory_product_latlng'),
+                                                    bounds: defaultBounds
+                                                });
+                                            }
+                                        }
+                                    });
+                                });
+                            });
+                        }
+                        $('.product').find('img').each(function () {
+                            $(this).attr('src', $(this).attr('data-src'));
+                        });
+                        swal.close();
+                    }
+                });
+            }
+
+            $('#inventory_link').on('click', function () {
+                loadInventory();
+            });
+
+            @if( $tab == 'inventory' )
+            loadInventory();
+            @endif
+
+            //js for DURATION AND RATES
+            function changeRequiredStates(form_container) {
+                var rate1 = form_container.find('input[name="rate1"]');
+                var rate2 = form_container.find('input[name="rate2"]');
+                var rate3 = form_container.find('input[name="rate3"]');
+                switch (form_container.find('select[name="duration"]').val()) {
+                    case '0' :
+                        rate1.prop('required', true).parent().slideDown();
+                        rate2.prop('required', false).parent().slideUp();
+                        rate3.prop('required', false).parent().slideUp();
+                        break;
+                    case '1' :
+                        rate1.prop('required', true).parent().slideDown();
+                        rate2.prop('required', true).parent().slideDown();
+                        rate3.prop('required', false).parent().slideUp();
+                        break;
+                    case '2' :
+                        rate1.prop('required', true).parent().slideDown();
+                        rate2.prop('required', true).parent().slideDown();
+                        rate3.prop('required', true).parent().slideDown();
+                        break;
+                }
+            }
+
+            changeRequiredStates($('#lend-form'));
+            $('#lend-form').find('select[name="duration"]').on('change', function () {
+                changeRequiredStates($('#lend-form'));
+            });
+            $('#update-form').find('select[name="duration"]').on('change', function () {
+                changeRequiredStates($('#update-form'));
+            });
+
+            //js for ADDRESS/LOCATION
+            var defaultBounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(19.296441, 72.9864994),
+                new google.maps.LatLng(18.8465126, 72.9042434)
+            );
+
+            $("#user_address").geocomplete({
+                location: '{{ Auth::user()->address }}',
+                details: "#user_latlng",
+                bounds: defaultBounds
+            }).bind("geocode:result", function (event, result) {
+                console.log(result);
+            });
+
+            $("#product_address").geocomplete({
+                location: '{{ Auth::user()->address }}',
+                details: "#product_latlng",
+                bounds: defaultBounds
+            }).bind("geocode:result", function (event, result) {
+                console.log('Product :' + result);
+            });
+
+            //js for ALERTS
+            $('#alert').parent().slideDown();
+            $('.fa-close').on('click', function (e) {
+                $(this).parent().parent().slideUp();
+            });
+
+            //js for SUBCATEGORIES
+            var category_selector = $('#lend-form').find($('#category_id'));
+
+            function changeSubcategories() {
+
+                var subcategory_selector = $('#lend-form').find($('#subcategory_id'));
+                subcategory_selector.empty();
+                var category_id = category_selector.val();
+                var csrf_token = '{{ csrf_token() }}';
+
+                subcategory_selector.empty();
+                subcategory_selector.append('<option value="" selected disabled>Select a subcategory</option>');
+
+                if (category_id != '') {
+                    $.ajax(
+                        {
+                            type: 'POST',
+                            url: '{{ route('get_subcategories') }}',
+                            data: {_token: csrf_token, category_id: category_id},
+                            dataType: 'JSON',
+                            success: function (returned_data) {
+
+                                $.each(returned_data, function (i, d) {
+                                    subcategory_selector.append('<option value="' + d.id + '">' + ucwords(d.name) + '</option>');
+                                });
+
+                            }
+                        }
+                    );
+                }
+            }
+
+            changeSubcategories();
+            category_selector.on('change', function () {
+                changeSubcategories();
+            })
+
+        });
+
+        //js for DROPZONE
+        var previewNode = document.querySelector("#dropzone_template");
+        previewNode.id = "";
+        var previewTemplate = previewNode.parentNode.innerHTML;
+        previewNode.parentNode.removeChild(previewNode);
+
+        Dropzone.options.lendForm = {
+
+            autoProcessQueue: false,
+            uploadMultiple: true,
+            parallelUploads: 8,
+            previewTemplate: previewTemplate,
+            previewsContainer: '#previews',
+            maxFiles: 8,
+            acceptedFiles: 'image/*',
+
+            init: function () {
+                var myDropzone = this;
+                var files = 0;
+
+                $('#lend-form').submit(function (e) {
+                    // Make sure that the form isn't actually being sent.
+                    e.preventDefault();
+                    e.stopPropagation();
+                    myDropzone.processQueue();
+                    if (files == 0) {
+                        $('#pictures_error').remove();
+                        $('#pictures_div').append('<span id="pictures_error" style="display: none;" class="color--error"><strong>Upload atleast one picture.</strong></span>');
+                        $('#pictures_error').fadeIn();
+                    }
+                });
+                this.on("addedfile", function (file) {
+                    files++;
+                });
+                this.on("removedfile", function (file) {
+                    files--;
+                });
+                this.on("successmultiple", function (files, response) {
+                    window.location = '{{ route('account', ['inventory']) }}';
+                });
+                this.on("errormultiple", function (files, response) {
+                    location.reload();
+                });
+            }
+        };
+
+
+    </script>
+@endsection
+@section('content')
     <div id="request_message_template" style="display: none;">
         <div class="message boxed boxed--border  bg--secondary boxed--lg box-shadow">
             <div>
@@ -137,6 +932,7 @@
             <div class="contact_div card text-center" style="display: none;">Contact : <span class="h4" style="margin-bottom: 0.5em"><span class="first_name"></span> <span class="last_name"></span>, <span class="contact"></span></span></div>
         </div>
     </div>
+
     <div id="notifications_template" style="display: none;">
         <div class="notification pos-right pos-top col-11 col-sm-6 col-lg-4 notification--reveal"
              data-animation="from-top" data-notification-link="openNotification">
@@ -166,6 +962,7 @@
         </div>
     </div>
     <div id="notification_trigger" data-notification-link="openNotification" style="display: none;"></div>
+
     <div class="main-container">
         <section class="bg--secondary space--sm">
             <div class="container">
@@ -513,9 +1310,7 @@
                                                        class="btn btn--primary type--uppercase" name="submit_post"
                                                        value="Post">
                                             </div>
-
                                         </div>
-
                                     </form>
                                 </div>
                             </div>
@@ -526,798 +1321,4 @@
             </div>
         </section>
     </div>
-
-    {{--Dropzone Plugin--}}
-    <script src="{{ asset('js/dropzone.js') }}"></script>
-
-    {{-- Sweet Alert 2 Plugin--}}
-    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
-
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            var token = '{{ csrf_token() }}';
-
-            //js functions
-            function ucfirst(string) {
-                if(string.length > 0)
-                    return string.charAt(0).toUpperCase() + string.slice(1);
-                else
-                    return string;
-            }
-
-            function ucwords (str) {
-
-                return (str + '')
-                    .replace(/^(.)|\s+(.)/g, function ($1) {
-                        return $1.toUpperCase()
-                    })
-            }
-
-            //js for URLS and TAB TRANSITION
-            function changeTab(tab) {
-
-                $('.account-tab').not('[style="display: none;"]').fadeOut( function () {
-                    $('#account-' + tab + '.account-tab').fadeIn();
-                });
-
-            }
-
-            $('.tab-link').on('click', function (e) {
-
-                e.preventDefault();
-                var tab = $(this).attr('id');
-                tab = tab.substring(0, tab.length - 5);
-                changeTab(tab);
-                history.pushState({tab: tab}, 'here', '{{ URL::to('account') }}/' + tab);
-
-            });
-
-            window.onpopstate = function (ev) {
-
-                if(ev.state) {
-                    changeTab(ev.state.tab);
-                }
-
-            };
-
-            @if( $fixhome )
-                history.replaceState({ tab: 'profile'}, 'test', '{{ URL::to('account') }}/profile');
-            @endif
-
-            //js for MESSAGE COUNT
-            function updateCount(count) {
-
-                $('#message_count').html(count);
-                if(parseInt(count) == 0)
-                    $('#message_count').hide();
-                else
-                    $('#message_count').show();
-
-            }
-
-            //js for MESSAGES
-            @if( $tab == 'messages' )
-                getMessages(false);
-            @endif
-
-            var requestMessageTemplate = $('#request_message_template');
-            requestMessageTemplate.remove();
-            requestMessageTemplate = requestMessageTemplate.html();
-            var replyMessageTemplate = $('#reply_message_template');
-            replyMessageTemplate.remove();
-            replyMessageTemplate = replyMessageTemplate.html();
-
-            var date_options = {
-                weekday: "long", year: "numeric", month: "short",
-                day: "numeric"
-            };
-
-            function replySeen(tid) {
-
-                var message_count = $('#message_count').html();
-                updateCount(message_count - 1);
-                new_reply_count --;
-                if(new_reply_count == 0)
-                    $('#reply_dot').hide();
-                $.ajax({
-
-                    url: '{{ route('seen_message') }}',
-                    type: 'POST',
-                    data: { _token: token, tid: tid}
-
-                });
-
-            }
-
-            function getContact(tid, message) {
-
-                message.find('.contact_div').addClass('loading');
-                $.ajax({
-
-                    url: '{{ route('get_contact') }}',
-                    type: 'POST',
-                    data: { _token: token, tid: tid},
-                    success: function (response) {
-
-                        if(response.message === 'success') {
-                            message.find('.contact').html(response.contact);
-                            message.find('.contact_div').removeClass('loading');
-                            if(response.hasOwnProperty('first_name')) {
-
-                                message.find('.first_name').html(response.first_name);
-                                message.find('.last_name').html(response.last_name);
-
-                            }
-                        }
-                    }
-                });
-
-            }
-
-            var new_reply_count = 0;
-            var new_request_count = 0;
-            function getMessages() {
-
-                var messages_div = $('#account-messages');
-                messages_div.html('');
-                swal({ title: 'Getting your messages..'});
-                swal.showLoading();
-
-                $.ajax({
-
-                    url: '{{ route('get_messages') }}',
-                    type: 'GET',
-                    dataType: 'JSON',
-                    success: function (response) {
-
-                        var new_message_count = response.new_requests.length + response.new_replies.length;
-                        var total_count = response.old_requests.length + response.new_requests.length + response.old_replies.length + response.new_replies.length;
-                        new_request_count = response.new_requests.length;
-                        new_reply_count = response.new_replies.length;
-                        if (total_count === 0) {
-                            messages_div.html('<div class="row align-items-center" style="height: 400px;">' +
-                                '<div class="col-12 text-center h5">You don\'t have any messages :(</div>' +
-                                '</div>' +
-                                '</div>');
-                        }
-                        else {
-                            messages_div.append('<div class="row"><div class="tab-container col-md-12">' +
-                                '<ul class="tabs"></ul>' +
-                                '<ul class="tabs-content"></ul>' +
-                                '</div></div>');
-                            messages_div.find('ul.tabs').append('<li id="requests_title" class="active">' +
-                                '<div class="tab__title"><span class="h5">Requests <i id="request_dot" style="color: #03A9F4;" class="fa fa-circle"></i></span></div>' +
-                                '</li>');
-                            messages_div.find('ul.tabs-content').append('<li id="requests_content" class="active">' +
-                                '<div class="tab__content"></div>' +
-                                '</li>');
-                            messages_div.find('ul.tabs').append('<li id="replies_title">' +
-                                '<div class="tab__title"><span class="h5">Replies <i id="reply_dot" style="color: #03A9F4;" class="fa fa-circle"></i></span></div>' +
-                                '</li>');
-                            messages_div.find('ul.tabs-content').append('<li id="replies_content">' +
-                                '<div class="tab__content"></div>' +
-                                '</li>');
-                            $('ul.tabs').find('li').on('click', function (target) {
-
-                                $('ul.tabs').children('li.active').removeClass('active');
-                                $('ul.tabs-content').children('li.active').removeClass('active');
-                                $(this).addClass('active');
-                                var tab = $(this).attr('id').replace(/_title/, '');
-                                $('ul.tabs-content').children('#' + tab + '_content').addClass('active');
-
-                            });
-                            var requests_container = messages_div.find('#requests_content').find('.tab__content');
-                            var replies_container = messages_div.find('#replies_content').find('.tab__content');
-                            if(response.new_requests.length + response.old_requests.length === 0) {
-
-                                requests_container.html('<div class="row align-items-center" style="height: 400px;">' +
-                                    '<div class="col-12 text-center h5">You don\'t have any requests :(</div>' +
-                                    '</div>' +
-                                    '</div>');
-
-                            }
-                            if(response.new_replies.length + response.old_replies.length === 0) {
-
-                                replies_container.html('<div class="row align-items-center" style="height: 400px;">' +
-                                    '<div class="col-12 text-center h5">You don\'t have any replies :(</div>' +
-                                    '</div>' +
-                                    '</div>');
-
-                            }
-                            if(response.new_replies.length == 0)
-                                $('#reply_dot').hide();
-                            if(response.new_requests.length == 0)
-                                $('#request_dot').hide();
-                            $.each(response.new_requests, function (i, d) {
-
-                                var message = $(requestMessageTemplate);
-                                message.find('.product_name').html(d.name);
-                                message.find('.first_name').html(d.first_name);
-                                message.find('.last_name').html(d.last_name);
-                                message.find('.accepted_request').hide();
-                                message.find('.rejected_request').hide();
-                                message.find('.from_date').html(new Date(d.from_date).toLocaleDateString("en-us", date_options));
-                                message.find('.to_date').html(new Date(d.to_date).toLocaleDateString("en-us", date_options));
-                                message.find('.accept').on('click', function (e) {
-
-                                    e.preventDefault();
-                                    answerRequest(d.tid, 1, message);
-
-                                });
-                                message.find('.reject').on('click', function (e) {
-
-                                    e.preventDefault();
-                                    answerRequest(d.tid, 0, message);
-
-                                });
-                                requests_container.append(message);
-
-                            });
-                            $.each(response.old_requests, function (i, d) {
-
-                                var message = $(requestMessageTemplate);
-                                message.find('.response_buttons_div').remove();
-                                message.find('.new_request').remove();
-                                message.find('.product_name').html(d.name);
-                                message.find('.first_name').html(d.first_name);
-                                message.find('.last_name').html(d.last_name);
-                                message.find('.from_date').html(new Date(d.from_date).toLocaleDateString("en-us", date_options));
-                                message.find('.to_date').html(new Date(d.to_date).toLocaleDateString("en-us", date_options));
-                                switch (parseInt(d.status)) {
-                                    case 2:
-                                        message.find('h4.product_name').after('<i class="fa fa-times-circle"></i>');
-                                        message.find('.accepted_request').remove();
-                                        break;
-                                    case 4:
-                                        message.find('h4.product_name').after('<i class="fa fa-times-circle"></i>');
-                                        message.find('.rejected_request').remove();
-                                        getContact(d.tid, message);
-                                        message.find('.contact_div').show();
-                                        break;
-                                    case 3:
-                                    case 5:
-                                        message.find('h4.product_name').after('<i class="fa fa-check-circle"></i>');
-                                        message.find('.rejected_request').remove();
-                                        getContact(d.tid, message);
-                                        message.find('.contact_div').show();
-                                        break;
-                                }
-                                requests_container.append(message);
-
-                            });
-                            $.each(response.new_replies, function (i, d) {
-
-                                var message = $(replyMessageTemplate);
-                                message.find('.request_pending').remove();
-                                message.find('.product_name').html(d.name);
-                                message.find('.from_date').html(new Date(d.from_date).toLocaleDateString("en-us", date_options));
-                                message.find('.to_date').html(new Date(d.to_date).toLocaleDateString("en-us", date_options));
-                                if(d.status == 2) {
-
-                                    message.find('.contact_div').remove();
-                                    message.find('.request_accepted').remove();
-                                    message.find('.response_buttons_div').find('.show_contact').remove();
-                                    message.find('.response_buttons_div').find('.okay').on('click', function(e) {
-
-                                        e.preventDefault();
-                                        replySeen(d.tid);
-                                        message.find('.response_buttons_div').slideUp(function () {
-                                            $(this).remove();
-                                        });
-
-                                    });
-
-                                } else {
-
-                                    message.find('.request_rejected').remove();
-                                    message.find('.response_buttons_div').find('.okay').remove();
-                                    message.find('.response_buttons_div').find('.show_contact').on('click', function (e) {
-
-                                        e.preventDefault();
-                                        replySeen(d.tid);
-                                        message.find('.response_buttons_div').slideUp(function () {
-
-                                            getContact(d.tid, message);
-                                            $(this).remove();
-
-                                        });
-                                        message.find('.contact_div').slideDown();
-
-                                    });
-
-                                }
-                                replies_container.append(message);
-
-                            });
-                            $.each(response.old_replies, function (i, d) {
-
-                                var message = $(replyMessageTemplate);
-                                message.find('.response_buttons_div').remove();
-                                message.find('.request_rejected').remove();
-                                switch(parseInt(d.status)) {
-
-                                    case 1:
-                                        message.find('.request_accepted').remove();
-                                        message.find('.contact_div').remove();
-                                        break;
-                                    case 3:
-                                        message.find('.request_pending').remove();
-                                        getContact(d.tid, message);
-                                        message.find('.contact_div').show();
-                                        break;
-                                    case 4:
-                                        message.find('.request_pending').remove();
-                                        getContact(d.tid, message);
-                                        message.find('.contact_div').show();
-                                        break;
-                                    case 5:
-                                        message.find('.request_pending').remove();
-                                        getContact(d.tid, message);
-                                        message.find('.contact_div').show();
-                                        break;
-
-                                }
-                                message.find('.product_name').html(d.name);
-                                message.find('.from_date').html(new Date(d.from_date).toLocaleDateString("en-us", date_options));
-                                message.find('.to_date').html(new Date(d.to_date).toLocaleDateString("en-us", date_options));
-                                replies_container.append(message);
-
-                            });
-                        }
-
-                        updateCount(new_message_count);
-                        swal.close();
-                    }
-                });
-            }
-
-            $('#messages_link').on('click', function () {
-                getMessages();
-            });
-
-            function getMessageCount() {
-                $.ajax({
-                    url: '{{ route('get_message_count') }}',
-                    type: 'GET',
-                    dataType: 'JSON',
-                    success: function (response) {
-                        var count = parseInt(response.requests_count) + parseInt(response.replies_count);
-                        if (count != 0) {
-                            swal({
-                                title: 'You have new messages',
-                                imageUrl: '{{ asset('img/message.gif') }}',
-                                imageWidth: 300,
-                                imageHeight: 225,
-                                text: 'Visit the messages tab to view requests for your products and to answer them',
-                                confirmButtonText: 'View Messages'
-                            }).then((result) => {
-                                if(result.value) {
-                                $('.all-page-modals').find('.modal-container').fadeOut(200, 'swing', function () {
-
-                                    $('.all-page-modals').find('.modal-container').removeClass('modal-active').show();
-                                    $('#messages_link').trigger('click');
-
-                                });
-                                }
-                            });
-                            updateCount(count);
-                        }
-                    }
-                });
-            }
-
-            @if($tab != 'messages')
-                getMessageCount();
-            @endif
-
-            function answerRequest(tid, reply, message) {
-
-                var csrf_token = '{{ csrf_token() }}';
-                $.ajax({
-
-                    type: 'POST',
-                    url: '{{ route('answer_request') }}',
-                    data: {_token: csrf_token, tid: tid, reply: reply},
-                    success: function (response) {
-
-                        if(reply === 1) {
-
-                            message.find('h4.product_name').after('<i class="fa fa-check-circle"></i>');
-                            message.find('.accepted_request').slideDown();
-                            message.find('.new_request').slideUp(function () {
-
-                                message.find('.new_request').remove();
-                                message.find('.rejected_request').remove();
-
-                            });
-                            getContact(tid, message);
-                            message.find('.response_buttons_div').slideUp(function () {
-
-                                message.find('.response_buttons_div').remove();
-                                message.find('.contact_div').slideDown();
-
-                            });
-
-                        } else {
-
-                            message.find('h4.product_name').after('<i class="fa fa-times-circle"></i>');
-                            message.find('.new_request').slideUp(function () {
-
-                                message.find('.new_request').remove();
-                                message.find('.accepted_request').remove();
-
-                            });
-                            message.find('.rejected_request').slideDown();
-                            message.find('.response_buttons_div').remove();
-                            message.find('.response_buttons_div').slideUp(function () {
-
-                                message.find('.response_buttons_div').remove();
-
-                            });
-
-                        }
-                        var message_count = $('#message_count').html();
-                        updateCount(parseInt(message_count) - 1);
-                        new_request_count --;
-                        if(new_request_count == 0)
-                            $('#request_dot').hide();
-                    }
-
-                });
-
-            }
-
-            //js for  NOTIFICATIONS
-            var notificationTemplate = $('#notifications_template');
-            notificationTemplate.remove();
-            notificationTemplate = notificationTemplate.html();
-
-            function setCloseNotification(notification) {
-
-                notification.fadeOut(function () {
-
-                    notification.attr('style', '');
-                    notification.addClass('notification--dismissed');
-                    getNotifications();
-
-                })
-
-            }
-
-            function replyForNotification(id, reply) {
-
-                var csrf_token = '{{ csrf_token() }}';
-                $.ajax({
-
-                    type: 'POST',
-                    url: '{{ route('reply_notification') }}',
-                    data: {_token: csrf_token, id: id, reply: reply}
-
-                });
-
-            }
-
-            function getNotifications() {
-
-                $.ajax({
-
-                    type: 'GET',
-                    url: '{{ route('get_notification') }}',
-                    dataType: 'JSON',
-                    success: function (returned_data) {
-
-                        if(!(returned_data == null)) {
-                            $('.notification.notification--reveal').remove();
-                            var notification = $(notificationTemplate);
-                            notification.find('#product_name').html(returned_data.name);
-                            notification.find('#product_image').attr('src', '{{ asset('img/uploads/products/small') }}/' + returned_data.image);
-                            notification.find('#renter_name').html(ucfirst(returned_data.first_name) + ' ' + ucfirst(returned_data.last_name));
-                            $('body').append(notification);
-                            $('#notification_trigger').trigger('click');
-
-                            notification.find('#yes_close_notification').on('click', function () {
-
-                                setCloseNotification(notification);
-                                replyForNotification(returned_data.tid, 1);
-
-                            });
-
-                            notification.find('#no_close_notification').on('click', function () {
-
-                                setCloseNotification(notification);
-                                replyForNotification(returned_data.tid, 0);
-
-                            });
-                        }
-                    }
-                });
-
-            }
-
-            getNotifications();
-
-            //js for INVENTORY
-            function updateAvailability(id, availability) {
-
-                var csrf = '{{ csrf_token() }}';
-                $.ajax({
-
-                    type: 'POST',
-                    url: '{{ route('update_availability') }}',
-                    dataType: 'JSON',
-                    data: {_token: csrf, product_id: id, availability: availability},
-                    success: function () {
-                        console.log('success');
-                    }
-                });
-
-            }
-
-            function loadInventory() {
-
-                var inventory_div = $('#account-inventory');
-                var inventory_form = inventory_div.find('#inventory_form').html();
-                inventory_div.html('');
-                inventory_div.append('<div id="inventory_form" style="display: none;">' + inventory_form + '</div>');
-                swal({title: 'Preparing your inventory..'});
-                swal.showLoading();
-                $.ajax({
-
-                    type: 'GET',
-                    url: '{{ route('get_inventory') }}',
-                    dataType: 'JSON',
-                    success: function (returned_data) {
-
-                        if (returned_data.length == 0) {
-                            inventory_div.html('<div class="row align-items-center" style="height: 400px;">' +
-                                '<div class="col-12 text-center h5">You havent uploaded any products :(</div>' +
-                                '</div>' +
-                                '</div>');
-                        }
-                        else {
-                            inventory_div.append('<div id="inventory_row" class="row">' +
-                                '<div class="col-md-12">' +
-                                '<div class="masonry">' +
-                                '<div class="masonry__container masonry--active row"></div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>');
-                            var masonry_container = inventory_div.find('.masonry__container');
-                            var loading_url = '{{ asset('img/loading.svg') }}';
-                            $.each(returned_data, function (i, d) {
-
-                                var image = '{{ asset('img/uploads/products/small') }}/' + d.image;
-                                var product_link = '{{ URL::to('account/inventory') }}' + '/' + d.id;
-                                var product = $('<div class="masonry__item col-6 col-lg-4">' +
-                                    '   <div class="product">' +
-                                    '       <span class="product_id_info hidden">' + d.name + '</span>' +
-                                    '       <a class="inventory_product_link" href="' + product_link + '">' +
-                                    '           <img class="img-fluid" style="border-radius: 5px;" alt="Image" id="" data-src="' + image + '" src="' + loading_url + '"/>' +
-                                    '       </a>' +
-                                    '       <a class="block inventory_product_link" href="' + product_link + '">' +
-                                    '           <div class="text-center"><h5>' + d.name + '</h5></div>' +
-                                    '       </a>' +
-                                    '       <form>' +
-                                    '       <div class="col-md-12">' +
-                                    '           <div class="input-checkbox input-checkbox--switch">' +
-                                    '               <input type="checkbox" ' + ((d.availability == '1')? 'checked ':'') + 'name="public-profile" id="checkbox-' + i + '">' +
-                                    '               <label for="checkbox-' + i + '"></label>' +
-                                    '           </div>' +
-                                    '           <span>Availability</span>' +
-                                    '       </div>' +
-                                    '       </form>' +
-                                    '   </div>' +
-                                    '</div>');
-                                masonry_container.append(product);
-                                product.find('input[type="checkbox"]').on('change', function () {
-
-                                    if(product.find('input[type="checkbox"]').is(":checked"))
-                                        updateAvailability(d.id, 1);
-                                    else
-                                        updateAvailability(d.id, 0);
-
-                                });
-                                product.find('a.inventory_product_link').on('click', function (e) {
-
-                                    swal({title: 'Getting post details'});
-                                    swal.showLoading();
-                                    var inventory_form = $('#inventory_form');
-                                    e.preventDefault();
-                                    $.ajax({
-                                        url: $(this).attr('href'),
-                                        type: 'GET',
-                                        dataType: 'JSON',
-                                        success: function (response) {
-                                            swal.close();
-                                            if(response.message == 'success') {
-                                                inventory_form.find('input[name="category_id"]').val(ucwords(response.category_name));
-                                                inventory_form.find('input[name="subcategory_id"]').val(ucwords(response.subcategory_name));
-                                                inventory_form.find('input[name="name"]').val(response.name);
-                                                inventory_form.find('textarea[name="description"]').html(response.description);
-                                                inventory_form.find('select[name="duration"]').find('option[value="' + response.duration + '"]').attr('selected', true);
-                                                inventory_form.find('input[name="rate1"]').val(response.rate_1);
-                                                inventory_form.find('input[name="rate2"]').val(response.rate_2);
-                                                inventory_form.find('input[name="rate3"]').val(response.rate_3);
-                                                inventory_form.find('form').append('<input type="hidden" name="id" value="' + response.id + '">');
-                                                changeRequiredStates(inventory_form);
-                                                $('#inventory_row').slideUp(function () {
-                                                    inventory_form.slideDown();
-                                                });
-                                                inventory_form.find('input[name="address"]').geocomplete({
-                                                    location: response.address,
-                                                    details: $('#inventory_product_latlng'),
-                                                    bounds: defaultBounds
-                                                });
-                                            }
-                                        }
-                                    });
-                                });
-                            });
-                        }
-                        $('.product').find('img').each(function () {
-                            $(this).attr('src', $(this).attr('data-src'));
-                        });
-                        swal.close();
-                    }
-                });
-            }
-
-            $('#inventory_link').on('click', function () {
-                loadInventory();
-            });
-
-            @if( $tab == 'inventory' )
-                loadInventory();
-            @endif
-
-                //js for DURATION AND RATES
-                function changeRequiredStates(form_container) {
-                    var rate1 = form_container.find('input[name="rate1"]');
-                    var rate2 = form_container.find('input[name="rate2"]');
-                    var rate3 = form_container.find('input[name="rate3"]');
-                    switch (form_container.find('select[name="duration"]').val()) {
-                        case '0' :
-                            rate1.prop('required', true).parent().slideDown();
-                            rate2.prop('required', false).parent().slideUp();
-                            rate3.prop('required', false).parent().slideUp();
-                            break;
-                        case '1' :
-                            rate1.prop('required', true).parent().slideDown();
-                            rate2.prop('required', true).parent().slideDown();
-                            rate3.prop('required', false).parent().slideUp();
-                            break;
-                        case '2' :
-                            rate1.prop('required', true).parent().slideDown();
-                            rate2.prop('required', true).parent().slideDown();
-                            rate3.prop('required', true).parent().slideDown();
-                            break;
-                    }
-                }
-
-                changeRequiredStates($('#lend-form'));
-                $('#lend-form').find('select[name="duration"]').on('change', function () {
-                    changeRequiredStates($('#lend-form'));
-                });
-                $('#update-form').find('select[name="duration"]').on('change', function () {
-                    changeRequiredStates($('#update-form'));
-                });
-
-            //js for ADDRESS/LOCATION
-            var defaultBounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng(19.296441, 72.9864994),
-                new google.maps.LatLng(18.8465126, 72.9042434)
-            );
-
-            $("#user_address").geocomplete({
-                location: '{{ Auth::user()->address }}',
-                details: "#user_latlng",
-                bounds: defaultBounds
-            }).bind("geocode:result", function (event, result) {
-                console.log(result);
-            });
-
-            $("#product_address").geocomplete({
-                location: '{{ Auth::user()->address }}',
-                details: "#product_latlng",
-                bounds: defaultBounds
-            }).bind("geocode:result", function (event, result) {
-                console.log('Product :' + result);
-            });
-
-            //js for ALERTS
-            $('#alert').parent().slideDown();
-            $('.fa-close').on('click', function (e) {
-                $(this).parent().parent().slideUp();
-            });
-
-            //js for SUBCATEGORIES
-            var category_selector = $('#lend-form').find($('#category_id'));
-
-            function changeSubcategories() {
-
-                var subcategory_selector = $('#lend-form').find($('#subcategory_id'));
-                subcategory_selector.empty();
-                var category_id = category_selector.val();
-                var csrf_token = '{{ csrf_token() }}';
-
-                subcategory_selector.empty();
-                subcategory_selector.append('<option value="" selected disabled>Select a subcategory</option>');
-
-                if (category_id != '') {
-                    $.ajax(
-                        {
-                            type: 'POST',
-                            url: '{{ route('get_subcategories') }}',
-                            data: {_token: csrf_token, category_id: category_id},
-                            dataType: 'JSON',
-                            success: function (returned_data) {
-
-                                $.each(returned_data, function (i, d) {
-                                    subcategory_selector.append('<option value="' + d.id + '">' + ucwords(d.name) + '</option>');
-                                });
-
-                            }
-                        }
-                    );
-                }
-            }
-
-            changeSubcategories();
-            category_selector.on('change', function () {
-                changeSubcategories();
-            })
-
-        });
-
-        //js for DROPZONE
-        var previewNode = document.querySelector("#dropzone_template");
-        previewNode.id = "";
-        var previewTemplate = previewNode.parentNode.innerHTML;
-        previewNode.parentNode.removeChild(previewNode);
-
-        Dropzone.options.lendForm = {
-
-            autoProcessQueue: false,
-            uploadMultiple: true,
-            parallelUploads: 8,
-            previewTemplate: previewTemplate,
-            previewsContainer: '#previews',
-            maxFiles: 8,
-            acceptedFiles: 'image/*',
-
-            init: function () {
-                var myDropzone = this;
-                var files = 0;
-
-                $('#lend-form').submit(function (e) {
-                    // Make sure that the form isn't actually being sent.
-                    e.preventDefault();
-                    e.stopPropagation();
-                    myDropzone.processQueue();
-                    if (files == 0) {
-                        $('#pictures_error').remove();
-                        $('#pictures_div').append('<span id="pictures_error" style="display: none;" class="color--error"><strong>Upload atleast one picture.</strong></span>');
-                        $('#pictures_error').fadeIn();
-                    }
-                });
-                this.on("addedfile", function (file) {
-                    files++;
-                });
-                this.on("removedfile", function (file) {
-                    files--;
-                });
-                this.on("successmultiple", function (files, response) {
-                    window.location = '{{ route('account', ['inventory']) }}';
-                });
-                this.on("errormultiple", function (files, response) {
-                    location.reload();
-                });
-            }
-        };
-
-
-    </script>
-
 @endsection

@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Middleware;
-use Illuminate\Support\Facades\Auth;
 
 use Closure;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Redirect;
+//
 
 class MobileAuth
 {
@@ -13,13 +13,15 @@ class MobileAuth
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @return mixed
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::user()->verified != 1)
-            return redirect('/register/mobile_verfication');
-
+        if (! $request->user() || ! $request->user()->hasContactVerified()) {
+            return $request->expectsJson()
+                ? abort(403, 'mobile_auth')
+                : Redirect::route('otp.form');
+        }
         return $next($request);
     }
 }

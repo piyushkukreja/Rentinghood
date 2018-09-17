@@ -22,6 +22,7 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('mobile_auth');
+        $this->middleware('verified');
     }
 
     /**
@@ -46,27 +47,6 @@ class HomeController extends Controller
 
         return view('dashboard.account', $data);
     }
-
-
-    /*public function vendorIndex($tab = 'undefined')
-    {
-
-        $data = [];
-        if ($tab == 'undefined')
-        {
-            $data['fixhome'] = true;
-            $data['tab'] = 'inventory';
-        }
-        else
-        {
-            $data['fixhome'] = false;
-            $data['tab'] = $tab;
-        }
-        $data['categories'] = DB::table('categories')->get();
-
-        return view('dashboard.account', $data);
-
-    }*/
 
     public function getInventory()
     {

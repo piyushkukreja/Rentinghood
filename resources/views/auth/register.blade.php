@@ -1,7 +1,8 @@
 @extends('layouts.public')
-@extends('layouts.public_parts.navbar_blue')
-@section('content')
-    <style>
+@extends('layouts.public_parts.navbar_transparent')
+@section('head')
+    @parent
+    <style type="text/css">
         @media (max-width: 767px) {
             .map_canvas {
                 min-height: 50vh;
@@ -17,8 +18,31 @@
             color: #fff;
         }
     </style>
+@endsection
+@section('scripts')
+    @parent
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var defaultBounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(19.296441, 72.9864994),
+                new google.maps.LatLng(18.8465126, 72.9042434)
+            );
+            $("#address").geocomplete({
+                location: 'Mumbai',
+                map: ".map_canvas",
+                details: "#latlng",
+                bounds: defaultBounds
+            }).bind("geocode:result", function (event, result) {
+                console.log(result);
+            });
+
+        })
+    </script>
+@endsection
+@section('content')
     <div class="main-container">
-        <section class="feature-large height-100 imagebg" data-overlay="5">
+        <section class="feature-large height-100 imagebg" data-overlay="7">
             <div class="background-image-holder">
                 <img alt="background" src="{{ asset('img/register-bg.jpg') }}">
             </div>
@@ -29,12 +53,12 @@
                     </div>
                     <div class="col-md-6 col-12">
                         <h2 style="font-weight: 500;">Become a RentingHood neighbour</h2>
-                        <a class="btn block btn--icon bg--facebook type--uppercase" href="{{ route('social-login', ['facebook']) }}">
+                        {{--<a class="btn block btn--icon bg--facebook type--uppercase" href="{{ route('social-login', ['facebook']) }}">
                                 <span class="btn__text">
                                     <i class="socicon-facebook"></i>
                                     Sign-up with Facebook
                                 </span>
-                        </a>
+                        </a>--}}
                         <a class="btn block btn--icon bg--googleplus type--uppercase" href="{{ route('social-login', ['google']) }}">
                                 <span class="btn__text">
                                     <i class="socicon-google"></i>
@@ -130,25 +154,4 @@
             <!--end of container-->
         </section>
     </div>
-
-    <script>
-
-        $(document).ready(function () {
-
-            var defaultBounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng(19.296441, 72.9864994),
-                new google.maps.LatLng(18.8465126, 72.9042434)
-            );
-            $("#address").geocomplete({
-                location: 'Mumbai',
-                map: ".map_canvas",
-                details: "#latlng",
-                bounds: defaultBounds
-            }).bind("geocode:result", function (event, result) {
-                console.log(result);
-            });
-
-        })
-    </script>
-
 @endsection

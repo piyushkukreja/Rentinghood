@@ -12,10 +12,10 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 class LendController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('mobile_auth');
+    public function index() {
+        $data = [];
+        $data['categories'] = DB::table('categories')->orderBy('name')->get();
+        return view('lend.categories', $data);
     }
 
     public function showLendForm($category_id)
@@ -101,9 +101,9 @@ class LendController extends Controller
 
     public function getProductDetails($id)
     {
-        $uid = Auth::user();
-        $product = DB::table('products')->where('id', $id)->first();
-        if($product && ($product->lender_id == Auth::user()->id))
+        $user = Auth::user();
+        $product = Product::find($id);
+        if($product && ($product->lender_id == $user->id))
         {
             $subcategory = DB::table('subcategories')->where('id', $product->subcategory_id)->first();
             $product->subcategory_name = $subcategory->name;
@@ -112,36 +112,10 @@ class LendController extends Controller
             return json_encode($product);
         }
         else {
-
             $product = new \stdClass();
             $product->id = 0;
             $product->message = 'failed';
             return json_encode($product);
-
-        }
-    }
-
-
-    public function getVendorProductDetails()
-    {
-        /*$id = Product::;*/
-        /*echo $id;*/
-        $product = DB::table('products')->where('id', $id)->first();
-        if($product && ($product->lender_id == Auth::user()->id))
-        {
-            $subcategory = DB::table('subcategories')->where('id', $product->subcategory_id)->first();
-            $product->subcategory_name = $subcategory->name;
-            $product->category_name = DB::table('categories')->where('id', $subcategory->category_id)->first()->name;
-            $product->message = 'success';
-            return json_encode($product);
-        }
-        else {
-
-            $product = new \stdClass();
-            $product->id = 0;
-            $product->message = 'failed';
-            return json_encode($product);
-
         }
     }
 
