@@ -73,7 +73,7 @@ section.categories_section.space--sm {
         padding-top: 0.75em;
     }
 
-    #otp_modal .modal-content, #login_modal .modal-content, #new_message_modal .modal-content {
+    #login-modal .modal-content, #new_message_modal .modal-content {
         max-width: 500px;
     }
 

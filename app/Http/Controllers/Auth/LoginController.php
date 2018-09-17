@@ -55,10 +55,15 @@ class LoginController extends Controller
     /**
      * Redirect the user to the OAuth Provider.
      *
+     * @param Request $request
+     * @param $provider
+     *
      * @return Response
      */
-    public function redirectToProvider($provider)
+    public function redirectToProvider(Request $request, $provider)
     {
+        if($request->has('post_login_url'))
+            Session::put('post_login_url', $request->input('post_login_url'));
         return Socialite::driver($provider)->redirect();
     }
 
@@ -74,12 +79,13 @@ class LoginController extends Controller
     {
         $user = Socialite::driver($provider)->user();
         $authenticated_user = $this->findOrCreateUser($user, $provider);
-        if(isset($authenticated_user->address)) {
-            Auth::login($authenticated_user, true);
-            return redirect()->intended(route('home'));
-        } else {
-            return redirect()->route('contact');
+        Auth::login($authenticated_user, true);
+        if(Session::has('post_login_url')) {
+            $redirect_url = Session::get('post_login_url');
+            Session::forget('post_login_url');
+            return redirect($redirect_url);
         }
+        return redirect()->intended(route('home'));
     }
 
     /**

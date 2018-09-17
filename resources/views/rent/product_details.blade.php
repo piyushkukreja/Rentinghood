@@ -27,7 +27,7 @@
                 margin-bottom: 0.5em;
             }
         }
-        #contact_owner {
+        #contact-owner {
             font-size: 1em;
             margin-top: 0.5em;
             margin-bottom: 5em;
@@ -45,18 +45,19 @@
         $(document).ready(function () {
 
             //Buttons
-            var contactOwnerButton = $('#contact_owner');
+            var contactOwnerButton = $('#contact-owner');
+            var socialLoginButton = $('.social-login');
 
             //Forms
-            var loginForm = $('#login_form');
-            var registerForm = $('#register_form');
-            var contactOwnerForm = $('#contact_owner_form');
+            var loginForm = $('#login-form');
+            var registerForm = $('#register-form');
+            var contactOwnerForm = $('#contact-owner-form');
 
             //Modals and Triggers
-            var loginModal = $('#login_modal');
-            var loginModalTrigger = $('#login_modal_trigger');
-            var registerModal = $('#register_modal');
-            var registerModalTrigger = $('#register_modal_trigger');
+            var loginModal = $('#login-modal');
+            var loginModalTrigger = $('#login-modal-trigger');
+            var registerModal = $('#register-modal');
+            var registerModalTrigger = $('#register-modal-trigger');
 
             //Inputs
             var fromInput = $('#from');
@@ -73,7 +74,7 @@
                 loginForm.on('submit', function (event) {
                     event.preventDefault();
                     event.stopPropagation();
-                    $('#login_error').remove();
+                    $('#login-error').remove();
                     $.ajax({
                         type: 'POST',
                         url: loginForm.attr('action'),
@@ -88,13 +89,13 @@
                         error: function (xhr, status, error) {
                             var errors = JSON.parse(xhr.responseText);
                             var emailError = errors["errors"]["email"][0];
-                            loginForm.find('#email').after('<span id="login_error" class="color--error">' + emailError + '</span>');
+                            loginForm.find('#email').after('<span id="login-error" class="color--error">' + emailError + '</span>');
                         }
                     });
                 });
 
                 //js for Register Modal
-                $('#register_link').on('click', function (event) {
+                $('#register-link').on('click', function (event) {
                     event.preventDefault();
                     loginModal.find('.modal-close').trigger('click');
                     registerModalTrigger.trigger('click');
@@ -103,7 +104,7 @@
                 registerForm.submit(function (event) {
                     event.preventDefault();
                     event.stopPropagation();
-                    $('.register_error').slideUp(function () {
+                    $('.register-error').slideUp(function () {
                         $(this).remove();
                     });
                     $.ajax({
@@ -119,7 +120,7 @@
                             errors = errors["errors"];
                             for (var key in errors) {
                                 if(errors.hasOwnProperty(key))
-                                    registerForm.find('[name="' + key + '"]').after('<span class="register_error color--error">' + errors[key][0] + '</span>');
+                                    registerForm.find('[name="' + key + '"]').after('<span class="register-error color--error">' + errors[key][0] + '</span>');
                             }
                         }
                     });
@@ -338,6 +339,12 @@
                 }
             }
 
+            socialLoginButton.on('click', function (event) {
+                event.preventDefault();
+                var redirectTo = encodeURIComponent(window.location.href.replace(/[\?#].*|$/, '?from_date=' + $('[name="from_date"]').val() + '&to_date=' + $('[name="to_date"]').val()));
+                window.location.href = $(this).attr('href') + '?post_login_url=' + redirectTo;
+            });
+
             @if(isset($_GET['from_date']) && isset($_GET['to_date']))
                 fromPicker.set('select', '{{ $_GET['from_date'] }}');
                 toPicker.set('select', '{{ $_GET['to_date'] }}');
@@ -435,7 +442,7 @@
                         </div>
                         <!--end of row-->
                         <hr id="product_hr">
-                        <form id="contact_owner_form" method="post" action="{{ route('contact_owner') }}">
+                        <form id="contact-owner-form" method="post" action="{{ route('contact_owner') }}">
                             {{ csrf_field() }}
                             <input name="product_id" type="hidden" value="{{ $product->id }}">
                             <div id="availability_message" class="col-12 h5 color--error boxed boxed--border"
@@ -449,7 +456,7 @@
                             </div>
                             <hr>
                             <div class="col-12 text-center">
-                                <button id="contact_owner" type="submit" class="btn btn--primary">
+                                <button id="contact-owner" type="submit" class="btn btn--primary">
                                     Place a request
                                 </button>
                             </div>
@@ -463,8 +470,8 @@
     @guest
         <!-- LOGIN MODAL   -->
         <div class="modal-instance">
-            <a id="login_modal_trigger" href="#" class="modal-trigger hidden">Login</a>
-            <div id="login_modal" class="modal-container">
+            <a id="login-modal-trigger" href="#" class="modal-trigger hidden">Login</a>
+            <div id="login-modal" class="modal-container">
                 <div class="modal-content section-modal">
                     <section class="unpad ">
                         <div class="container">
@@ -479,13 +486,24 @@
                                             </p>
                                         </div>
                                         <div class="feature__body">
-                                            <form id="login_form" method="POST" action="{{ route('login') }}">
+                                            <form id="login-form" method="POST" action="{{ route('login') }}">
                                                 {{ csrf_field() }}
                                                 <div class="row">
                                                     <div class="col-md-12">
+                                                        <a class="btn block btn--icon bg--googleplus type--uppercase social-login"
+                                                           href="{{ route('social-login', ['google']) }}">
+                                                            <span class="btn__text">
+                                                                <i class="socicon-google"></i>
+                                                                Login with Google +
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <hr style="margin-bottom: 0">
+                                                    </div>
+                                                    <div class="col-md-12">
                                                         <input id="email" type="email" name="email" value="" placeholder="Email"
                                                                required autofocus>
-
                                                     </div>
                                                     <div class="col-md-12">
                                                         <input id="password" type="password" name="password" placeholder="Password"
@@ -500,7 +518,7 @@
 
                                             </form>
                                             <span class="type--fine-print block">
-                                                Don't have an account yet? <a id="register_link" href="#">Create account</a>
+                                                Don't have an account yet? <a id="register-link" href="#">Create account</a>
                                             </span>
                                         </div>
                                     </div>
@@ -514,8 +532,8 @@
 
         <!-- REGISTER MODAL   -->
         <div class="modal-instance">
-            <a id="register_modal_trigger" class="btn modal-trigger hidden" href="#"></a>
-            <div id="register_modal" class="modal-container">
+            <a id="register-modal-trigger" class="btn modal-trigger hidden" href="#"></a>
+            <div id="register-modal" class="modal-container">
                 <div class="modal-content">
                     <section class="imageblock feature-large border--round ">
                         <div class="imageblock__content col-lg-5 col-md-3 pos-left">
@@ -530,10 +548,21 @@
                                         <div class="col-md-11 col-lg-10">
                                             <h1>Become a RentingHood neighbour</h1>
                                             <hr class="short">
-                                            <form id="register_form" method="POST" action="{{ route('register') }}">
+                                            <form id="register-form" method="POST" action="{{ route('register') }}">
                                                 {{ csrf_field() }}
                                                 <div class="row">
-
+                                                    <div class="col-md-12">
+                                                        <a class="btn block btn--icon bg--googleplus type--uppercase social-login"
+                                                           href="{{ route('social-login', ['google']) }}">
+                                                            <span class="btn__text">
+                                                                <i class="socicon-google"></i>
+                                                                Signup with Google +
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <hr style="margin-bottom: 0">
+                                                    </div>
                                                     <div class="col-md-6">
                                                         <input id="first_name" type="text" name="first_name" placeholder="First Name" value="" required autofocus>
                                                     </div>
