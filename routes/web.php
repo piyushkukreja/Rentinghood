@@ -91,6 +91,8 @@ if (!\Illuminate\Support\Facades\App::environment('local'))
 else
     $group_parameters['prefix'] = 'vendor';
 
+Route::get('/checkbox', 'VendorController@viewCheckbox')->name('vendor.checkbox');
+
 Route::group($group_parameters, function () {
 
     //Vendor Index Page
@@ -161,7 +163,6 @@ Route::group($group_parameters, function () {
         Session::put('lng', $request->input('lng'));
         return ['message' => 'success'];
     })->name('save_location');
-
     //Auth Routes
     //Login and logout routes
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');

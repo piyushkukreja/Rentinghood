@@ -63,6 +63,7 @@ var AppCalendar = function() {
                     success: function (response) {
                         if(response.status === 'success') {
                             //Store the event
+                            storing.id = response.event.id;
                             storing.title = response.event.title;
                             storing.date = response.event.date;
                             storing.start = moment(response.event.date);
@@ -104,6 +105,36 @@ var AppCalendar = function() {
                         } else {
                             swal({
                                 title: 'Event could not be updated!',
+                                type: 'warning'
+                            });
+                        }
+                        editModal.find('#edit-event-modal-close').trigger('click');
+                        editing = null;
+                    }
+                });
+            });
+
+
+
+            //Get data from modal and send it to delete an event
+            $('#event-delete').on('click', function () {
+                var modalData = getDataFromModal(editModal);
+                if(!modalData) {
+                    return;
+                }
+                $.ajax({
+                    url: base_url + '/events/' + editing.id,
+                    type: 'DELETE',
+                    data: modalData.dataForAjax,
+                    dataType: 'JSON',
+                    success: function (response) {
+                        if(response.status === 'success') {
+                            //Delete the event
+                            calendar.fullCalendar('removeEvents', editing.id);
+                            //calendar.fullCalendar('refetchEvents', editing);
+                        } else {
+                            swal({
+                                title: 'Event could not be deleted!',
                                 type: 'warning'
                             });
                         }

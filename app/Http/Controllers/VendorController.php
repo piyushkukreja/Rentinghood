@@ -48,4 +48,10 @@ class VendorController
         $response['status'] = 'success';
         return $response;
     }
+
+    public function viewCheckbox(){
+        $data = [];
+        $data['section'] = 'inventory';
+        return view('vendor.checkbox',['data' => $data]);
+    }
 }
