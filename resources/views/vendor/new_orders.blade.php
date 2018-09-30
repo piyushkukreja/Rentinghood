@@ -50,10 +50,10 @@
                             <tr>
                                 <th class="all">Renter Name</th>
                                 <th class="min-tablet" width="50">Renter Address</th>
-                                <th class="all">Product Name</th>
-                                <th class="all">Product Image</th>
-                                <th class="all">From_Date</th>
-                                <th class="all">To_Date</th>
+                                <th class="all">Name</th>
+                                <th class="all">Image</th>
+                                <th class="all">From Date</th>
+                                <th class="all">To Date</th>
                                 <th class="all">Actions</th>
                             </tr>
                             </thead>

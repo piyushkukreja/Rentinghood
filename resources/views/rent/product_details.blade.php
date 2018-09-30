@@ -486,7 +486,7 @@
                                     <div class="boxed bg--none boxed--lg text-center feature">
                                         <div class="modal-close modal-close-cross"></div>
                                         <div class="text-block">
-                                            <h3>Login to Your Account</h3>
+                                            <h2>Login to Your Account</h2>
                                             <p>
                                                 Welcome back, sign in with your existing account credentials.
                                             </p>
@@ -551,7 +551,7 @@
                                     <div class="boxed bg--none boxed--lg text-center feature">
                                         <div class="modal-close modal-close-cross"></div>
                                         <div class="text-block">
-                                            <h1>Become a RentingHood neighbour</h1>
+                                            <h2>Become a RentingHood neighbour</h2>
                                         </div>
                                         <div class="feature__body">
                                             <form id="register-form" method="POST" action="{{ route('register') }}">

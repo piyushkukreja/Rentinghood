@@ -7,7 +7,6 @@ var AppCalendar = function() {
         },
 
         initCalendar: function(base_url, csrf) {
-
             if (!jQuery().fullCalendar) {
                 return;
             }
@@ -82,7 +81,6 @@ var AppCalendar = function() {
                 });
             });
 
-
             //Get data from modal and send it to update an event
             $('#event-edit').on('click', function () {
                 var modalData = getDataFromModal(editModal);
@@ -113,8 +111,6 @@ var AppCalendar = function() {
                     }
                 });
             });
-
-
 
             //Get data from modal and send it to delete an event
             $('#event-delete').on('click', function () {
@@ -165,18 +161,6 @@ var AppCalendar = function() {
                     url: base_url + '/calendar/show-all',
                     type: 'GET'
                 },
-                /*dayClick: function(date, jsEvent, view) {
-
-                    alert('Clicked on: ' + date.format());
-
-                    alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-
-                    alert('Current view: ' + view.name);
-
-                    // change the day's background color just for fun
-                    $(this).css('background-color', 'red');
-
-                },*/
 
                 //Creating Event Object from JSON
                 eventDataTransform: function (eventData) {
@@ -207,11 +191,8 @@ var AppCalendar = function() {
                     storing = event;
                     storeModalTrigger.trigger('click');
                 },
-
                 timeFormat: 'h(:mm) A'
             });
-
         }
-
     };
 }();

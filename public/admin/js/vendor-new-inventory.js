@@ -32,8 +32,11 @@ var TableDatatablesResponsive = function () {
                             '<img style="height: 80px;" src="../../img/uploads/products/small/' + json[i].image + '" alt="product image" />',
                             json[i].category,
                             json[i].subcategory.name,
-                            '<div><input type="checkbox"' + (parseInt(json[i].availability) === 1 ? 'checked' : '') + ' class="accept form-check-input"' +
-                            '</input></div>',
+                            '<div class="md-checkbox">' +
+                            '<input type="checkbox"' + (parseInt(json[i].availability) === 1 ? 'checked' : '') + ' id="checkbox-' + json[i].id + '" class="accept md-check">' +
+                            '<label for="checkbox-' + json[i].id + '">' +
+                            '<span></span><span class="check"></span><span class="box"></span>' +
+                            '</label></div>',
                             '<a href="javascript:;" class="delete btn red btn-outline" style="padding: 3px 6px 3px 6px;">' +
                             '<i class="fa fa-remove"></i></a>',
                             json[i].id
@@ -89,40 +92,14 @@ var TableDatatablesResponsive = function () {
         });
         });*/
 
-
-
         table.on('click', '.accept', function () {
             var row = $(this).parents('tr')[0];
             var id = oTable.fnGetData(row)[0];
-            if($(this).is(':checked')){
+            if($(this).is(':checked'))
                 updateAvailability(id, 1);
-            }else{
+            else
                 updateAvailability(id, 0);
-            }});
-            /*swal({
-                title: 'Are you sure you want to approve this post?',
-                type: 'warning',
-                showCancelButton: true,
-                buttonsStyling: false,
-                allowEnterKey: false,
-                confirmButtonClass: 'btn btn-warning',
-                cancelButtonClass: 'btn btn-info',
-            }).then((result) => {
-                if (result.value) {
-                $.ajax({
-                    url: base_url + '/products/update-availability',
-                    type: 'POST',
-                    data: { _token: csrf, product_id: id },
-                    dataType: 'JSON',
-                    success: function (response) {
-                        if(response.status === 'success') {
-                            oTable.fnDeleteRow(row);
-                            decrementCount();
-                        }
-                    }
-                });
-            }
-        });*/
+        });
 
         function updateAvailability(id, availability) {
             $.ajax({
@@ -132,29 +109,15 @@ var TableDatatablesResponsive = function () {
                 data: { _token: csrf, product_id: id, availability: availability }
             });
         }
-
-        function decrementCount() {
-            var countSpan = $('#new-posts-count');
-            var count = countSpan.html() - 1;
-            if(count === 0)
-                countSpan.remove();
-            else
-                countSpan.html(count);
-        }
     };
 
     return {
-
         //main function to initiate the module
         init: function (base_url, csrf) {
-
             if (!jQuery().dataTable) {
                 return;
             }
-
             initTable1(base_url, csrf);
         }
-
     };
-
 }();

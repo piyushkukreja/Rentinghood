@@ -91,8 +91,6 @@ if (!\Illuminate\Support\Facades\App::environment('local'))
 else
     $group_parameters['prefix'] = 'vendor';
 
-Route::get('/checkbox', 'VendorController@viewCheckbox')->name('vendor.checkbox');
-
 Route::group($group_parameters, function () {
 
     //Vendor Index Page

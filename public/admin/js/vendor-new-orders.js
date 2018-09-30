@@ -33,9 +33,9 @@ var TableDatatablesResponsive = function () {
                             '<img style="height: 80px;" src="../../img/uploads/products/small/' + json[i].product.image + '" alt="product image" />',
                             json[i].from_date,
                             json[i].to_date,
-                            '<a href="' + base_url + '/products/new-orders/accept' + json[i].id + '" class="accept btn blue" style="padding: 3px 6px 3px 6px;">' +
-                            '<i class="fa fa-check-square"></i></button> ' +
-                            '<a href="' + base_url + '/products/new-orders/reject' + json[i].id + '" class="reject btn red" style="padding: 3px 6px 3px 6px;">' +
+                            '<a href="' + base_url + '/products/new-orders/accept' + json[i].id + '" class="accept btn blue btn-outline" style="padding: 3px 6px 3px 6px;">' +
+                            '<i class="fa fa-check"></i></button> ' +
+                            '<a href="' + base_url + '/products/new-orders/reject' + json[i].id + '" class="reject btn red btn-outline" style="padding: 3px 6px 3px 6px;">' +
                             '<i class="fa fa-remove"></i></a>',
                             json[i].id,
                         ]);
@@ -61,7 +61,6 @@ var TableDatatablesResponsive = function () {
 
             "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
         });
-        var tableWrapper = jQuery('#sample_1_wrapper');
 
         table.on('click', '.accept', function (e) {
             e.preventDefault();

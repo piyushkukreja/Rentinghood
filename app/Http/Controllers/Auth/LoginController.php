@@ -98,8 +98,9 @@ class LoginController extends Controller
     public function findOrCreateUser($user, $provider)
     {
         $authenticated_user = User::where('provider_id', $user->id)->first();
-        if ($authenticated_user)
+        if ($authenticated_user) {
             return $authenticated_user;
+        }
 
         $existing_user = User::where('email', $user->email)->first();
         if($existing_user) {
@@ -127,7 +128,6 @@ class LoginController extends Controller
         $new_user->lat = 0;
         $new_user->lng = 0;
         $new_user->email_verified_at = new Carbon;
-
         $new_user->contact = null;
 
         $new_user->save();

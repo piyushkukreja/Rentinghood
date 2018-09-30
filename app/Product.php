@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $appends = ['category_id', 'category'];
-    protected $with = array('subcategory', 'lender');
+    protected $with = ['subcategory', 'lender'];
 
     public function getCategoryIdAttribute() {
         return $this->category()->id;
