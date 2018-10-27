@@ -164,5 +164,43 @@
             </div>
             <!--end of container-->
         </section>
+        <section class="switchable switchable--switch feature-large">
+            <div class="container">
+                <div class="row justify-content-around">
+                    <div class="col-md-5">
+                        <img alt="Image" class="rounded-circle" src="{{ asset('img/aboutus/avatar-22.jpeg') }}" />
+                    </div>
+                    <div class="col-md-6 col-lg-5">
+                        <div class="switchable__text">
+                            <div class="text-block">
+                                <h2>Shubham Satish Mahatme</h2>
+                                <span>Investor relations and Business Development</span>
+                            </div>
+                            <p class="lead">
+                                Fondly addressed as Bham has been into the startup’s from the age of 17.
+                                He was the founder of central India’s first late night food delivery service.
+                                He has been into the startup industry since a long time & has closely worked with many startup’s & has helped them grow.
+                                A avid traveller & a big time foodie he is someone who can have an endless conversation.
+                                Up for a coffee & a conversation at rentinghood connect with him at shubham@rentinghood.com
+                            </p>
+                            <ul class="social-list list-inline list--hover">
+                                <li>
+                                    <a href="mailto:shubham@rentinghood.com">
+                                        <i class="socicon socicon-mail icon icon--xs"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a target="_blank" href="https://www.linkedin.com/in/shubham-satish-mahatme-9964a6101?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BmqQFXGT8TMG6AEOrEtjcyQ%3D%3D">
+                                        <i class="socicon socicon-linkedin icon icon--xs"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--end of row-->
+            </div>
+            <!--end of container-->
+        </section>
     </div>
 @endsection
